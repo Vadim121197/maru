@@ -11,7 +11,7 @@ const LoginPage = ({ searchParams }: { searchParams: { code: string } }) => {
   const { login } = useStore(authSelector)
 
   const signIn = () => {
-    console.log(searchParams)
+    console.log(searchParams.get('code'))
 
     if (!searchParams.code) return
     console.log(searchParams)
