@@ -12,10 +12,13 @@ const LoginPage = ({ searchParams }: { searchParams: { code: string } }) => {
 
   const signIn = () => {
     if (!searchParams.code) return
+    console.log(searchParams.code)
 
     void (async () => {
       try {
         await login(searchParams.code)
+        console.log('there')
+
         router.push('/')
       } catch (error) {}
     })()
