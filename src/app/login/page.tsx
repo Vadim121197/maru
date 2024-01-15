@@ -1,24 +1,24 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '~/components/ui/button'
 import { cn } from '~/lib/utils'
 import { useStore } from '~/state'
 import { authSelector } from '~/state/auth'
 
-const LoginPage = ({ searchParams }: { searchParams: { code: string } }) => {
+const LoginPage = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { login } = useStore(authSelector)
 
   const signIn = () => {
-    console.log(searchParams.get('code'))
-
-    if (!searchParams.code) return
+    const code = searchParams.get('code')
+    if (!code) return
     console.log(searchParams)
 
     void (async () => {
       try {
-        await login(searchParams.code)
+        await login(code)
         console.log('there')
 
         router.push('/')
