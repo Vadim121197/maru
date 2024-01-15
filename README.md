@@ -1,22 +1,4 @@
-# next-template
+Docker
 
-A Next.js 13 template for building apps with Radix UI and Tailwind CSS.
-
-## Usage
-
-```bash
-npx create-next-app -e https://github.com/shadcn/next-template
-```
-
-## Features
-
-- Next.js 13 App Directory
-- Radix UI Primitives
-- Tailwind CSS
-- Icons from [Lucide](https://lucide.dev)
-- Dark mode with `next-themes`
-- Tailwind CSS class sorting, merging and linting.
-
-## License
-
-Licensed under the [MIT license](https://github.com/shadcn/ui/blob/main/LICENSE.md).
+1. docker compose -f docker-compose.yml build maru_lake
+2. docker compose -f docker-compose.yml up -d maru_lake

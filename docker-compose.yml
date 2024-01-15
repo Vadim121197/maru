@@ -1,14 +1,14 @@
 version: '3'
 
 services:
-  lend_lord:
-    container_name: lend_lord
-    image: lend_lord:latest
+  maru_lake:
+    container_name: maru_lake
+    image: maru_lake:latest
     build:
       context: ./
       dockerfile: ./Dockerfile
       args:
-        NODE: development
+        NODE: production
     restart: always
     ports:
       - 9022:3000
