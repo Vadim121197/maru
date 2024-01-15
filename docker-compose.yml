@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  lend_lord:
+    container_name: lend_lord
+    image: lend_lord:latest
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        NODE: development
+    restart: always
+    ports:
+      - 9022:3000

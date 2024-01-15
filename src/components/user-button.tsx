@@ -1,0 +1,87 @@
+'use client'
+
+import { UserRound } from 'lucide-react'
+import { cn } from '~/lib/utils'
+import { useStore } from '~/state'
+import { authSelector } from '~/state/auth'
+import { siteConfig } from '~/config/site'
+import Link from 'next/link'
+import { Button, buttonVariants } from './ui/button'
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet'
+
+export const UserButton = () => {
+  const { isAuthenticated, user, logout } = useStore(authSelector)
+
+  return (
+    <div>
+      <a
+        href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}`}
+        className={cn('w-[196px]', buttonVariants(), !isAuthenticated ? 'hidden lg:inline-flex' : 'hidden')}
+      >
+        Sign In
+      </a>
+      <Sheet>
+        <SheetTrigger>
+          <div className={isAuthenticated ? 'hidden lg:block' : 'hidden'}>
+            <UserRound strokeWidth='1' className='ml-3 h-8 w-8' />
+          </div>
+          <div className='block lg:hidden'>
+            <svg xmlns='http://www.w3.org/2000/svg' width='29' height='18' viewBox='0 0 29 18' fill='none'>
+              <path d='M29 0H0V2H29V0Z' fill='#CEC5C5' />
+              <path d='M28.9996 16.0001H16.1663V18.0001H28.9996V16.0001Z' fill='#CEC5C5' />
+              <path d='M29 7.99994H8V9.99994H29V7.99994Z' fill='#CEC5C5' />
+            </svg>
+          </div>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader className='mb-6'>
+            <SheetTitle className='text-left text-base font-medium'>{user?.username}</SheetTitle>
+          </SheetHeader>
+          <div className='flex flex-col'>
+            <div className='mb-6'>
+              {isAuthenticated ? (
+                <Button className='w-full' onClick={logout}>
+                  Sign out
+                </Button>
+              ) : (
+                <a
+                  href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}`}
+                  className={cn('w-full', buttonVariants())}
+                >
+                  Sign In
+                </a>
+              )}
+            </div>
+
+            <nav className='mb-6 flex flex-col gap-4 border-b-[1px] border-border pb-6'>
+              {siteConfig.mainNav.map(
+                (item) =>
+                  item.href && (
+                    <SheetClose asChild key={item.href}>
+                      <Link href={item.href} className='flex items-center gap-2 text-[12px] font-normal leading-[18px]'>
+                        <div>{item.icon}</div>
+                        <span>{item.title}</span>
+                      </Link>
+                    </SheetClose>
+                  ),
+              )}
+            </nav>
+            <nav className='mb-[18px] flex flex-col gap-4 border-b-[1px] border-border pb-6'>
+              {siteConfig.secondaryNav.map(
+                (item) =>
+                  item.href && (
+                    <SheetClose asChild key={item.href}>
+                      <Link href={item.href} className='flex items-center gap-2 text-[12px] font-normal leading-[18px]'>
+                        <div>{item.icon}</div>
+                        <span>{item.title}</span>
+                      </Link>
+                    </SheetClose>
+                  ),
+              )}
+            </nav>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </div>
+  )
+}
