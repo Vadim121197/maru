@@ -83,16 +83,8 @@ const IndexPage = () => {
             <p className='text-center text-base font-semibold lg:text-lg lg:font-medium'>
               Welcome! Get started by creating your first project.
             </p>
-            <Link
-              href={Nav.PROJECT_CREATE}
-              className={cn(
-                'gap-4 w-[196px]',
-                buttonVariants(),
-              )}
-            >
-              <p className='text-sm font-bold lg:text-base lg:font-semibold'>
-                New Project
-              </p>
+            <Link href={Nav.PROJECT_CREATE} className={cn('gap-4 w-[196px]', buttonVariants())}>
+              <p className='text-sm font-bold lg:text-base lg:font-semibold'>New Project</p>
               <div>
                 <MoveRight className='h-6 w-6' />
               </div>
@@ -150,43 +142,43 @@ const IndexPage = () => {
             <p className='mb-6 text-base font-semibold text-muted-foreground lg:mb-5 lg:text-lg lg:font-medium'>
               Proofs Generated
             </p>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              width='141'
-              height='66'
-              viewBox='0 0 141 66'
-              fill='none'
-              className='self-end'
-            >
-              <g opacity='0.8'>
-                <path
-                  opacity='0.4'
-                  fillRule='evenodd'
-                  clipRule='evenodd'
-                  d='M140 65C140 65 126.078 53 120.888 53C115.697 53 110.309 58.881 105.25 53.0098C100.191 47.1386 99.1463 40.9776 94.825 45C90.5037 49.0224 86.3667 49.0224 84.4 45C82.4333 40.9776 84.3483 39 77.45 39C70.5517 39 71.1652 27.6914 68.7625 21C66.3598 14.3086 62.8186 7.35401 56.6 13C50.3814 18.646 46.1454 14.9231 44.4375 11C42.7296 7.07692 41.3063 5 37.4875 5C33.6687 5 33.704 9 30.5375 9C27.371 9 26.3683 13 21.85 13C17.3317 13 14.7705 3.00503 11.425 3.00503C8.07948 3.00503 1 1 1 1V65H140Z'
-                  fill='url(#paint0_linear_491_19351)'
-                />
-                <path
-                  d='M140 65C140 65 126.078 53 120.888 53C115.697 53 110.309 58.881 105.25 53.0098C100.191 47.1386 99.1463 40.9776 94.825 45C90.5037 49.0224 86.3667 49.0224 84.4 45C82.4333 40.9776 84.3483 39 77.45 39C70.5517 39 71.1652 27.6914 68.7625 21C66.3598 14.3086 62.8186 7.35401 56.6 13C50.3814 18.646 46.1454 14.9231 44.4375 11C42.7296 7.07692 41.3063 5 37.4875 5C33.6687 5 33.704 9 30.5375 9C27.371 9 26.3683 13 21.85 13C17.3317 13 14.7705 3.00503 11.425 3.00503C8.07949 3.00503 1 1 1 1'
-                  stroke='#6D23F8'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                />
-              </g>
-              <defs>
-                <linearGradient
-                  id='paint0_linear_491_19351'
-                  x1='139.704'
-                  y1='1'
-                  x2='139.704'
-                  y2='64.7276'
-                  gradientUnits='userSpaceOnUse'
-                >
-                  <stop stopColor='#6D23F8' />
-                  <stop offset='1' stopColor='#6D23F8' stopOpacity='0' />
-                </linearGradient>
-              </defs>
-            </svg>
+            <div className='w-full'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 141 66'
+                fill='none'
+                className='w-full'
+              >
+                <g opacity='0.8'>
+                  <path
+                    opacity='0.4'
+                    fillRule='evenodd'
+                    clipRule='evenodd'
+                    d='M140 65C140 65 126.078 53 120.888 53C115.697 53 110.309 58.881 105.25 53.0098C100.191 47.1386 99.1463 40.9776 94.825 45C90.5037 49.0224 86.3667 49.0224 84.4 45C82.4333 40.9776 84.3483 39 77.45 39C70.5517 39 71.1652 27.6914 68.7625 21C66.3598 14.3086 62.8186 7.35401 56.6 13C50.3814 18.646 46.1454 14.9231 44.4375 11C42.7296 7.07692 41.3063 5 37.4875 5C33.6687 5 33.704 9 30.5375 9C27.371 9 26.3683 13 21.85 13C17.3317 13 14.7705 3.00503 11.425 3.00503C8.07948 3.00503 1 1 1 1V65H140Z'
+                    fill='url(#paint0_linear_491_19351)'
+                  />
+                  <path
+                    d='M140 65C140 65 126.078 53 120.888 53C115.697 53 110.309 58.881 105.25 53.0098C100.191 47.1386 99.1463 40.9776 94.825 45C90.5037 49.0224 86.3667 49.0224 84.4 45C82.4333 40.9776 84.3483 39 77.45 39C70.5517 39 71.1652 27.6914 68.7625 21C66.3598 14.3086 62.8186 7.35401 56.6 13C50.3814 18.646 46.1454 14.9231 44.4375 11C42.7296 7.07692 41.3063 5 37.4875 5C33.6687 5 33.704 9 30.5375 9C27.371 9 26.3683 13 21.85 13C17.3317 13 14.7705 3.00503 11.425 3.00503C8.07949 3.00503 1 1 1 1'
+                    stroke='#6D23F8'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </g>
+                <defs>
+                  <linearGradient
+                    id='paint0_linear_491_19351'
+                    x1='139.704'
+                    y1='1'
+                    x2='139.704'
+                    y2='64.7276'
+                    gradientUnits='userSpaceOnUse'
+                  >
+                    <stop stopColor='#6D23F8' />
+                    <stop offset='1' stopColor='#6D23F8' stopOpacity='0' />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
             <p className='mt-[11px] lg:mt-[6px] text-base font-semibold lg:text-lg lg:font-medium'>
               Total count: 12374893
             </p>
