@@ -33,6 +33,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
       } catch {}
     })()
   }, [])
+
   return (
     <html lang='en' suppressHydrationWarning>
       <head />

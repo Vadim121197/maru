@@ -43,7 +43,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
     <section className='container grid items-center md:pt-[84px]'>
       <div className='flex flex-col md:gap-6'>
         <div className='flex items-center justify-between'>
-          <p className='text-2xl font-bold'>{project.name}</p>
+          <p className='text-2xl font-bold'>{project.repo_url}</p>
           <div className='flex gap-[22px]'>
             <Dialog>
               <DialogTrigger
@@ -77,9 +77,11 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
                 </div>
               </DialogContent>
             </Dialog>
-            <Link href={Nav.PROJECT_CREATE} className={cn('md:w-[196px] gap-[10px]', buttonVariants())}>
-              <PlusIcon className='h-4 w-4 text-white' />
-              <span>Add Calculations</span>
+            <Link
+              href={`/projects/${params.id}/calculations`}
+              className={cn('md:w-[196px] gap-[10px]', buttonVariants())}
+            >
+              Start Proving
             </Link>
           </div>
         </div>

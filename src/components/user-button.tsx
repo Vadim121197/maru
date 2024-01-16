@@ -1,25 +1,20 @@
 'use client'
 
 import { UserRound } from 'lucide-react'
-import { cn } from '~/lib/utils'
 import { useStore } from '~/state'
 import { authSelector } from '~/state/auth'
 import { siteConfig } from '~/config/site'
 import Link from 'next/link'
-import { Button, buttonVariants } from './ui/button'
+import { Button } from './ui/button'
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet'
+import { SigninButton } from './signin-button'
 
 export const UserButton = () => {
   const { isAuthenticated, user, logout } = useStore(authSelector)
 
   return (
-    <div>
-      <a
-        href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}`}
-        className={cn('w-[196px]', buttonVariants(), !isAuthenticated ? 'hidden lg:inline-flex' : 'hidden')}
-      >
-        Sign In
-      </a>
+    <>
+      <SigninButton className={!isAuthenticated ? 'hidden lg:inline-flex' : 'hidden'} />
       <Sheet>
         <SheetTrigger>
           <div className={isAuthenticated ? 'hidden lg:block' : 'hidden'}>
@@ -44,12 +39,7 @@ export const UserButton = () => {
                   Sign out
                 </Button>
               ) : (
-                <a
-                  href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}`}
-                  className={cn('w-full', buttonVariants())}
-                >
-                  Sign In
-                </a>
+                <SigninButton className='w-full' />
               )}
             </div>
 
@@ -82,6 +72,6 @@ export const UserButton = () => {
           </div>
         </SheetContent>
       </Sheet>
-    </div>
+    </>
   )
 }

@@ -16,7 +16,7 @@ export const ProjectCard = ({ href, project, className }: { href: string; projec
     </div>
     <div className='flex flex-col gap-1'>
       <div className='flex items-center justify-between'>
-        <p className='text-base font-semibold lg:text-lg lg:font-medium'>{project.name}</p>
+        <p className='text-base font-semibold lg:text-lg lg:font-medium'>{project.repo_url}</p>
         {project.tags.map((tag) => (
           <div
             key={tag.id}

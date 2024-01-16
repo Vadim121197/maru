@@ -1,4 +1,5 @@
-import axiosInterceptorInstance, { AxiosRoutes } from '~/lib/axios-interceptor-instance'
+import axios from 'axios'
+import axiosInterceptorInstance, { AxiosRoutes, BASE_URL } from '~/lib/axios-interceptor-instance'
 import type { Auth, User } from '~/types/auth'
 import type { AllSlices, SliceCreator } from '.'
 
@@ -11,7 +12,7 @@ export interface AuthSlice {
   logout: () => void
 }
 
-export const createAuthSlice = (): SliceCreator<AuthSlice> => (set) => {
+export const createAuthSlice = (): SliceCreator<AuthSlice> => (set, get) => {
   return {
     isAuthenticated: false,
     user: null,
@@ -53,7 +54,7 @@ export const createAuthSlice = (): SliceCreator<AuthSlice> => (set) => {
     refreshToken: async () => {
       try {
         const refreshToken = localStorage.getItem('refresh_token')
-        const { data: auth } = await axiosInterceptorInstance.post<Auth>(AxiosRoutes.AUTH_REFRESH, {
+        const { data: auth } = await axios.post<Auth>(`${BASE_URL}${AxiosRoutes.AUTH_REFRESH}`, {
           refresh_token: refreshToken,
         })
         localStorage.setItem('access_token', auth.access_token)
@@ -66,10 +67,7 @@ export const createAuthSlice = (): SliceCreator<AuthSlice> => (set) => {
 
         return Promise.resolve()
       } catch (error) {
-        set((state) => {
-          state.auth.isAuthenticated = false
-          state.auth.user = null
-        })
+        get().auth.logout()
 
         return Promise.reject(error)
       }
@@ -78,6 +76,7 @@ export const createAuthSlice = (): SliceCreator<AuthSlice> => (set) => {
       set((state) => {
         state.auth.isAuthenticated = false
         state.auth.user = null
+        state.projects.userProjects = []
       })
       localStorage.removeItem('access_token')
       localStorage.removeItem('refresh_token')

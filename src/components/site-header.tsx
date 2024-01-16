@@ -10,22 +10,20 @@ export const SiteHeader = () => (
       <div className='flex h-[72px] items-center space-x-4 pl-[14px] pr-5 lg:container sm:justify-between sm:space-x-0 lg:h-[86px]'>
         <MainNav />
         <div className='flex flex-1 items-center justify-end space-x-4'>
-          <nav className='flex items-center gap-6'>
+          <div className='flex items-center baseline gap-6'>
             {/* <ThemeToggle /> */}
-            {siteConfig.mainNav.length ? (
-              <nav className='hidden gap-6 lg:flex'>
-                {siteConfig.mainNav.map(
-                  (item) =>
-                    item.href && (
-                      <Link key={item.href} href={item.href} className='flex items-center text-base font-semibold'>
-                        {item.title}
-                      </Link>
-                    ),
-                )}
-              </nav>
-            ) : null}
+            <nav className='hidden gap-6 lg:flex'>
+              {siteConfig.mainNav.map(
+                (item) =>
+                  item.href && (
+                    <Link key={item.href} href={item.href} className='flex text-base font-semibold'>
+                      {item.title}
+                    </Link>
+                  ),
+              )}
+            </nav>
             <UserButton />
-          </nav>
+          </div>
         </div>
       </div>
     </div>

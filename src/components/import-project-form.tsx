@@ -1,33 +1,31 @@
+'use client'
+
+import { useEffect } from 'react'
 import { Lock, Unlock } from 'lucide-react'
-import axiosInterceptorInstance, { AxiosRoutes } from '~/lib/axios-interceptor-instance'
+import { authSelector } from '~/state/auth'
+import { useStore } from '~/state'
+import { projectsSelector } from '~/state/projects'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Input } from './ui/input'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Label } from './ui/label'
 import { Button } from './ui/button'
 
-const importProject = async (formData: FormData) => {
-  try {
-    await axiosInterceptorInstance.post(AxiosRoutes.PROJECTS, {
-      name: formData.get('name'),
-      repo_url: formData.get('repo_url'),
-      is_private: formData.get('is_private') === 'private',
-    })
-  } catch (error) {
-    /* empty */
-  }
-}
-
 export const ImportProjectForm = () => {
-  async function create(formData: FormData) {
-    'use server'
+  const { user, isAuthenticated } = useStore(authSelector)
+  const { userProjects, getUserProjects } = useStore(projectsSelector)
 
-    await importProject(formData)
-  }
+  useEffect(() => {
+    if (!isAuthenticated) return
+
+    void (async () => {
+      await getUserProjects()
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated])
 
   return (
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <form className='flex w-full flex-col gap-6 bg-card p-6' action={create}>
+    <form className='flex w-full flex-col gap-6 bg-card p-6'>
       <div className='flex flex-col gap-[10px]'>
         <p className='text-base font-medium'>Project</p>
         <Select defaultValue='light'>
@@ -35,12 +33,14 @@ export const ImportProjectForm = () => {
             <SelectValue placeholder='Owner' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value='light'>
-              <div className='flex items-center gap-3'>
-                <div className='h-6 w-6 rounded-full bg-[#6D23F8]' />
-                <span>test_1</span>
-              </div>
-            </SelectItem>
+            {userProjects.map((pr) => (
+              <SelectItem value={pr.id.toString()} key={pr.id}>
+                <div className='flex items-center gap-3'>
+                  <div className='h-6 w-6 rounded-full bg-[#6D23F8]' />
+                  <span>{pr.name}</span>
+                </div>
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -55,19 +55,7 @@ export const ImportProjectForm = () => {
               <SelectItem value='light'>
                 <div className='flex items-center gap-3'>
                   <div className='h-6 w-6 rounded-full bg-[#6D23F8]' />
-                  <span>@uzerprofile234</span>
-                </div>
-              </SelectItem>
-              <SelectItem value='dark'>
-                <div className='flex items-center gap-3'>
-                  <div className='h-6 w-6 rounded-full bg-[#6D23F8]' />
-                  <span>@uzerprofile234</span>
-                </div>
-              </SelectItem>
-              <SelectItem value='system'>
-                <div className='flex items-center gap-3'>
-                  <div className='h-6 w-6 rounded-full bg-[#6D23F8]' />
-                  <span>@uzerprofile234</span>
+                  <span>{user?.username}</span>
                 </div>
               </SelectItem>
             </SelectContent>
@@ -78,14 +66,8 @@ export const ImportProjectForm = () => {
           <Input name='repo_url' />
         </div>
       </div>
-      <div className='flex flex-col gap-[10px]'>
-        <p className='text-base font-medium'>Project Name</p>
-        <Input name='name' />
-      </div>
-      <div className='flex flex-col gap-[10px]'>
-        <p className='text-base font-medium'>Description</p>
-        <Input />
-      </div>
+      
+      
       <div className='mt-4 flex flex-col gap-4'>
         <p className='text-base font-medium'>Visibility</p>
         <RadioGroup defaultValue='public' name='is_private'>

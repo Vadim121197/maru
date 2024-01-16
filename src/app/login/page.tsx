@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 import { Button } from '~/components/ui/button'
 import { cn } from '~/lib/utils'
 import { useStore } from '~/state'
@@ -11,20 +12,26 @@ const LoginPage = () => {
   const searchParams = useSearchParams()
   const { login } = useStore(authSelector)
 
+  useEffect(() => {
+    if (searchParams.get('installation_id') && searchParams.get('setup_action')) {
+      router.push('/')
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
+
   const signIn = () => {
     const code = searchParams.get('code')
+
     if (!code) return
-    console.log(searchParams)
 
     void (async () => {
       try {
         await login(code)
-        console.log('there')
-
         router.push('/')
       } catch (error) {}
     })()
   }
+
   return (
     <section className='mt-[100px] flex flex-col items-center justify-center px-7 lg:container lg:mt-[150px]'>
       <p className='mb-2 text-center text-xl font-medium lg:mb-4 lg:text-2xl lg:font-bold'>Sign in</p>

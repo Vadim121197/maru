@@ -14,7 +14,7 @@ import type { Project } from '~/types/project'
 
 const resources = [
   {
-    title: 'MarU STARKs',
+    title: 'Maru starks',
   },
   {
     title: 'Extract Map Reduce explained',
@@ -42,8 +42,11 @@ const AuthSidebar = () => (
         </Link>
       ))}
     </div>
-    <Link href={Nav.PROJECT_CREATE} className={cn('md:w-full gap-[10px] mt-6 lg:mt-0', buttonVariants())}>
-      <PlusIcon className='h-4 w-4 text-white' />
+    <Link
+      href={Nav.PROJECT_CREATE}
+      className={cn('w-full gap-[10px] mt-6 lg:mt-0 lg:w-[196px] text-primary', buttonVariants())}
+    >
+      <PlusIcon className='h-4 w-4 ' />
       <span>New Project</span>
     </Link>
   </div>
@@ -54,9 +57,10 @@ const IndexPage = () => {
   const projects = [] as Project[]
 
   return (
-    <section className='grid items-center px-7 pt-10 lg:container lg:pt-[60px]'>
-      <div className='grid grid-cols-1 gap-[100px] lg:grid-cols-6 lg:gap-6'>
-        <div className='order-2 flex flex-col gap-10 lg:order-1 lg:col-span-1'>
+    <section className='grid items-center px-7 pt-10 lg:pt-[60px]'>
+      {/* <div className='grid grid-cols-1 gap-[100px] lg:grid-cols-4 lg:gap-6'> */}
+      <div className='flex flex-col justify-between lg:flex-row  gap-[100px] lg:gap-6'>
+        <div className='order-2 flex flex-col gap-10 lg:order-1 lg:w-[20%]'>
           {isAuthenticated && (
             <div className='hidden w-full lg:block'>
               <AuthSidebar />
@@ -66,13 +70,15 @@ const IndexPage = () => {
             <p className='mb-[14px] text-base font-semibold lg:text-lg lg:font-medium'>Resources</p>
             {resources.map((r) => (
               <div key={r.title} className='flex w-full items-center gap-[10px] p-4 text-muted-foreground'>
-                <Link2 className='h-6 w-6 rotate-[-45deg]' strokeWidth={1} />
+                <div>
+                  <Link2 className='h-6 w-6 rotate-[-45deg]' strokeWidth={1} />
+                </div>
                 <p className='text-sm font-bold lg:text-base lg:font-semibold'>{r.title}</p>
               </div>
             ))}
           </div>
         </div>
-        <div className='order-1 flex flex-col items-center lg:order-2 lg:col-span-3 lg:items-end lg:gap-6'>
+        <div className='order-1 flex flex-col items-center lg:order-2 lg:w-[60%] lg:items-end lg:gap-6'>
           <div className='order-1 flex w-full flex-col items-center justify-between gap-6 bg-card p-4 lg:flex-row lg:gap-1 lg:px-5 lg:py-[18px]'>
             <p className='text-center text-base font-semibold lg:text-lg lg:font-medium'>
               Welcome! Get started by creating your first project.
@@ -80,16 +86,15 @@ const IndexPage = () => {
             <Link
               href={Nav.PROJECT_CREATE}
               className={cn(
-                'gap-4',
-                buttonVariants({
-                  variant: 'ghost',
-                  size: 'icon',
-                }),
+                'gap-4 w-[196px]',
+                buttonVariants(),
               )}
             >
-              <p className='text-sm font-bold text-muted-foreground lg:text-base lg:font-semibold'>New Project</p>
+              <p className='text-sm font-bold lg:text-base lg:font-semibold'>
+                New Project
+              </p>
               <div>
-                <MoveRight className='h-6 w-6 text-muted-foreground' />
+                <MoveRight className='h-6 w-6' />
               </div>
             </Link>
           </div>
@@ -134,7 +139,7 @@ const IndexPage = () => {
             <></>
           )}
         </div>
-        <div className='order-3 flex flex-col gap-5 lg:col-span-2'>
+        <div className='order-3 flex flex-col gap-5 lg:w-[20%]'>
           <div className='flex items-center gap-3'>
             <div>
               <TrendingUp strokeWidth={1} className='h-6 w-6 text-primary' />
@@ -182,7 +187,9 @@ const IndexPage = () => {
                 </linearGradient>
               </defs>
             </svg>
-            <p className='mt-[11px] text-lg font-semibold lg:mt-[6px] lg:text-xl'>12374893</p>
+            <p className='mt-[11px] lg:mt-[6px] text-base font-semibold lg:text-lg lg:font-medium'>
+              Total count: 12374893
+            </p>
           </div>
         </div>
       </div>

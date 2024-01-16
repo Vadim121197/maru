@@ -7,18 +7,22 @@ import { ProjectCard } from '~/components/project-card'
 import { buttonVariants } from '~/components/ui/button'
 import { cn } from '~/lib/utils'
 import { useStore } from '~/state'
+import { authSelector } from '~/state/auth'
 import { projectsSelector } from '~/state/projects'
 import { Nav } from '~/types/nav'
 
 const ProjectsPage = () => {
   const { userProjects, getUserProjects } = useStore(projectsSelector)
+  const { isAuthenticated } = useStore(authSelector)
 
   useEffect(() => {
+    if (!isAuthenticated) return
+
     void (async () => {
       await getUserProjects()
     })()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated])
 
   return (
     <section className='container grid items-center md:pt-[84px]'>

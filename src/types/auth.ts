@@ -10,4 +10,7 @@ export interface User {
   created_at: Date
   id: number
   username: string
+  installation_id: null | number
 }
+
+//https://github.com/apps/maru-lake-app/installations/select_target
