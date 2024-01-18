@@ -12,3 +12,14 @@ services:
     restart: always
     ports:
       - 9022:3000
+  maru_lake_dev:
+    container_name: maru_lake_dev
+    image: maru_lake_dev:latest
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        NODE: development
+    restart: always
+    ports:
+      - 9122:3000
