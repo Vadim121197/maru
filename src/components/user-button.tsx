@@ -39,16 +39,13 @@ export const UserButton = () => {
                 <Button
                   className='w-full'
                   onClick={() => {
-                    void (async () => {
-                      await signOut()
-                    })()
+                    void signOut()
                   }}
                 >
                   Sign out
                 </Button>
               )}
             </div>
-
             <nav className='mb-6 flex flex-col gap-4 border-b-[1px] border-border pb-6'>
               {siteConfig.mainNav.map(
                 (item) =>
