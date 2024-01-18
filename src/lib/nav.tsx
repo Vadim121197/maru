@@ -6,11 +6,13 @@ export const mainNav: NavItem[] = [
     title: 'Discover',
     href: '/',
     icon: <LayoutGrid strokeWidth={1} className='h-6 w-6' />,
+    protected: false,
   },
   {
     title: 'My Projects',
     href: '/projects',
     icon: <AlignLeft strokeWidth={1} className='h-6 w-6' />,
+    protected: true,
   },
 ]
 

@@ -11,7 +11,12 @@ export interface Project {
   created_at: Date
   updated_at: Date
   id: number
+  is_demo: boolean
   stars_count: number
-  user_id: number
+  user: {
+    id: number
+    avatar_url: string
+    username: string
+  }
   tags: Tag[]
 }

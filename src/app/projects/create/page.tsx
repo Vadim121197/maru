@@ -7,7 +7,7 @@ import { Nav } from '~/types/nav'
 const ProjectNewPage = () => {
   return (
     <section className='container grid w-[628px] items-center gap-6 md:pt-[70px]'>
-      <BackButton to={Nav.PROJECTS} />
+      <BackButton to={Nav.HOME} />
       <div className='mt-[26px] flex flex-col items-center gap-4'>
         <p className='text-2xl font-bold'>Create Project</p>
         <p className='text-lg font-medium text-muted-foreground'>

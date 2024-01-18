@@ -3,13 +3,14 @@ import Link from 'next/link'
 import moment from 'moment'
 import { cn } from '~/lib/utils'
 import type { Project } from '~/types/project'
+import Image from 'next/image'
 
 export const ProjectCard = ({ href, project, className }: { href: string; project: Project; className?: string }) => (
   <Link href={href} className={cn('flex flex-col bg-card p-4 lg:p-6 gap-11 lg:gap-5', className)}>
     <div className='flex items-center justify-between'>
       <div className='flex items-center gap-3'>
-        <div className='h-6 w-6 rounded-full bg-primary' />
-        <p className='text-sm font-medium lg:text-base'>{project.user_id}</p>
+        <Image src={project.user.avatar_url} width={24} height={24} className='rounded-full' alt='avatar' />
+        <p className='text-sm font-medium lg:text-base'>{project.user.username}</p>
       </div>
       <div className='flex items-center gap-2'>
         <StarIcon stroke='#FFE600' fill='#FFE600' className='h-6 w-6' />

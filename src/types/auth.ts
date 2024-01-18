@@ -14,5 +14,3 @@ export interface User {
   installation_id: null | number
   avatar_url: null | string
 }
-
-//https://github.com/apps/maru-lake-app/installations/select_target
