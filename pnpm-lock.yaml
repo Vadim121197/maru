@@ -24,11 +24,11 @@ dependencies:
     specifier: ^1.0.4
     version: registry.npmmirror.com/@radix-ui/react-tabs@1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.23)(react-dom@18.2.0)(react@18.2.0)
   axios:
-    specifier: ^1.6.4
-    version: registry.npmmirror.com/axios@1.6.4
+    specifier: ^1.6.5
+    version: registry.npmmirror.com/axios@1.6.5
   axios-auth-refresh:
     specifier: ^3.3.6
-    version: registry.npmmirror.com/axios-auth-refresh@3.3.6(axios@1.6.4)
+    version: registry.npmmirror.com/axios-auth-refresh@3.3.6(axios@1.6.5)
   class-variance-authority:
     specifier: ^0.7.0
     version: registry.npmmirror.com/class-variance-authority@0.7.0
@@ -1934,7 +1934,7 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  registry.npmmirror.com/axios-auth-refresh@3.3.6(axios@1.6.4):
+  registry.npmmirror.com/axios-auth-refresh@3.3.6(axios@1.6.5):
     resolution: {integrity: sha512-2CeBUce/SxIfFxow5/n8vApJ97yYF6qoV4gh1UrswT7aEOnlOdBLxxyhOI4IaxGs6BY0l8YujU2jlc4aCmK17Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/axios-auth-refresh/-/axios-auth-refresh-3.3.6.tgz}
     id: registry.npmmirror.com/axios-auth-refresh/3.3.6
     name: axios-auth-refresh
@@ -1942,13 +1942,13 @@ packages:
     peerDependencies:
       axios: '>= 0.18 < 0.19.0 || >= 0.19.1'
     dependencies:
-      axios: registry.npmmirror.com/axios@1.6.4
+      axios: registry.npmmirror.com/axios@1.6.5
     dev: false
 
-  registry.npmmirror.com/axios@1.6.4:
-    resolution: {integrity: sha512-heJnIs6N4aa1eSthhN9M5ioILu8Wi8vmQW9iHQ9NUvfkJb0lEEDUiIdQNAuBtfUt3FxReaKdpQA5DbmMOqzF/A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/axios/-/axios-1.6.4.tgz}
+  registry.npmmirror.com/axios@1.6.5:
+    resolution: {integrity: sha512-Ii012v05KEVuUoFWmMW/UQv9aRIc3ZwkWDcM+h5Il8izZCtRVpDUfwpoFf7eOtajT3QiGR4yDUx7lPqHJULgbg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/axios/-/axios-1.6.5.tgz}
     name: axios
-    version: 1.6.4
+    version: 1.6.5
     dependencies:
       follow-redirects: registry.npmmirror.com/follow-redirects@1.15.4
       form-data: registry.npmmirror.com/form-data@4.0.0

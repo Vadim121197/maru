@@ -1,23 +1,22 @@
 'use client'
 
-import { useState } from 'react'
 import { Lock, Unlock } from 'lucide-react'
-import { Nav } from '~/types/nav'
-import axiosInterceptorInstance, { AxiosRoutes } from '~/lib/axios-interceptor-instance'
-import { cn } from '~/lib/utils'
 import { useRouter } from 'next/navigation'
-import { useStore } from '~/state'
-import { authSelector } from '~/state/auth'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
-import { Input } from './ui/input'
-import { RadioGroup, RadioGroupItem } from './ui/radio-group'
-import { Label } from './ui/label'
-import { Button, buttonVariants } from './ui/button'
+import { useState } from 'react'
+import { AxiosRoutes, axiosInstance } from '~/lib/axios-instance'
+import { cn } from '~/lib/utils'
+import { useSession } from 'next-auth/react'
+import { Nav } from '~/types/nav'
 import { SigninButton } from './signin-button'
+import { Button, buttonVariants } from './ui/button'
+import { Input } from './ui/input'
+import { Label } from './ui/label'
+import { RadioGroup, RadioGroupItem } from './ui/radio-group'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 
 export const CreateProjectForm = () => {
   const navigate = useRouter()
-  const { user } = useStore(authSelector)
+  const { data: session } = useSession()
   const [repoName, setRepoName] = useState('')
   const [type, setType] = useState<'public' | 'private'>('public')
 
@@ -28,7 +27,7 @@ export const CreateProjectForm = () => {
         e.preventDefault()
         void (async () => {
           try {
-            await axiosInterceptorInstance.post(AxiosRoutes.PROJECTS, {
+            await axiosInstance.post(AxiosRoutes.PROJECTS, {
               repo_url: repoName,
               is_private: type === 'private',
             })
@@ -50,7 +49,7 @@ export const CreateProjectForm = () => {
               <SelectItem value='light'>
                 <div className='flex items-center gap-3'>
                   <div className='h-6 w-6 rounded-full bg-[#6D23F8]' />
-                  <span>{user?.username}</span>
+                  <span>{session?.user.username}</span>
                 </div>
               </SelectItem>
             </SelectContent>
@@ -101,9 +100,9 @@ export const CreateProjectForm = () => {
           </div>
         </RadioGroup>
       </div>
-      {!user ? (
+      {!session ? (
         <SigninButton className='mt-[34px] self-center' />
-      ) : !user.installation_id ? (
+      ) : !session.user.installation_id ? (
         <a
           href='https://github.com/apps/maru-lake-app/installations/select_target'
           className={cn('mt-[34px] w-[196px] self-center', buttonVariants())}

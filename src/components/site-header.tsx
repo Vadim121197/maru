@@ -7,6 +7,7 @@ import { UserButton } from './user-button'
 
 export const SiteHeader = async () => {
   const session = await getServerSession(authOptions)
+
   return (
     <header className='sticky top-0 z-40 w-full bg-background'>
       <div className='bg-header'>
@@ -17,7 +18,7 @@ export const SiteHeader = async () => {
               {/* <ThemeToggle /> */}
               <nav className='hidden gap-6 lg:flex'>
                 {siteConfig.mainNav.map((item) => {
-                  if (!session && item.protected) return 
+                  if (!session && item.protected) return
                   return (
                     <Link key={item.href} href={item.href} className='flex text-base font-semibold'>
                       {item.title}

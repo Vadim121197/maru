@@ -9,7 +9,7 @@ import { Label } from '~/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import { Textarea } from '~/components/ui/textarea'
-import axiosInterceptorInstance, { AxiosRoutes } from '~/lib/axios-interceptor-instance'
+import { AxiosRoutes, axiosInstance } from '~/lib/axios-instance'
 import { expressionTypeLabels, type Expressions } from '~/lib/expressions'
 import { cn } from '~/lib/utils'
 import type {
@@ -76,9 +76,7 @@ const ProjectExpressionPage = ({ params }: { params: { type: Expressions; id: st
   useEffect(() => {
     void (async () => {
       try {
-        const { data } = await axiosInterceptorInstance.get<Expression[]>(
-          `${AxiosRoutes.PROJECTS}/${params.id}/expressions`,
-        )
+        const { data } = await axiosInstance.get<Expression[]>(`${AxiosRoutes.PROJECTS}/${params.id}/expressions`)
         setExpressions(data)
       } catch (error) {
         /* empty */
@@ -96,9 +94,7 @@ const ProjectExpressionPage = ({ params }: { params: { type: Expressions; id: st
 
     void (async () => {
       try {
-        const { data } = await axiosInterceptorInstance.get<ExpressionTools>(
-          `${AxiosRoutes.EXPRESSIONS}/${contractAddress}/tools`,
-        )
+        const { data } = await axiosInstance.get<ExpressionTools>(`${AxiosRoutes.EXPRESSIONS}/${contractAddress}/tools`)
         setTools(data)
         setSelectedEvent(data.events[0])
       } catch (error) {
@@ -112,7 +108,7 @@ const ProjectExpressionPage = ({ params }: { params: { type: Expressions; id: st
 
     void (async () => {
       try {
-        const { data: expressionData } = await axiosInterceptorInstance.post<Expression>(AxiosRoutes.EXPRESSIONS, {
+        const { data: expressionData } = await axiosInstance.post<Expression>(AxiosRoutes.EXPRESSIONS, {
           raw_data: expression,
           name: expressionName,
           project_id: params.id,
@@ -120,7 +116,7 @@ const ProjectExpressionPage = ({ params }: { params: { type: Expressions; id: st
           event: `${selectedEvent.name}(${selectedEvent.params.map((i) => i.arg_type).join(',')})`,
         })
 
-        const { data: expressionPrevData } = await axiosInterceptorInstance.post<string>(
+        const { data: expressionPrevData } = await axiosInstance.post<string>(
           `${AxiosRoutes.EXPRESSIONS}/${expressionData.id}/preview`,
         )
         setRes(expressionPrevData)

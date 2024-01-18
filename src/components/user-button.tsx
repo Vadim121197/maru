@@ -36,12 +36,10 @@ export const UserButton = () => {
               {!session ? (
                 <SigninButton className='w-full' />
               ) : (
-                <Button
-                  className='w-full'
-                  onClick={() => {
-                    void signOut()
-                  }}
-                >
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                <Button className='w-full' onClick={signOut}>
                   Sign out
                 </Button>
               )}

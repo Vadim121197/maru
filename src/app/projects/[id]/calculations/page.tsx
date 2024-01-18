@@ -6,7 +6,7 @@ import { OneTimeCalculation } from '~/components/one-time-calculation'
 import { Label } from '~/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
-import axiosInterceptorInstance, { AxiosRoutes } from '~/lib/axios-interceptor-instance'
+import { AxiosRoutes, axiosInstance } from '~/lib/axios-instance'
 import { cn } from '~/lib/utils'
 import type { Expression } from '~/types/expressions'
 import { Nav } from '~/types/nav'
@@ -19,9 +19,7 @@ const ProjectCalculationsPage = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     void (async () => {
       try {
-        const { data } = await axiosInterceptorInstance.get<Expression[]>(
-          `${AxiosRoutes.PROJECTS}/${params.id}/expressions`,
-        )
+        const { data } = await axiosInstance.get<Expression[]>(`${AxiosRoutes.PROJECTS}/${params.id}/expressions`)
 
         setExpressions(data)
         setSelectedExpression(data[0]?.id ? data[0]?.id.toString() : undefined)

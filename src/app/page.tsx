@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { Link2, MoveRight, PlusIcon, TrendingUp } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import Link from 'next/link'
@@ -7,7 +6,7 @@ import { ProjectCard } from '~/components/project-card'
 import { buttonVariants } from '~/components/ui/button'
 import { UserCard } from '~/components/user-card'
 import { siteConfig } from '~/config/site'
-import { AxiosRoutes, BASE_URL } from '~/lib/axios-interceptor-instance'
+import { AxiosRoutes, axiosInstance } from '~/lib/axios-instance'
 import { cn } from '~/lib/utils'
 import { Nav } from '~/types/nav'
 import type { Project } from '~/types/project'
@@ -55,7 +54,12 @@ const AuthSidebar = () => (
 const IndexPage = async () => {
   const session = await getServerSession(authOptions)
 
-  const { data: projects } = await axios.get<Project[]>(`${BASE_URL}${AxiosRoutes.PROJECTS}`)
+  let projects: Project[] = []
+  try {
+    const { data } = await axiosInstance.get<Project[]>(AxiosRoutes.PROJECTS)
+
+    projects = data
+  } catch (error) {}
 
   return (
     <section className='grid items-center px-7 pt-10 lg:pt-[60px]'>

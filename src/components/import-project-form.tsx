@@ -1,10 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
 import { Lock, Unlock } from 'lucide-react'
-import { authSelector } from '~/state/auth'
-import { useStore } from '~/state'
-import { projectsSelector } from '~/state/projects'
+import { useSession } from 'next-auth/react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Input } from './ui/input'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
@@ -12,17 +9,7 @@ import { Label } from './ui/label'
 import { Button } from './ui/button'
 
 export const ImportProjectForm = () => {
-  const { user, isAuthenticated } = useStore(authSelector)
-  const { userProjects, getUserProjects } = useStore(projectsSelector)
-
-  useEffect(() => {
-    if (!isAuthenticated) return
-
-    void (async () => {
-      await getUserProjects()
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated])
+  const { data: session } = useSession()
 
   return (
     <form className='flex w-full flex-col gap-6 bg-card p-6'>
@@ -33,14 +20,14 @@ export const ImportProjectForm = () => {
             <SelectValue placeholder='Owner' />
           </SelectTrigger>
           <SelectContent>
-            {userProjects.map((pr) => (
+            {/* {userProjects.map((pr) => (
               <SelectItem value={pr.id.toString()} key={pr.id}>
                 <div className='flex items-center gap-3'>
                   <div className='h-6 w-6 rounded-full bg-[#6D23F8]' />
                   <span>{pr.name}</span>
                 </div>
               </SelectItem>
-            ))}
+            ))} */}
           </SelectContent>
         </Select>
       </div>
@@ -55,7 +42,7 @@ export const ImportProjectForm = () => {
               <SelectItem value='light'>
                 <div className='flex items-center gap-3'>
                   <div className='h-6 w-6 rounded-full bg-[#6D23F8]' />
-                  <span>{user?.username}</span>
+                  <span>{session?.user.username}</span>
                 </div>
               </SelectItem>
             </SelectContent>

@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { MoveRight, PlusIcon } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import Image from 'next/image'
@@ -7,7 +6,7 @@ import { authOptions } from '~/auth'
 import { buttonVariants } from '~/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
-import { AxiosRoutes, BASE_URL } from '~/lib/axios-interceptor-instance'
+import { AxiosRoutes, axiosInstance } from '~/lib/axios-instance'
 import { expressionTypeLabels, expressionTypes } from '~/lib/expressions'
 import { cn } from '~/lib/utils'
 import type { Expression } from '~/types/expressions'
@@ -18,10 +17,10 @@ const ProjectPage = async ({ params }: { params: { id: string } }) => {
   try {
     const session = await getServerSession(authOptions)
 
-    const { data: project } = await axios.get<Project>(`${BASE_URL}${AxiosRoutes.PROJECTS}/${params.id}`)
+    const { data: project } = await axiosInstance.get<Project>(`${AxiosRoutes.PROJECTS}/${params.id}`)
 
-    const { data: projectExpressions } = await axios.get<Expression[]>(
-      `${BASE_URL}${AxiosRoutes.PROJECTS}/${params.id}/expressions`,
+    const { data: projectExpressions } = await axiosInstance.get<Expression[]>(
+      `${AxiosRoutes.PROJECTS}/${params.id}/expressions`,
     )
 
     return (
@@ -115,9 +114,7 @@ const ProjectPage = async ({ params }: { params: { id: string } }) => {
         </div>
       </section>
     )
-  } catch (error) {
-    console.log(error)
-  }
+  } catch (error) {}
 }
 
 export default ProjectPage

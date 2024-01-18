@@ -1,33 +1,9 @@
 import axios from 'axios'
-import moment from 'moment'
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import type { AuthOptions, Session, User } from 'next-auth'
 import type { Auth, User as CustomUser } from '~/types/auth'
 import type { JWT } from 'next-auth/jwt'
-
-const refreshTokenApiCall = async (token: JWT) => {
-  try {
-    const url = process.env.NEXT_PUBLIC_API_URL + '/auth/refresh'
-
-    const { data } = await axios.post<Auth>(url, {
-      refresh_token: token.refreshToken,
-    })
-
-    return {
-      ...token,
-      error: null,
-      accessToken: data.access_token,
-      refreshToken: data.refresh_token,
-      expiresIn: moment().unix() + moment.utc(data.expire_at).local().unix() * 1000 - 2000,
-    }
-  } catch (error) {
-    return {
-      ...token,
-      error: 'RefreshAccessTokenError',
-    }
-  }
-}
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -63,6 +39,8 @@ export const authOptions: AuthOptions = {
     async session({ session, token }: { session: Session; token: JWT }) {
       session.accessToken = token.accessToken
       session.error = token.error
+      session.refreshToken = token.refreshToken
+
       if (session.accessToken) {
         try {
           const url = process.env.NEXT_PUBLIC_API_URL + '/users/me'
@@ -75,26 +53,38 @@ export const authOptions: AuthOptions = {
 
           session.user = data
           return session
-        } catch {
+        } catch (error) {
           return session
         }
       }
     },
-    async jwt({ token, user }: { token: JWT; user: User | null }) {
-      const now = moment().unix()
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    jwt({
+      token,
+      user,
+      trigger,
+      session,
+    }: {
+      token: JWT
+      user: User | null
+      trigger: string
+      session: Session | null
+    }) {
+      if (trigger === 'update' && session?.accessToken && session.refreshToken) {
+        return {
+          ...token,
+          refreshToken: session.refreshToken,
+          accessToken: session.accessToken,
+        }
+      }
 
       if (user) {
         token.refreshToken = user.refresh_token
         token.accessToken = user.access_token
-
-        token.expiresIn = now + moment.utc(user.expire_at).local().unix() * 1000 - 2000
       }
 
-      if (now < token.expiresIn) {
-        return token
-      }
-
-      return await refreshTokenApiCall(token)
+      return token
     },
   },
 }
