@@ -6,8 +6,6 @@ import type { AuthOptions, Session, User } from 'next-auth'
 import type { Auth, User as CustomUser } from '~/types/auth'
 import type { JWT } from 'next-auth/jwt'
 
-
-
 const refreshTokenApiCall = async (token: JWT) => {
   try {
     const url = process.env.NEXT_PUBLIC_API_URL + '/auth/refresh'

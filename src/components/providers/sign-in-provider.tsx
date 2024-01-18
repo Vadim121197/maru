@@ -19,7 +19,7 @@ export const SignInProvider = ({ children }: { children: ReactNode }) => {
         callbackUrl: pathname,
       })
     })()
-  }, [searchParams])
+  }, [searchParams, pathname])
 
   return <>{children}</>
 }

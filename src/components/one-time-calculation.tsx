@@ -2,7 +2,7 @@ import { Input } from './ui/input'
 
 export const OneTimeCalculation = () => {
   return (
-    <form className='flex flex-col gap-[60px] items-center'>
+    <form className='flex flex-col items-center gap-[60px]'>
       <div className='grid grid-cols-2 gap-10'>
         <div className='flex flex-col gap-4'>
           <p className='text-base font-medium'>From</p>

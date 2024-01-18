@@ -102,7 +102,7 @@ export const CreateProjectForm = () => {
         </RadioGroup>
       </div>
       {!user ? (
-        <SigninButton className='self-center mt-[34px]' />
+        <SigninButton className='mt-[34px] self-center' />
       ) : !user.installation_id ? (
         <a
           href='https://github.com/apps/maru-lake-app/installations/select_target'
