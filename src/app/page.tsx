@@ -1,17 +1,14 @@
-'use client'
-
+import axios from 'axios'
 import { Link2, MoveRight, PlusIcon, TrendingUp } from 'lucide-react'
-import { signIn, useSession } from 'next-auth/react'
+import { getServerSession } from 'next-auth'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { authOptions } from '~/auth'
 import { ProjectCard } from '~/components/project-card'
 import { buttonVariants } from '~/components/ui/button'
 import { UserCard } from '~/components/user-card'
 import { siteConfig } from '~/config/site'
+import { AxiosRoutes, BASE_URL } from '~/lib/axios-interceptor-instance'
 import { cn } from '~/lib/utils'
-import { useStore } from '~/state'
-import { authSelector } from '~/state/auth'
 import { Nav } from '~/types/nav'
 import type { Project } from '~/types/project'
 
@@ -55,20 +52,16 @@ const AuthSidebar = () => (
   </div>
 )
 
-const IndexPage = () => {
-  const { isAuthenticated, login } = useStore(authSelector)
-  const { data: session, status } = useSession()
+const IndexPage = async () => {
+  const session = await getServerSession(authOptions)
 
-
-
-  const projects = [] as Project[]
+  const { data: projects } = await axios.get<Project[]>(`${BASE_URL}${AxiosRoutes.PROJECTS}`)
 
   return (
     <section className='grid items-center px-7 pt-10 lg:pt-[60px]'>
-      {/* <div className='grid grid-cols-1 gap-[100px] lg:grid-cols-4 lg:gap-6'> */}
       <div className='flex flex-col justify-between lg:flex-row  gap-[100px] lg:gap-6'>
         <div className='order-2 flex flex-col gap-10 lg:order-1 lg:w-[20%]'>
-          {isAuthenticated && (
+          {session && (
             <div className='hidden w-full lg:block'>
               <AuthSidebar />
             </div>
@@ -97,7 +90,7 @@ const IndexPage = () => {
               </div>
             </Link>
           </div>
-          {isAuthenticated && (
+          {session && (
             <div className='order-2 mt-10 block w-full lg:mt-0 lg:hidden'>
               <AuthSidebar />
             </div>

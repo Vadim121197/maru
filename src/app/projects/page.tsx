@@ -14,8 +14,6 @@ const ProjectsPage = async () => {
   try {
     const session = await getServerSession(authOptions)
 
-    console.log(session)
-
     let projects: Project[] = []
     if (session) {
       const { data } = await axios.get<Project[]>(`${BASE_URL}${AxiosRoutes.PROJECTS}`, {

@@ -1,14 +1,20 @@
-'use client'
+import { getServerSession } from 'next-auth'
+import Image from 'next/image'
+import { authOptions } from '~/auth'
 
-import { useStore } from '~/state'
-import { authSelector } from '~/state/auth'
+export const UserCard = async () => {
+  const session = await getServerSession(authOptions)
 
-export const UserCard = () => {
-  const { user } = useStore(authSelector)
+  if (!session) return
+
   return (
     <div className='flex items-center gap-3'>
-      <div className='h-6 w-6 rounded-full bg-primary' />
-      <p className='text-sm font-medium lg:text-base'>{user?.username}</p>
+      {session.user.avatar_url ? (
+        <Image src={session.user.avatar_url} width={24} height={24} className='rounded-full' alt='avatar' />
+      ) : (
+        <div className='h-6 w-6 rounded-full bg-primary' />
+      )}
+      <p className='text-sm font-medium lg:text-base'>{session.user.username}</p>
     </div>
   )
 }
