@@ -6,7 +6,7 @@ import type { AllSlices, SliceCreator } from '.'
 export interface AuthSlice {
   isAuthenticated: boolean
   user: null | User
-  login: (code: string) => Promise<void>
+  login: () => Promise<void>
   getUserInfo: () => Promise<void>
   refreshToken: () => Promise<void>
   logout: () => void
@@ -16,15 +16,9 @@ export const createAuthSlice = (): SliceCreator<AuthSlice> => (set, get) => {
   return {
     isAuthenticated: false,
     user: null,
-    login: async (code: string) => {
+    login: async () => {
       try {
-        const { data: auth } = await axiosInterceptorInstance.get<Auth>(`${AxiosRoutes.AUTH_CALLBACK}?code=${code}`)
-
-        localStorage.setItem('access_token', auth.access_token)
-        localStorage.setItem('refresh_token', auth.refresh_token)
-        localStorage.setItem('user_id', auth.id.toString())
-
-        const { data: user } = await axiosInterceptorInstance.get<User>(AxiosRoutes.USERS_ME)
+        const { data: user } = await axios.get<User>('/api/me')
 
         set((state) => {
           state.auth.isAuthenticated = true

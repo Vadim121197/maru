@@ -1,28 +1,43 @@
 'use client'
 
+import axios from 'axios'
 import { PlusIcon } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { ProjectCard } from '~/components/project-card'
 import { buttonVariants } from '~/components/ui/button'
+import { AxiosRoutes, BASE_URL } from '~/lib/axios-interceptor-instance'
 import { cn } from '~/lib/utils'
 import { useStore } from '~/state'
 import { authSelector } from '~/state/auth'
 import { projectsSelector } from '~/state/projects'
 import { Nav } from '~/types/nav'
+import type { Project } from '~/types/project'
 
 const ProjectsPage = () => {
   const { userProjects, getUserProjects } = useStore(projectsSelector)
   const { isAuthenticated } = useStore(authSelector)
 
+  const { data: session, status } = useSession()
+
+
   useEffect(() => {
-    if (!isAuthenticated) return
+    if (!session?.user) return
 
     void (async () => {
-      await getUserProjects()
+      try {
+        const { data: projects } = await axios.get<Project[]>(`${BASE_URL}${AxiosRoutes.PROJECTS}`, {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        })
+
+        console.log(projects)
+      } catch {}
     })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated])
+  }, [session?.user])
 
   return (
     <section className='container grid items-center md:pt-[84px]'>

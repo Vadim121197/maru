@@ -1,7 +1,7 @@
 import axios, { AxiosError, type AxiosRequestConfig } from 'axios'
 import { useStore } from '~/state'
 
-export const BASE_URL = 'https://maru.zpoken.dev/api/v1'
+export const BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 export enum AxiosRoutes {
   PROJECTS = '/projects',

@@ -1,7 +1,10 @@
 'use client'
 
 import { Link2, MoveRight, PlusIcon, TrendingUp } from 'lucide-react'
+import { signIn, useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 import { ProjectCard } from '~/components/project-card'
 import { buttonVariants } from '~/components/ui/button'
 import { UserCard } from '~/components/user-card'
@@ -53,7 +56,11 @@ const AuthSidebar = () => (
 )
 
 const IndexPage = () => {
-  const { isAuthenticated } = useStore(authSelector)
+  const { isAuthenticated, login } = useStore(authSelector)
+  const { data: session, status } = useSession()
+
+
+
   const projects = [] as Project[]
 
   return (
@@ -143,12 +150,7 @@ const IndexPage = () => {
               Proofs Generated
             </p>
             <div className='w-full'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 141 66'
-                fill='none'
-                className='w-full'
-              >
+              <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 141 66' fill='none' className='w-full'>
                 <g opacity='0.8'>
                   <path
                     opacity='0.4'

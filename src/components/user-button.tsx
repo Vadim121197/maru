@@ -1,8 +1,7 @@
 'use client'
 
 import { UserRound } from 'lucide-react'
-import { useStore } from '~/state'
-import { authSelector } from '~/state/auth'
+import { signOut, useSession } from 'next-auth/react'
 import { siteConfig } from '~/config/site'
 import Link from 'next/link'
 import { Button } from './ui/button'
@@ -10,14 +9,14 @@ import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger 
 import { SigninButton } from './signin-button'
 
 export const UserButton = () => {
-  const { isAuthenticated, user, logout } = useStore(authSelector)
+  const { data: session } = useSession()
 
   return (
     <>
-      <SigninButton className={!isAuthenticated ? 'hidden lg:inline-flex' : 'hidden'} />
+      <SigninButton className={!session ? 'hidden lg:inline-flex' : 'hidden'} />
       <Sheet>
         <SheetTrigger>
-          <div className={isAuthenticated ? 'hidden lg:block' : 'hidden'}>
+          <div className={!session ? 'hidden' : 'hidden lg:block'}>
             <UserRound strokeWidth='1' className='ml-3 h-8 w-8' />
           </div>
           <div className='block lg:hidden'>
@@ -30,16 +29,23 @@ export const UserButton = () => {
         </SheetTrigger>
         <SheetContent>
           <SheetHeader className='mb-6'>
-            <SheetTitle className='text-left text-base font-medium'>{user?.username}</SheetTitle>
+            <SheetTitle className='text-left text-base font-medium'>{session?.user.username}</SheetTitle>
           </SheetHeader>
           <div className='flex flex-col'>
             <div className='mb-6'>
-              {isAuthenticated ? (
-                <Button className='w-full' onClick={logout}>
+              {!session ? (
+                <SigninButton className='w-full' />
+              ) : (
+                <Button
+                  className='w-full'
+                  onClick={() => {
+                    void (async () => {
+                      await signOut()
+                    })()
+                  }}
+                >
                   Sign out
                 </Button>
-              ) : (
-                <SigninButton className='w-full' />
               )}
             </div>
 
