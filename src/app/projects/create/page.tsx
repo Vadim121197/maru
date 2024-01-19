@@ -10,7 +10,7 @@ const ProjectNewPage = () => {
       <div className='mt-[26px] flex flex-col items-center gap-4'>
         <p className='text-2xl font-bold'>Create Project</p>
         <p className='text-lg font-medium text-muted-foreground'>
-          To get started, try importing the example repository.
+          To get started, try create project
         </p>
       </div>
       <Tabs defaultValue='new'>
