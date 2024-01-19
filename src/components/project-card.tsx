@@ -9,7 +9,9 @@ export const ProjectCard = ({ href, project, className }: { href: string; projec
   <Link href={href} className={cn('flex flex-col bg-card p-4 lg:p-6 gap-11 lg:gap-5', className)}>
     <div className='flex items-center justify-between'>
       <div className='flex items-center gap-3'>
-        <Image src={project.user.avatar_url} width={24} height={24} className='rounded-full' alt='avatar' />
+        {project.user.avatar_url && (
+          <Image src={project.user.avatar_url} width={24} height={24} className='rounded-full' alt='avatar' />
+        )}
         <p className='text-sm font-medium lg:text-base'>{project.user.username}</p>
       </div>
       <div className='flex items-center gap-2'>

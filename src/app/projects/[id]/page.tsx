@@ -73,7 +73,9 @@ const ProjectPage = async ({ params }: { params: { id: string } }) => {
           </div>
           <div className='flex flex-col gap-6'>
             <div className='flex items-center gap-3'>
-              <Image src={project.user.avatar_url} width={24} height={24} className='rounded-full' alt='avatar' />
+              {project.user.avatar_url && (
+                <Image src={project.user.avatar_url} width={24} height={24} className='rounded-full' alt='avatar' />
+              )}
               <p className='text-sm font-medium lg:text-base'>{project.user.username}</p>
             </div>
             <div className='flex gap-[85px]'>
