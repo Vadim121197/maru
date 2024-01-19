@@ -19,7 +19,7 @@ services:
       context: ./
       dockerfile: ./Dockerfile
       args:
-        NODE: development
+        NODE: stage
     restart: always
     ports:
       - 9122:3000

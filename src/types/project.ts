@@ -4,18 +4,15 @@ export interface Tag {
 }
 
 export interface Project {
-  name: string
-  repo_url: string
-  description: string
-  is_private: boolean
+  name: string | null
   created_at: Date
   updated_at: Date
   id: number
-  is_demo: boolean
   stars_count: number
+  is_demo: boolean
   user: {
     id: number
-    avatar_url: string
+    avatar_url: string | null
     username: string
   }
   tags: Tag[]
