@@ -9,7 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { AxiosRoutes, axiosInstance } from '~/lib/axios-instance'
 import { cn } from '~/lib/utils'
 import type { Expression } from '~/types/expressions'
-import { Nav } from '~/types/nav'
 
 const ProjectCalculationsPage = ({ params }: { params: { id: string } }) => {
   const [selectedExpression, setSelectedExpression] = useState<string | undefined>()
@@ -33,7 +32,7 @@ const ProjectCalculationsPage = ({ params }: { params: { id: string } }) => {
     <section className='container grid w-[628px] items-center md:pt-[64px]'>
       <div className='flex flex-col md:gap-10 '>
         <div className='pl-[10%]'>
-          <BackButton to={`${Nav.PROJECTS}/${params.id}`} />
+          <BackButton />
         </div>
         <div className='flex flex-col items-center gap-4'>
           <p className='text-2xl font-bold'>New Calculations</p>

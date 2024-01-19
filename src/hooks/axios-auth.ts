@@ -13,7 +13,9 @@ const useAxiosAuth = () => {
   useEffect(() => {
     const requestIntercept = axiosInstance.interceptors.request.use(
       (config) => {
-        config.headers.Authorization = `Bearer ${session?.accessToken}`
+        if (!config.headers.Authorization) {
+          config.headers.Authorization = `Bearer ${session?.accessToken}`
+        }
 
         return config
       },
@@ -28,9 +30,9 @@ const useAxiosAuth = () => {
         if (error.response?.status === 401 && !prevRequest.sent) {
           prevRequest.sent = true
 
-          await refreshToken()
+          const tokens = await refreshToken()
 
-          prevRequest.headers.Authorization = `Bearer ${session?.accessToken}`
+          prevRequest.headers.Authorization = `Bearer ${tokens?.accessToken}`
 
           return axiosInstance(prevRequest)
         }

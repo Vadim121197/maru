@@ -17,6 +17,11 @@ export const useRefreshToken = () => {
         accessToken: data.access_token,
         refreshToken: data.refresh_token,
       })
+
+      return {
+        accessToken: data.access_token,
+        refreshToken: data.refresh_token,
+      }
     } catch (error) {
       await signOut()
     }

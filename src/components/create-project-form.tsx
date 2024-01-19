@@ -3,12 +3,13 @@
 import { Lock, Unlock } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { AxiosRoutes, axiosInstance } from '~/lib/axios-instance'
-import { cn } from '~/lib/utils'
+import Image from 'next/image'
+import { AxiosRoutes } from '~/lib/axios-instance'
+import useAxiosAuth from '~/hooks/axios-auth'
 import { useSession } from 'next-auth/react'
 import { Nav } from '~/types/nav'
 import { SigninButton } from './signin-button'
-import { Button, buttonVariants } from './ui/button'
+import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
@@ -16,7 +17,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 
 export const CreateProjectForm = () => {
   const navigate = useRouter()
+  const axiosAuth = useAxiosAuth()
   const { data: session } = useSession()
+
   const [repoName, setRepoName] = useState('')
   const [type, setType] = useState<'public' | 'private'>('public')
 
@@ -27,7 +30,7 @@ export const CreateProjectForm = () => {
         e.preventDefault()
         void (async () => {
           try {
-            await axiosInstance.post(AxiosRoutes.PROJECTS, {
+            await axiosAuth.post(AxiosRoutes.PROJECTS, {
               repo_url: repoName,
               is_private: type === 'private',
             })
@@ -46,12 +49,24 @@ export const CreateProjectForm = () => {
               <SelectValue placeholder='Owner' />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='light'>
-                <div className='flex items-center gap-3'>
-                  <div className='h-6 w-6 rounded-full bg-[#6D23F8]' />
-                  <span>{session?.user.username}</span>
-                </div>
-              </SelectItem>
+              {session ? (
+                <SelectItem value='light'>
+                  <div className='flex items-center gap-3'>
+                    {session.user.avatar_url && (
+                      <Image
+                        src={session.user.avatar_url}
+                        width={24}
+                        height={24}
+                        className='rounded-full'
+                        alt='avatar'
+                      />
+                    )}
+                    <span>{session.user.username}</span>
+                  </div>
+                </SelectItem>
+              ) : (
+                <SigninButton className='w-full' />
+              )}
             </SelectContent>
           </Select>
         </div>
@@ -100,20 +115,10 @@ export const CreateProjectForm = () => {
           </div>
         </RadioGroup>
       </div>
-      {!session ? (
-        <SigninButton className='mt-[34px] self-center' />
-      ) : !session.user.installation_id ? (
-        <a
-          href='https://github.com/apps/maru-lake-app/installations/select_target'
-          className={cn('mt-[34px] w-[196px] self-center', buttonVariants())}
-        >
-          Install App
-        </a>
-      ) : (
-        <Button type='submit' className='mt-[34px] w-[196px] self-center'>
-          Create
-        </Button>
-      )}
+
+      <Button type='submit' className='mt-[34px] w-[196px] self-center' disabled={!session}>
+        Create
+      </Button>
     </form>
   )
 }
