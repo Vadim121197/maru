@@ -28,7 +28,7 @@ yarn-error.log*
 .env.development
 .env.test.local
 .env.production
-.env.stage
+.env.staging
 
 # turbo
 .turbo
