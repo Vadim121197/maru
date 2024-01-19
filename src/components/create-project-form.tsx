@@ -17,7 +17,7 @@ export const CreateProjectForm = () => {
   const axiosAuth = useAxiosAuth()
   const { data: session } = useSession()
 
-  const [repoName, setRepoName] = useState('')
+  const [name, setName] = useState('')
 
   return (
     <form
@@ -27,7 +27,7 @@ export const CreateProjectForm = () => {
         void (async () => {
           try {
             await axiosAuth.post(AxiosRoutes.PROJECTS, {
-              repo_url: repoName,
+              name: name,
             })
             navigate.push(Nav.PROJECTS)
           } catch {}
@@ -64,11 +64,11 @@ export const CreateProjectForm = () => {
           </Select>
         </div>
         <div className='flex flex-col gap-[10px]'>
-          <p className='text-base font-medium'>Repository name</p>
+          <p className='text-base font-medium'>Project name</p>
           <Input
-            value={repoName}
+            value={name}
             onChange={(e) => {
-              setRepoName(e.target.value)
+              setName(e.target.value)
             }}
           />
         </div>

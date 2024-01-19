@@ -1,6 +1,6 @@
 'use client'
 
-import { CheckCircle2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { BackButton } from '~/components/back-button'
 import { Button } from '~/components/ui/button'
@@ -9,7 +9,8 @@ import { Label } from '~/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import { Textarea } from '~/components/ui/textarea'
-import { AxiosRoutes, axiosInstance } from '~/lib/axios-instance'
+import useAxiosAuth from '~/hooks/axios-auth'
+import { AxiosRoutes } from '~/lib/axios-instance'
 import { expressionTypeLabels, type Expressions } from '~/lib/expressions'
 import { cn } from '~/lib/utils'
 import type {
@@ -21,6 +22,7 @@ import type {
   ExpressionFunction,
   ExpressionTools,
 } from '~/types/expressions'
+import { Nav } from '~/types/nav'
 
 interface ExpressionHelperTable {
   key: number
@@ -34,6 +36,9 @@ interface ExpressionHelperTable {
 const defaultExpression = 'sum(e.data[1] == 1 ? e.data[2] : 0) + sum(e.data[3] == 1 ? e.data[4] : 0)'
 
 const ProjectExpressionPage = ({ params }: { params: { type: Expressions; id: string } }) => {
+  const axiosAuth = useAxiosAuth()
+  const navigate = useRouter()
+
   const [contractAddress, setContractAddress] = useState('0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7')
   const [expressionName, setExpressionName] = useState('')
   const [expression, setExpression] = useState(defaultExpression)
@@ -42,7 +47,7 @@ const ProjectExpressionPage = ({ params }: { params: { type: Expressions; id: st
   // data from API
   const [tools, setTools] = useState<ExpressionTools | null>(null)
   const [expressions, setExpressions] = useState<Expression[]>([])
-  const [res, setRes] = useState('')
+  // const [res, setRes] = useState('')
 
   const expressionHelperData = useMemo(() => {
     if (!tools || !selectedEvent) return []
@@ -75,13 +80,13 @@ const ProjectExpressionPage = ({ params }: { params: { type: Expressions; id: st
   useEffect(() => {
     void (async () => {
       try {
-        const { data } = await axiosInstance.get<Expression[]>(`${AxiosRoutes.PROJECTS}/${params.id}/expressions`)
+        const { data } = await axiosAuth.get<Expression[]>(`${AxiosRoutes.PROJECTS}/${params.id}/expressions`)
         setExpressions(data)
       } catch (error) {
         /* empty */
       }
     })()
-  }, [params.id])
+  }, [params.id, axiosAuth])
 
   useEffect(() => {
     if (!contractAddress) {
@@ -93,21 +98,21 @@ const ProjectExpressionPage = ({ params }: { params: { type: Expressions; id: st
 
     void (async () => {
       try {
-        const { data } = await axiosInstance.get<ExpressionTools>(`${AxiosRoutes.EXPRESSIONS}/${contractAddress}/tools`)
+        const { data } = await axiosAuth.get<ExpressionTools>(`${AxiosRoutes.EXPRESSIONS}/${contractAddress}/tools`)
         setTools(data)
         setSelectedEvent(data.events[0])
       } catch (error) {
         /* empty */
       }
     })()
-  }, [contractAddress])
+  }, [contractAddress, axiosAuth])
 
   const save = () => {
     if (!selectedEvent || !expression || !expressionName || !params.id || !contractAddress) return
 
     void (async () => {
       try {
-        const { data: expressionData } = await axiosInstance.post<Expression>(AxiosRoutes.EXPRESSIONS, {
+        await axiosAuth.post<Expression>(AxiosRoutes.EXPRESSIONS, {
           raw_data: expression,
           name: expressionName,
           project_id: params.id,
@@ -115,10 +120,12 @@ const ProjectExpressionPage = ({ params }: { params: { type: Expressions; id: st
           event: `${selectedEvent.name}(${selectedEvent.params.map((i) => i.arg_type).join(',')})`,
         })
 
-        const { data: expressionPrevData } = await axiosInstance.post<string>(
-          `${AxiosRoutes.EXPRESSIONS}/${expressionData.id}/preview`,
-        )
-        setRes(expressionPrevData)
+        navigate.push(`${Nav.PROJECTS}/${params.id}`)
+
+        // const { data: expressionPrevData } = await axiosAuth.post<string>(
+        //   `${AxiosRoutes.EXPRESSIONS}/${expressionData.id}/preview`,
+        // )
+        // setRes(expressionPrevData)
       } catch (error) {}
     })()
   }
@@ -238,9 +245,9 @@ const ProjectExpressionPage = ({ params }: { params: { type: Expressions; id: st
                   </Table>
                 </div>
                 <Button variant='outline' className='mb-10 mt-6 w-[50%] self-center' onClick={save}>
-                  Save and Precalculation
+                  Save
                 </Button>
-                {res && (
+                {/* {res && (
                   <div className='mb-[58px] flex flex-col gap-[14px]'>
                     <p className='text-sm font-normal'>Values</p>
                     <div className='flex items-center gap-2'>
@@ -248,7 +255,7 @@ const ProjectExpressionPage = ({ params }: { params: { type: Expressions; id: st
                       <CheckCircle2 strokeWidth={2} className='h-4 w-4 text-primary' />
                     </div>
                   </div>
-                )}
+                )} */}
               </div>
             )}
           </div>

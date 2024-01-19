@@ -9,7 +9,9 @@ export const ProjectCard = ({ href, project, className }: { href: string; projec
   <Link href={href} className={cn('flex flex-col bg-card p-4 lg:p-6 gap-11 lg:gap-5', className)}>
     <div className='flex items-center justify-between'>
       <div className='flex items-center gap-3'>
-        <Image src={project.user.avatar_url} width={24} height={24} className='rounded-full' alt='avatar' />
+        {project.user.avatar_url && (
+          <Image src={project.user.avatar_url} width={24} height={24} className='rounded-full' alt='avatar' />
+        )}
         <p className='text-sm font-medium lg:text-base'>{project.user.username}</p>
       </div>
       <div className='flex items-center gap-2'>
@@ -19,7 +21,7 @@ export const ProjectCard = ({ href, project, className }: { href: string; projec
     </div>
     <div className='flex flex-col gap-1'>
       <div className='flex items-center justify-between'>
-        <p className='text-base font-semibold lg:text-lg lg:font-medium'>{project.repo_url}</p>
+        <p className='text-base font-semibold lg:text-lg lg:font-medium'>{project.name}</p>
         {project.tags.map((tag) => (
           <div
             key={tag.id}

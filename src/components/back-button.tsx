@@ -24,7 +24,7 @@ export const BackButton = () => {
         onClick={() => {
           router.back()
         }}
-        className='flex gap-4 items-center hover:opacity-50'
+        className='flex items-center gap-4 hover:opacity-50'
         variant='ghost'
       >
         <MoveLeft className='h-6 w-6 text-muted-foreground' />

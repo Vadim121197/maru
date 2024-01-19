@@ -1,5 +1,3 @@
-import type { Deflate } from 'zlib'
-
 export interface ExpressionEventParam {
   name: string
   arg_type: 'address' | 'int128' | 'uint256' | 'uint256[]'
@@ -42,5 +40,12 @@ export interface Expression {
   parsed_data: string
   project_id: number
   raw_data: string
-  updated_at: Deflate
+  updated_at: Date
+  aggregate_operation: string
+  expression_type: string
+}
+
+export interface ExpressionsRes {
+  final_expressions: Expression[]
+  base_expressions: Expression[]
 }
