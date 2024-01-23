@@ -31,6 +31,10 @@ export interface ExpressionAggregateFunctions {
   value: string
 }
 
+export interface FinalExpressionTools {
+  expressions: string[]
+}
+
 export interface ExpressionTools {
   aggregate_operations: ExpressionAggregateFunctions[]
   constants: ExpressionConstants[]
@@ -64,5 +68,19 @@ export interface ExpressionsRes {
 export interface ExpressionValues {
   name: string
   rawData: string
-  aggregate: string | undefined
+  aggregate?: string
+}
+
+export interface ExpressionCreateRes {
+  raw_data: string
+  name: string
+  project_id: number
+  contract_address: string
+  aggregate_operation: string
+  event: string
+  expression_type: 'base' | 'final'
+  id: number
+  created_at: Date
+  updated_at: Date
+  parsed_data: string
 }

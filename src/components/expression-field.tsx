@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from './ui/textarea'
 
 interface ExpressionFieldProps {
-  aggregateFunctions: ExpressionAggregateFunctions[]
+  aggregateFunctions?: ExpressionAggregateFunctions[]
   expressionValues: ExpressionValues
   setExpressionValues: Dispatch<SetStateAction<ExpressionValues>>
 }
@@ -25,7 +25,7 @@ export const ExpressionField = ({
             setExpressionValues((state) => ({ ...state, name: e.target.value }))
           }}
         />
-        {aggregateFunctions.length ? (
+        {aggregateFunctions && aggregateFunctions.length ? (
           <div className='flex items-center gap-3'>
             <p className='text-sm font-normal'>Aggregate</p>
             <Select

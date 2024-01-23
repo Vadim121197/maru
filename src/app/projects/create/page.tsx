@@ -26,7 +26,7 @@ const ProjectNewPage = () => {
           <TabsTrigger value='new' className='w-full'>
             New Project
           </TabsTrigger>
-          <TabsTrigger value='import' className='w-full'>
+          <TabsTrigger value='import' className='w-full' disabled>
             Import
           </TabsTrigger>
         </TabsList>

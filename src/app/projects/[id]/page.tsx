@@ -1,6 +1,7 @@
 'use client'
 
 import { Plus } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -14,6 +15,7 @@ import { type Project } from '~/types/project'
 
 const ProjectPage = ({ params }: { params: { id: string } }) => {
   const axiosAuth = useAxiosAuth()
+  const { data: session } = useSession()
 
   const [project, setProject] = useState<Project | undefined>()
   const [projectExpressions, setProjectExpressions] = useState<ExpressionsRes | undefined>(undefined)
@@ -32,7 +34,9 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         )
 
         setProjectExpressions(projectExpressions)
-      } catch {}
+      } catch (error) {
+        console.log(error)
+      }
     })()
   }, [params.id, axiosAuth])
 
@@ -73,20 +77,22 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
             <div className='flex flex-col gap-4'>
               <div className='flex items-center justify-between'>
                 <p className='text-lg font-medium'>Expression</p>
-                <Link
-                  href={`/projects/${params.id}/expression/create`}
-                  className={cn(
-                    'flex items-center gap-[10px] px-4',
-                    buttonVariants({
-                      variant: 'outline',
-                    }),
-                  )}
-                >
-                  <div>
-                    <Plus className='h-4 w-4' />
-                  </div>
-                  <p className='text-base font-semibold'>Add Expression</p>
-                </Link>
+                {project.user.id === session?.user.id && (
+                  <Link
+                    href={`/projects/${params.id}/expression/create`}
+                    className={cn(
+                      'flex items-center gap-[10px] px-4',
+                      buttonVariants({
+                        variant: 'outline',
+                      }),
+                    )}
+                  >
+                    <div>
+                      <Plus className='h-4 w-4' />
+                    </div>
+                    <p className='text-base font-semibold'>Add Expression</p>
+                  </Link>
+                )}
               </div>
               <div className='flex flex-col gap-4'>
                 {projectExpressions?.base_expressions.map((exp) => (
@@ -106,20 +112,22 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
             <div className='flex flex-col gap-4'>
               <div className='flex items-center justify-between'>
                 <p className='text-lg font-medium'>Final Expression</p>
-                <Link
-                  href={`/projects/${params.id}/final-expression/create`}
-                  className={cn(
-                    'flex items-center gap-[10px] px-4',
-                    buttonVariants({
-                      variant: 'outline',
-                    }),
-                  )}
-                >
-                  <div>
-                    <Plus className='h-4 w-4' />
-                  </div>
-                  <p className='text-base font-semibold'>Add Final Expression</p>
-                </Link>
+                {project.user.id === session?.user.id && (
+                  <Link
+                    href={`/projects/${params.id}/final-expression/create`}
+                    className={cn(
+                      'flex items-center gap-[10px] px-4',
+                      buttonVariants({
+                        variant: 'outline',
+                      }),
+                    )}
+                  >
+                    <div>
+                      <Plus className='h-4 w-4' />
+                    </div>
+                    <p className='text-base font-semibold'>Add Final Expression</p>
+                  </Link>
+                )}
               </div>
               <div className='flex flex-col gap-4'>
                 {projectExpressions?.final_expressions.map((exp) => (
