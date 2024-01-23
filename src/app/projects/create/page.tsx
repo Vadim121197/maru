@@ -1,22 +1,32 @@
+'use client'
+
+import { useSession } from 'next-auth/react'
 import { BackButton } from '~/components/back-button'
 import { CreateProjectForm } from '~/components/create-project-form'
 import { ImportProjectForm } from '~/components/import-project-form'
+import { NotAuth } from '~/components/not-auth'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 
 const ProjectNewPage = () => {
+  const { data: session } = useSession()
+
+  if (!session) return <NotAuth />
+
   return (
-    <section className='container grid w-[628px] items-center gap-6 md:pt-[70px]'>
-      <BackButton />
-      <div className='mt-[26px] flex flex-col items-center gap-4'>
-        <p className='text-2xl font-bold'>Create Project</p>
-        <p className='text-lg font-medium text-muted-foreground'>To get started, try create project</p>
+    <section className='flex w-full flex-col gap-6 px-7 pt-10 lg:container lg:w-[628px] lg:pt-[70px]'>
+      <BackButton href='/projects' />
+      <div className='mt-[36px] flex flex-col items-center gap-4 lg:mt-[26px]'>
+        <p className='text-xl font-medium lg:text-2xl lg:font-bold'>Create Project</p>
+        <p className='text-base font-semibold text-muted-foreground lg:text-lg lg:font-medium'>
+          To get started, try create project
+        </p>
       </div>
       <Tabs defaultValue='new'>
-        <TabsList className='mb-6 w-full'>
+        <TabsList className='mb-10 w-full lg:mb-6'>
           <TabsTrigger value='new' className='w-full'>
             New Project
           </TabsTrigger>
-          <TabsTrigger value='import' className='w-full' disabled>
+          <TabsTrigger value='import' className='w-full'>
             Import
           </TabsTrigger>
         </TabsList>

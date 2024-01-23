@@ -7,10 +7,8 @@ import { AxiosRoutes } from '~/lib/axios-instance'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { useSession } from 'next-auth/react'
 import { Nav } from '~/types/nav'
-import { SigninButton } from './signin-button'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 
 export const CreateProjectForm = () => {
   const navigate = useRouter()
@@ -21,7 +19,7 @@ export const CreateProjectForm = () => {
 
   return (
     <form
-      className='flex w-full flex-col gap-6 bg-card p-6'
+      className='flex w-full flex-col gap-6 bg-card p-4 lg:p-6'
       onSubmit={(e) => {
         e.preventDefault()
         void (async () => {
@@ -34,37 +32,20 @@ export const CreateProjectForm = () => {
         })()
       }}
     >
-      <div className='grid grid-cols-2 gap-6'>
+      <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
         <div className='flex flex-col gap-[10px]'>
-          <p className='text-base font-medium'>Owner</p>
-          <Select defaultValue='light'>
-            <SelectTrigger className='w-full'>
-              <SelectValue placeholder='Owner' />
-            </SelectTrigger>
-            <SelectContent>
-              {session ? (
-                <SelectItem value='light'>
-                  <div className='flex items-center gap-3'>
-                    {session.user.avatar_url && (
-                      <Image
-                        src={session.user.avatar_url}
-                        width={24}
-                        height={24}
-                        className='rounded-full'
-                        alt='avatar'
-                      />
-                    )}
-                    <span>{session.user.username}</span>
-                  </div>
-                </SelectItem>
-              ) : (
-                <SigninButton className='w-full' />
-              )}
-            </SelectContent>
-          </Select>
+          <p className='text-sm font-medium lg:text-base'>Owner</p>
+          <div className='flex h-11 w-full items-center gap-3 border-2 border-border bg-background px-4 text-base font-medium text-muted'>
+            {session?.user.avatar_url && (
+              <div>
+                <Image src={session.user.avatar_url} width={24} height={24} className='rounded-full' alt='avatar' />
+              </div>
+            )}
+            <span>{session?.user.username ?? ''}</span>
+          </div>
         </div>
         <div className='flex flex-col gap-[10px]'>
-          <p className='text-base font-medium'>Project name</p>
+          <p className='text-sm font-medium lg:text-base'>Project name</p>
           <Input
             value={name}
             onChange={(e) => {
@@ -73,7 +54,7 @@ export const CreateProjectForm = () => {
           />
         </div>
       </div>
-      <Button type='submit' className='mt-[34px] w-[196px] self-center' disabled={!session}>
+      <Button type='submit' className='mt-[34px] w-full self-center lg:w-[196px]' disabled={!session}>
         Create
       </Button>
     </form>

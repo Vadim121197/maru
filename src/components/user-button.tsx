@@ -13,7 +13,7 @@ export const UserButton = () => {
 
   return (
     <>
-      <SigninButton className={!session ? 'hidden lg:inline-flex' : 'hidden'} />
+      <SigninButton variant='outline' className={!session ? 'hidden lg:inline-flex' : 'hidden'} />
       <Sheet>
         <SheetTrigger>
           <div className={!session ? 'hidden' : 'hidden lg:block'}>

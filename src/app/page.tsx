@@ -1,4 +1,4 @@
-import { Link2, MoveRight, PlusIcon, TrendingUp } from 'lucide-react'
+import { Link2, PlusIcon, TrendingUp } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import { authOptions } from '~/auth'
@@ -87,11 +87,8 @@ const IndexPage = async () => {
             <p className='text-center text-base font-semibold lg:text-lg lg:font-medium'>
               Welcome! Get started by creating your first project.
             </p>
-            <Link href={Nav.PROJECT_CREATE} className={cn('gap-4 w-[196px]', buttonVariants())}>
-              <p className='text-sm font-bold lg:text-base lg:font-semibold'>New Project</p>
-              <div>
-                <MoveRight className='h-6 w-6' />
-              </div>
+            <Link href={Nav.PROJECT_CREATE} className={cn('w-[148px] lg:w-[196px]', buttonVariants())}>
+              New Project
             </Link>
           </div>
           {session && (

@@ -1,24 +1,19 @@
 'use client'
 
-import { MoveRight, PlusIcon } from 'lucide-react'
-import { useSession } from 'next-auth/react'
+import { Plus } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { buttonVariants } from '~/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { AxiosRoutes } from '~/lib/axios-instance'
-import { expressionTypeLabels, expressionTypes } from '~/lib/expressions'
 import { cn } from '~/lib/utils'
 import type { ExpressionsRes } from '~/types/expressions'
-import { Nav } from '~/types/nav'
 import { type Project } from '~/types/project'
 
 const ProjectPage = ({ params }: { params: { id: string } }) => {
   const axiosAuth = useAxiosAuth()
-  const { data: session } = useSession()
 
   const [project, setProject] = useState<Project | undefined>()
   const [projectExpressions, setProjectExpressions] = useState<ExpressionsRes | undefined>(undefined)
@@ -48,48 +43,6 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
       <div className='flex flex-col md:gap-6'>
         <div className='flex items-center justify-between'>
           <p className='text-2xl font-bold'>{project.name}</p>
-          {session && session.user.id === project.user.id && (
-            <div className='flex gap-[22px]'>
-              <Dialog>
-                <DialogTrigger
-                  className={cn(
-                    'md:w-[196px] gap-[10px]',
-                    buttonVariants({
-                      variant: 'outline',
-                    }),
-                  )}
-                >
-                  <PlusIcon className='h-4 w-4 text-white' />
-                  <span>Add Expession</span>
-                </DialogTrigger>
-                <DialogContent className='w-[520px]'>
-                  <DialogHeader>
-                    <DialogTitle>Add Expression</DialogTitle>
-                  </DialogHeader>
-                  <div className='grid grid-cols-2 gap-x-9 gap-y-6 px-6 pb-4 pt-6'>
-                    {expressionTypes.map((exp) => (
-                      <Link
-                        href={!exp.disabled ? `${Nav.PROJECTS}/${params.id}/expression/${exp.type}` : {}}
-                        key={exp.type}
-                        className={cn('flex gap-4 max-w-fit', exp.disabled ? 'cursor-not-allowed' : 'group')}
-                      >
-                        <p className='text-base font-semibold text-muted-foreground group-hover:text-muted'>
-                          {expressionTypeLabels[exp.type]}
-                        </p>
-                        <MoveRight className='h-6 w-6 text-muted-foreground group-hover:text-primary' />
-                      </Link>
-                    ))}
-                  </div>
-                </DialogContent>
-              </Dialog>
-              <Link
-                href={`/projects/${params.id}/calculations`}
-                className={cn('md:w-[196px] gap-[10px]', buttonVariants())}
-              >
-                Start Proving
-              </Link>
-            </div>
-          )}
         </div>
         <div className='flex flex-col gap-6'>
           <div className='flex items-center gap-3'>
@@ -117,23 +70,68 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
             <TabsTrigger value='deployment'>Deployment</TabsTrigger>
           </TabsList>
           <TabsContent value='expression' className='grid grid-cols-2 gap-6'>
-            {projectExpressions?.base_expressions.map((expr) => (
-              <div key={expr.id} className='flex w-full flex-col gap-6'>
-                <p className='text-base font-medium'>{expr.name || 'unknown_name'}</p>
-                <div className='border-2 border-border bg-background p-6 text-[12px] font-normal leading-[18px] text-muted-foreground'>
-                  {expr.raw_data}
-                </div>
+            <div className='flex flex-col gap-4'>
+              <div className='flex items-center justify-between'>
+                <p className='text-lg font-medium'>Expression</p>
+                <Link
+                  href={`/projects/${params.id}/expression/create`}
+                  className={cn(
+                    'flex items-center gap-[10px] px-4',
+                    buttonVariants({
+                      variant: 'outline',
+                    }),
+                  )}
+                >
+                  <div>
+                    <Plus className='h-4 w-4' />
+                  </div>
+                  <p className='text-base font-semibold'>Add Expression</p>
+                </Link>
               </div>
-            ))}
-            <p>Final expressions</p>
-            {projectExpressions?.final_expressions.map((expr) => (
-              <div key={expr.id} className='flex w-full flex-col gap-6'>
-                <p className='text-base font-medium'>{expr.name || 'unknown_name'}</p>
-                <div className='border-2 border-border bg-background p-6 text-[12px] font-normal leading-[18px] text-muted-foreground'>
-                  {expr.raw_data}
-                </div>
+              <div className='flex flex-col gap-4'>
+                {projectExpressions?.base_expressions.map((exp) => (
+                  <div key={exp.id} className='flex flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px]'>
+                    <div className='flex items-center justify-between'>
+                      <p className='text-base font-medium'>{exp.name}</p>
+                      <div className='flex items-center gap-3'>
+                        <p className='text-sm font-normal'>Aggregate</p>
+                        <div className='border-2 px-8 py-[2px] text-sm font-normal'>{exp.aggregate_operation}</div>
+                      </div>
+                    </div>
+                    <p className='text-sm font-normal text-muted-foreground'>{exp.raw_data}</p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+            <div className='flex flex-col gap-4'>
+              <div className='flex items-center justify-between'>
+                <p className='text-lg font-medium'>Final Expression</p>
+                <Link
+                  href={`/projects/${params.id}/final-expression/create`}
+                  className={cn(
+                    'flex items-center gap-[10px] px-4',
+                    buttonVariants({
+                      variant: 'outline',
+                    }),
+                  )}
+                >
+                  <div>
+                    <Plus className='h-4 w-4' />
+                  </div>
+                  <p className='text-base font-semibold'>Add Final Expression</p>
+                </Link>
+              </div>
+              <div className='flex flex-col gap-4'>
+                {projectExpressions?.final_expressions.map((exp) => (
+                  <div key={exp.id} className='flex flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px]'>
+                    <div className='flex items-center justify-between'>
+                      <p className='text-base font-medium'>{exp.name}</p>
+                    </div>
+                    <p className='text-sm font-normal text-muted-foreground'>{exp.raw_data}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </TabsContent>
           <TabsContent value='deployment' />
         </Tabs>

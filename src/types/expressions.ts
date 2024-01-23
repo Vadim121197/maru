@@ -1,3 +1,9 @@
+export interface EventExample {
+  description: string
+  name: string
+  value: string
+}
+
 export interface ExpressionEventParam {
   name: string
   arg_type: 'address' | 'int128' | 'uint256' | 'uint256[]'
@@ -7,6 +13,7 @@ export interface ExpressionEventParam {
 export interface ExpressionEvent {
   name: string
   params: ExpressionEventParam[]
+  examples: EventExample[]
 }
 
 export interface ExpressionFunction {
@@ -25,27 +32,37 @@ export interface ExpressionAggregateFunctions {
 }
 
 export interface ExpressionTools {
+  aggregate_operations: ExpressionAggregateFunctions[]
   constants: ExpressionConstants[]
+  contract_name: string
   events: ExpressionEvent[]
   functions: ExpressionFunction[]
-  aggregate_functions: ExpressionAggregateFunctions[]
+  global_constants: ExpressionConstants[]
+  global_functions: ExpressionFunction[]
+  proved_expressions: string[]
 }
 
 export interface Expression {
-  contract_address: string
-  created_at: Date
-  event: string
-  id: number
-  name: string
-  parsed_data: string
-  project_id: number
   raw_data: string
-  updated_at: Date
+  name: string
+  project_id: number
+  contract_address: string
   aggregate_operation: string
-  expression_type: string
+  event: string
+  expression_type: 'base' | 'final'
+  id: number
+  created_at: Date
+  updated_at: Date
+  parsed_data: string
 }
 
 export interface ExpressionsRes {
   final_expressions: Expression[]
   base_expressions: Expression[]
+}
+
+export interface ExpressionValues {
+  name: string
+  rawData: string
+  aggregate: string | undefined
 }
