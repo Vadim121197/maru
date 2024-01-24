@@ -96,7 +96,11 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
               </div>
               <div className='flex flex-col gap-4'>
                 {projectExpressions?.base_expressions.map((exp) => (
-                  <div key={exp.id} className='flex flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px]'>
+                  <Link
+                    href={`/projects/${params.id}/expression/${exp.id}`}
+                    key={exp.id}
+                    className='flex flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px]'
+                  >
                     <div className='flex items-center justify-between'>
                       <p className='text-base font-medium'>{exp.name}</p>
                       <div className='flex items-center gap-3'>
@@ -105,7 +109,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
                       </div>
                     </div>
                     <p className='text-sm font-normal text-muted-foreground'>{exp.raw_data}</p>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -131,12 +135,16 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
               </div>
               <div className='flex flex-col gap-4'>
                 {projectExpressions?.final_expressions.map((exp) => (
-                  <div key={exp.id} className='flex flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px]'>
+                  <Link
+                    href={`/projects/${params.id}/final-expression/${exp.id}`}
+                    key={exp.id}
+                    className='flex flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px]'
+                  >
                     <div className='flex items-center justify-between'>
                       <p className='text-base font-medium'>{exp.name}</p>
                     </div>
                     <p className='text-sm font-normal text-muted-foreground'>{exp.raw_data}</p>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>

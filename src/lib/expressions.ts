@@ -18,26 +18,32 @@ export const expressionTypeLabels: Record<Expressions, string> = {
 
 export const expressionTypes = [
   {
-    type: Expressions.EVENT_DATA,
+    value: Expressions.EVENT_DATA,
+    label: expressionTypeLabels[Expressions.EVENT_DATA],
   },
   {
-    type: Expressions.BLOCK_HEADERS,
+    value: Expressions.BLOCK_HEADERS,
+    label: expressionTypeLabels[Expressions.BLOCK_HEADERS],
     disabled: true,
   },
   {
-    type: Expressions.STATE_DATA,
+    value: Expressions.STATE_DATA,
+    label: expressionTypeLabels[Expressions.STATE_DATA],
     disabled: true,
   },
   {
-    type: Expressions.STORAGE_SLOTS,
+    value: Expressions.STORAGE_SLOTS,
+    label: expressionTypeLabels[Expressions.STORAGE_SLOTS],
     disabled: true,
   },
   {
-    type: Expressions.TX_DATA,
+    value: Expressions.TX_DATA,
+    label: expressionTypeLabels[Expressions.TX_DATA],
     disabled: true,
   },
   {
-    type: Expressions.RECEIPT_DATA,
+    value: Expressions.RECEIPT_DATA,
+    label: expressionTypeLabels[Expressions.RECEIPT_DATA],
     disabled: true,
   },
 ]
