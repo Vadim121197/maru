@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import useAxiosAuth from '~/hooks/axios-auth'
-import { AxiosRoutes } from '~/lib/axios-instance'
+import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
 import type { Expression, ExpressionEvent, ExpressionTools, ExpressionValues } from '~/types/expressions'
 import { TextLabel } from '../form-components'
 import { ExpressionField } from '../expression-field'
@@ -28,7 +28,9 @@ export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string 
   useEffect(() => {
     void (async () => {
       try {
-        const { data } = await axiosAuth.get<Expression>(`/expressions/${expressionId}`)
+        const { data } = await axiosAuth.get<Expression>(
+          ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, expressionId),
+        )
         setExpression(data)
 
         setExpressionValues({
@@ -38,7 +40,7 @@ export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string 
         })
 
         const { data: tools } = await axiosAuth.get<ExpressionTools>(
-          `${AxiosRoutes.EXPRESSIONS}/${data.contract_address}/tools`,
+          ApiRoutes.EXPRESSIONS_ADDRESS_TOOLS.replace(ADDRESS, data.contract_address),
         )
 
         setTools(tools)
@@ -50,7 +52,7 @@ export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string 
 
   const precalculate = async () => {
     try {
-      const { data } = await axiosAuth.post<string>(`${AxiosRoutes.EXPRESSIONS}/demo`, {
+      const { data } = await axiosAuth.post<string>(ApiRoutes.EXPRESSIONS_DEMO, {
         raw_data: expressionValues.rawData,
         projects_id: expression?.project_id,
         contract_address: expression?.contract_address,
@@ -64,19 +66,20 @@ export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string 
   }
 
   const save = async () => {
+    if (!expression) return
     try {
-      await axiosAuth.put(`${AxiosRoutes.EXPRESSIONS}/${expression?.id}`, {
+      await axiosAuth.put(ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, expression.id.toString()), {
         ...expression,
         raw_data: expressionValues.rawData,
         name: expressionValues.name,
         aggregate_operation: expressionValues.aggregate,
       })
-      router.push(`/projects/${expression?.project_id}`)
+      router.push(`/projects/${expression.project_id}`)
     } catch (error) {}
   }
 
   return (
-    <div className='flex w-full flex-col gap-6 bg-card p-6'>
+    <div className='flex w-full flex-col gap-6 bg-card p-4 lg:p-6'>
       <div className='flex flex-col'>
         <div className='flex flex-col gap-[38px] border-b pb-4'>
           <div className='flex w-full flex-col gap-2'>
@@ -91,13 +94,13 @@ export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string 
             <BaseExpressionHelperTable tools={tools} event={selectedEvent} setExpressionValues={setExpressionValues} />
           )}
         </div>
-        <div className='mb-10 mt-4 flex items-start gap-1 text-sm font-normal'>
-          <p>The precalculation uses events in the last 1000 blocks.</p>
-          <p className='text-muted-foreground underline'>Change precalc settings</p>
+        <div className='mb-6 lg:mb-10 mt-4 text-[12px] leading-[18px] lg:text-sm font-normal'>
+          The precalculation uses events in the last 1000 blocks.{' '}
+          <span className='text-muted-foreground underline'>Change precalc settings</span>
         </div>
         <Button
           variant='outline'
-          className='mb-10 w-[274px] self-center'
+          className='mb-10 w-full lg:w-[274px] self-center'
           onClick={() => {
             void (async () => {
               await precalculate()
@@ -108,7 +111,7 @@ export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string 
         </Button>
         <PrecalcValues res={precalcRes} />
         <Button
-          className='mt-20 w-[274px] self-center'
+          className='mt-10 lg:mt-20 w-full lg:w-[274px] self-center'
           onClick={() => {
             void (async () => {
               await save()

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
-import { AxiosRoutes } from '~/lib/axios-instance'
+import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import type { CalculationRes } from '~/types/calculations'
 import type { ExpressionCreateRes, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
 import { ExpressionField } from '../expression-field'
@@ -35,7 +35,9 @@ export const FinalExpressionForm = ({ projectId }: { projectId: string }) => {
   useEffect(() => {
     void (async () => {
       try {
-        const { data } = await axiosAuth.get<FinalExpressionTools>(`/projects/${projectId}/tools`)
+        const { data } = await axiosAuth.get<FinalExpressionTools>(
+          ApiRoutes.PROJECTS_PROJECT_ID_TOOLS.replace(PROJECT_ID, projectId),
+        )
 
         setTools(data)
       } catch {}
@@ -44,7 +46,7 @@ export const FinalExpressionForm = ({ projectId }: { projectId: string }) => {
 
   const precalculate = async () => {
     try {
-      const { data } = await axiosAuth.post<string>(`${AxiosRoutes.EXPRESSIONS}/demo`, {
+      const { data } = await axiosAuth.post<string>(ApiRoutes.EXPRESSIONS_DEMO, {
         block_range: null,
         raw_data: expressionValues.rawData,
         expression_type: 'final',
@@ -57,7 +59,7 @@ export const FinalExpressionForm = ({ projectId }: { projectId: string }) => {
   const save = async () => {
     if (!expressionValues.rawData || !expressionValues.name) return
     try {
-      const { data } = await axiosAuth.post<ExpressionCreateRes>(AxiosRoutes.EXPRESSIONS, {
+      const { data } = await axiosAuth.post<ExpressionCreateRes>(ApiRoutes.EXPRESSIONS, {
         raw_data: expressionValues.rawData,
         name: expressionValues.name,
         project_id: projectId,
@@ -70,19 +72,20 @@ export const FinalExpressionForm = ({ projectId }: { projectId: string }) => {
   const prove = async () => {
     if (!saveRes?.id) return
     try {
-      const { data } = await axiosAuth.post<CalculationRes>('/calculations', {
+      const { data } = await axiosAuth.post<CalculationRes>(ApiRoutes.CALCULATIONS, {
         expression_id: saveRes.id,
         calculation_type: 'one_time',
         from_value: period.from,
         to_value: period.to,
         period_value: 'block',
+        project_id: projectId,
       })
       setProveRes(data)
     } catch {}
   }
 
   return (
-    <div className='flex w-full flex-col gap-6 bg-card p-6'>
+    <div className='flex w-full flex-col gap-6 bg-card p-4 lg:p-6'>
       {tools && (
         <div className='flex flex-col'>
           <div className='flex flex-col gap-[38px] border-b pb-4'>
@@ -92,13 +95,13 @@ export const FinalExpressionForm = ({ projectId }: { projectId: string }) => {
             </div>
             <FinalExpressionHelperTable tools={tools} setExpressionValues={setExpressionValues} />
           </div>
-          <div className='mb-10 mt-4 flex items-start gap-1 text-sm font-normal'>
-            <p>The precalculation uses events in the last 1000 blocks.</p>
-            <p className='text-muted-foreground underline'>Change precalc settings</p>
+          <div className='mb-6 lg:mb-10 mt-4 text-[12px] leading-[18px] lg:text-sm font-normal'>
+            The precalculation uses events in the last 1000 blocks.{' '}
+            <span className='text-muted-foreground underline'>Change precalc settings</span>
           </div>
           <Button
             variant='outline'
-            className='mb-10 w-[274px] self-center'
+            className='mb-10 w-full lg:w-[274px] self-center'
             onClick={() => {
               void (async () => {
                 await precalculate()
@@ -109,7 +112,7 @@ export const FinalExpressionForm = ({ projectId }: { projectId: string }) => {
           </Button>
           <PrecalcValues res={precalcRes} />
           <Button
-            className='mt-20 w-[274px] self-center'
+            className='mt-10 lg:mt-20 w-full lg:w-[274px] self-center'
             onClick={() => {
               void (async () => {
                 await save()

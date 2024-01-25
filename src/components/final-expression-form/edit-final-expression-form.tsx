@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
-import { AxiosRoutes } from '~/lib/axios-instance'
+import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import type { CalculationRes } from '~/types/calculations'
 import type { Expression, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
 import { ExpressionField } from '../expression-field'
@@ -33,7 +33,9 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
   useEffect(() => {
     void (async () => {
       try {
-        const { data } = await axiosAuth.get<Expression>(`/expressions/${expressionId}`)
+        const { data } = await axiosAuth.get<Expression>(
+          ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, expressionId),
+        )
 
         setExpression(data)
 
@@ -42,7 +44,9 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
           rawData: data.raw_data,
         })
 
-        const { data: tools } = await axiosAuth.get<FinalExpressionTools>(`/projects/${data.project_id}/tools`)
+        const { data: tools } = await axiosAuth.get<FinalExpressionTools>(
+          ApiRoutes.PROJECTS_PROJECT_ID_TOOLS.replace(PROJECT_ID, data.project_id.toString()),
+        )
 
         setTools(tools)
       } catch {}
@@ -51,7 +55,7 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
 
   const precalculate = async () => {
     try {
-      const { data } = await axiosAuth.post<string>(`${AxiosRoutes.EXPRESSIONS}/demo`, {
+      const { data } = await axiosAuth.post<string>(ApiRoutes.EXPRESSIONS_DEMO, {
         block_range: null,
         raw_data: expressionValues.rawData,
         expression_type: 'final',
@@ -62,9 +66,9 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
   }
 
   const save = async () => {
-    if (!expressionValues.rawData || !expressionValues.name) return
+    if (!expressionValues.rawData || !expressionValues.name || !expression?.id) return
     try {
-      await axiosAuth.put(`${AxiosRoutes.EXPRESSIONS}/${expression?.id}`, {
+      await axiosAuth.put(ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, expression.id.toString()), {
         ...expression,
         raw_data: expressionValues.rawData,
         name: expressionValues.name,
@@ -74,7 +78,7 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
 
   const prove = async () => {
     try {
-      const { data } = await axiosAuth.post<CalculationRes>('/calculations', {
+      const { data } = await axiosAuth.post<CalculationRes>(ApiRoutes.CALCULATIONS, {
         expression_id: expression?.id,
         calculation_type: 'one_time',
         from_value: period.from,
@@ -88,7 +92,7 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
   if (!expression || !tools) return <></>
 
   return (
-    <div className='flex w-full flex-col gap-6 bg-card p-6'>
+    <div className='flex w-full flex-col gap-6 bg-card p-4 lg:p-6'>
       <div className='flex flex-col'>
         <div className='flex flex-col gap-[38px] border-b pb-4'>
           <div className='flex w-full flex-col gap-2'>
@@ -97,13 +101,13 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
           </div>
           <FinalExpressionHelperTable tools={tools} setExpressionValues={setExpressionValues} />
         </div>
-        <div className='mb-10 mt-4 flex items-start gap-1 text-sm font-normal'>
-          <p>The precalculation uses events in the last 1000 blocks.</p>
-          <p className='text-muted-foreground underline'>Change precalc settings</p>
+        <div className='mb-6 lg:mb-10 mt-4 text-[12px] leading-[18px] lg:text-sm font-normal'>
+          The precalculation uses events in the last 1000 blocks.{' '}
+          <span className='text-muted-foreground underline'>Change precalc settings</span>
         </div>
         <Button
           variant='outline'
-          className='mb-10 w-[274px] self-center'
+          className='mb-10 w-full lg:w-[274px] self-center'
           onClick={() => {
             void (async () => {
               await precalculate()
@@ -114,7 +118,7 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
         </Button>
         <PrecalcValues res={precalcRes} />
         <Button
-          className='mt-20 w-[274px] self-center'
+          className='mt-10 lg:mt-20 w-full lg:w-[274px] self-center'
           onClick={() => {
             void (async () => {
               await save()

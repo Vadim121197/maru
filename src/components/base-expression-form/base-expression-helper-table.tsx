@@ -57,41 +57,121 @@ export const BaseExpressionHelperTable = ({
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Global Consts</TableHead>
-          <TableHead className='text-center'>Contract Consts</TableHead>
-          <TableHead className='text-center'>Contract Functions</TableHead>
-          <TableHead className='text-center'>Event Params</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {data.map((i) => (
-          <TableRow key={i.key}>
-            <TableCell>
-              <button onClick={helperClick(i.global_constants?.name)} type='button'>
-                {i.global_constants?.name}
-              </button>
-            </TableCell>
-            <TableCell className='text-center'>
-              <button onClick={helperClick(i.constant?.name)} type='button'>
-                {i.constant?.name}
-              </button>
-            </TableCell>
-            <TableCell className='text-center'>
-              <button onClick={helperClick(i.function?.name)} type='button'>
-                {i.function?.name}
-              </button>
-            </TableCell>
-            <TableCell className='text-center'>
-              <button onClick={helperClick(i.param?.name)} type='button'>
-                {i.param?.name}
-              </button>
-            </TableCell>
+    <>
+      <div className='flex flex-col gap-6 lg:hidden'>
+        {tools.global_constants.length ? (
+          <div className='flex flex-col gap-2'>
+            <p className='text-[12px] font-normal'>Global Consts</p>
+            <div className='grid grid-cols-2 gap-4'>
+              {tools.global_constants.map((i) => (
+                <button
+                  onClick={helperClick(i.name)}
+                  type='button'
+                  key={i.name}
+                  className='text-left text-[12px] font-normal text-muted-foreground'
+                >
+                  {i.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+        {tools.constants.length ? (
+          <div className='flex flex-col gap-2'>
+            <p className='text-[12px] font-normal'>Contract Consts</p>
+            <div className='grid grid-cols-2 gap-4'>
+              {tools.constants.map((i) => (
+                <button
+                  onClick={helperClick(i.name)}
+                  type='button'
+                  key={i.name}
+                  className='text-left text-[12px] font-normal text-muted-foreground'
+                >
+                  {i.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+        {tools.functions.length ? (
+          <div className='flex flex-col gap-2'>
+            <p className='text-[12px] font-normal'>Contract Functions</p>
+            <div className='grid grid-cols-2 gap-4'>
+              {tools.functions.map((i) => (
+                <button
+                  onClick={helperClick(i.name)}
+                  type='button'
+                  key={i.name}
+                  className='text-left text-[12px] font-normal text-muted-foreground break-all'
+                >
+                  {i.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+        {event.params.length ? (
+          <div className='flex flex-col gap-2'>
+            <p className='text-[12px] font-normal'>Event Params</p>
+            <div className='grid grid-cols-2 gap-4'>
+              {event.params.map((i) => (
+                <button
+                  onClick={helperClick(i.name)}
+                  type='button'
+                  key={i.name}
+                  className='text-left text-[12px] font-normal text-muted-foreground'
+                >
+                  {i.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
+      <Table className='hidden lg:table'>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Global Consts</TableHead>
+            <TableHead className='text-center'>Contract Consts</TableHead>
+            <TableHead className='text-center'>Contract Functions</TableHead>
+            <TableHead className='text-center'>Event Params</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {data.map((i) => (
+            <TableRow key={i.key}>
+              <TableCell>
+                <button onClick={helperClick(i.global_constants?.name)} type='button'>
+                  {i.global_constants?.name}
+                </button>
+              </TableCell>
+              <TableCell className='text-center'>
+                <button onClick={helperClick(i.constant?.name)} type='button'>
+                  {i.constant?.name}
+                </button>
+              </TableCell>
+              <TableCell className='text-center'>
+                <button onClick={helperClick(i.function?.name)} type='button'>
+                  {i.function?.name}
+                </button>
+              </TableCell>
+              <TableCell className='text-center'>
+                <button onClick={helperClick(i.param?.name)} type='button'>
+                  {i.param?.name}
+                </button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </>
   )
 }

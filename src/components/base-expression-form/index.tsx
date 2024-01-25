@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
-import { AxiosRoutes } from '~/lib/axios-instance'
+import { ADDRESS, ApiRoutes } from '~/lib/axios-instance'
 import { expressionTypes, type Expressions } from '~/lib/expressions'
 import type { ExpressionEvent, ExpressionTools, ExpressionValues } from '~/types/expressions'
 import { ExpressionField } from '../expression-field'
@@ -18,7 +18,7 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
   const axiosAuth = useAxiosAuth()
   const router = useRouter()
 
-  const [selectedSource, setSelectedSource] = useState<Expressions | undefined>()
+  const [selectedSource, setSelectedSource] = useState<Expressions | undefined>(expressionTypes[0]?.value)
   const [contractAddress, setContractAddress] = useState('')
   const [selectedEvent, setSelectedEvent] = useState<ExpressionEvent | undefined>()
   const [expressionValues, setExpressionValues] = useState<ExpressionValues>({
@@ -39,7 +39,9 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
 
     void (async () => {
       try {
-        const { data } = await axiosAuth.get<ExpressionTools>(`${AxiosRoutes.EXPRESSIONS}/${contractAddress}/tools`)
+        const { data } = await axiosAuth.get<ExpressionTools>(
+          ApiRoutes.EXPRESSIONS_ADDRESS_TOOLS.replace(ADDRESS, contractAddress),
+        )
 
         setTools(data)
         setSelectedEvent(data.events[0])
@@ -54,10 +56,11 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
   const precalculate = async () => {
     if (!selectedEvent) return
     try {
-      const { data } = await axiosAuth.post<string>(`${AxiosRoutes.EXPRESSIONS}/demo`, {
+      const { data } = await axiosAuth.post<string>(ApiRoutes.EXPRESSIONS_DEMO, {
         contract_address: contractAddress,
         event: `${selectedEvent.name}(${selectedEvent.params.map((i) => i.arg_type).join(',')})`,
         block_range: null,
+        project_id: projectId,
         raw_data: expressionValues.rawData,
         aggregate_operation: expressionValues.aggregate,
         expression_type: 'base',
@@ -76,7 +79,7 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
     )
       return
     try {
-      await axiosAuth.post(AxiosRoutes.EXPRESSIONS, {
+      await axiosAuth.post(ApiRoutes.EXPRESSIONS, {
         raw_data: expressionValues.rawData,
         name: expressionValues.name,
         project_id: projectId,
@@ -101,7 +104,7 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
   }, [tools])
 
   return (
-    <div className='flex w-full flex-col gap-6 bg-card p-6'>
+    <div className='flex w-full flex-col gap-6 bg-card p-4 lg:p-6'>
       <SelectComponent
         value={selectedSource}
         onValueChange={(e) => {
@@ -143,13 +146,13 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
             </div>
             <BaseExpressionHelperTable tools={tools} event={selectedEvent} setExpressionValues={setExpressionValues} />
           </div>
-          <div className='mb-10 mt-4 flex items-start gap-1 text-sm font-normal'>
-            <p>The precalculation uses events in the last 1000 blocks.</p>
-            <p className='text-muted-foreground underline'>Change precalc settings</p>
+          <div className='mb-6 lg:mb-10 mt-4 text-[12px] leading-[18px] lg:text-sm font-normal'>
+            The precalculation uses events in the last 1000 blocks.{' '}
+            <span className='text-muted-foreground underline'>Change precalc settings</span>
           </div>
           <Button
             variant='outline'
-            className='mb-10 w-[274px] self-center'
+            className='mb-10 w-full lg:w-[274px] self-center'
             onClick={() => {
               void (async () => {
                 await precalculate()
@@ -160,7 +163,7 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
           </Button>
           <PrecalcValues res={precalcRes} />
           <Button
-            className='mt-20 w-[274px] self-center'
+            className='mt-10 lg:mt-20 w-full lg:w-[274px] self-center'
             onClick={() => {
               void (async () => {
                 await save()

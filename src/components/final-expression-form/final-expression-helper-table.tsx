@@ -42,41 +42,64 @@ export const FinalExpressionHelperTable = ({
     setExpressionValues((state) => ({ ...state, rawData: `${state.rawData} ${value}` }))
   }
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Global Consts</TableHead>
-          <TableHead className='text-center'>Proved Values</TableHead>
-          <TableHead className='text-center'>Expressions</TableHead>
-          <TableHead className='text-center'>Global Functions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {data.map((i) => (
-          <TableRow key={i.key}>
-            <TableCell>
-              <button onClick={helperClick(i.constant)} type='button'>
-                {i.constant}
-              </button>
-            </TableCell>
-            <TableCell className='text-center'>
-              <button onClick={helperClick(i.proved)} type='button'>
-                {i.proved}
-              </button>
-            </TableCell>
-            <TableCell className='text-center'>
-              <button onClick={helperClick(i.expression)} type='button'>
-                {i.expression}
-              </button>
-            </TableCell>
-            <TableCell className='text-center'>
-              <button onClick={helperClick(i.function)} type='button'>
-                {i.function}
-              </button>
-            </TableCell>
+    <>
+      <div className='flex flex-col gap-6 lg:hidden'>
+        {tools.expressions.length ? (
+          <div className='flex flex-col gap-2'>
+            <p className='text-[12px] font-normal'>Expressions</p>
+            <div className='grid grid-cols-2 gap-4'>
+              {tools.expressions.map((i) => (
+                <button
+                  onClick={helperClick(i)}
+                  type='button'
+                  key={i}
+                  className='text-left text-[12px] font-normal text-muted-foreground'
+                >
+                  {i}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
+      <Table className='hidden lg:table'>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Global Consts</TableHead>
+            <TableHead className='text-center'>Proved Values</TableHead>
+            <TableHead className='text-center'>Expressions</TableHead>
+            <TableHead className='text-center'>Global Functions</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {data.map((i) => (
+            <TableRow key={i.key}>
+              <TableCell>
+                <button onClick={helperClick(i.constant)} type='button'>
+                  {i.constant}
+                </button>
+              </TableCell>
+              <TableCell className='text-center'>
+                <button onClick={helperClick(i.proved)} type='button'>
+                  {i.proved}
+                </button>
+              </TableCell>
+              <TableCell className='text-center'>
+                <button onClick={helperClick(i.expression)} type='button'>
+                  {i.expression}
+                </button>
+              </TableCell>
+              <TableCell className='text-center'>
+                <button onClick={helperClick(i.function)} type='button'>
+                  {i.function}
+                </button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </>
   )
 }

@@ -3,6 +3,14 @@ export interface Tag {
   id: number
 }
 
+export interface ProjectCreateResponse {
+  name: string
+  created_at: Date
+  updated_at: Date
+  id: number
+  user_id: number
+}
+
 export interface Project {
   name: string | null
   created_at: Date

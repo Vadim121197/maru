@@ -3,31 +3,32 @@ import { cn } from '~/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Input, type InputProps } from './ui/input'
 
-export const TextLabel = ({ label }: { label: string }) => <p className='text-base font-medium'>{label}</p>
+export const TextLabel = ({ label }: { label: string }) => <p className='text-sm font-medium lg:text-base'>{label}</p>
 
 export const SelectComponent = ({
-  value,
   options,
   label,
   triggerClassName,
-  onValueChange,
+  selectItemClassName,
+  selectContentClassName,
+  ...props
 }: {
-  value: SelectProps['value']
   options: { label?: string; value: string }[]
-  label: string
+  label?: string
   triggerClassName?: string
-  onValueChange: SelectProps['onValueChange']
-}) => {
+  selectItemClassName?: string
+  selectContentClassName?: string
+} & SelectProps) => {
   return (
     <div className='flex flex-col gap-[10px]'>
-      <TextLabel label={label} />
-      <Select value={value} onValueChange={onValueChange}>
+      {label && <TextLabel label={label} />}
+      <Select {...props}>
         <SelectTrigger className={cn('w-full', triggerClassName)}>
           <SelectValue />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className={selectContentClassName}>
           {options.map((opt) => (
-            <SelectItem value={opt.value} key={opt.value}>
+            <SelectItem value={opt.value} key={opt.value} className={selectItemClassName}>
               {opt.label ?? opt.value}
             </SelectItem>
           ))}
@@ -37,19 +38,11 @@ export const SelectComponent = ({
   )
 }
 
-export const InputComponent = ({
-  value,
-  label,
-  onChange,
-}: {
-  value: InputProps['value']
-  label: string
-  onChange: InputProps['onChange']
-}) => {
+export const InputComponent = ({ label, ...props }: { label: string } & InputProps) => {
   return (
     <div className='flex flex-col gap-[10px]'>
       <TextLabel label={label} />
-      <Input value={value} onChange={onChange} />
+      <Input {...props} />
     </div>
   )
 }
