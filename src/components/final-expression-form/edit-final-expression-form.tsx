@@ -3,14 +3,13 @@
 import { useEffect, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
-import type { CalculationRes } from '~/types/calculations'
 import type { Expression, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
 import { ExpressionField } from '../expression-field'
-import { InputComponent, TextLabel } from '../form-components'
-import { FinalExpressionHelperTable } from './final-expression-helper-table'
-import { Button } from '../ui/button'
+import { TextLabel } from '../form-components'
 import { PrecalcValues } from '../precalc-values'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
+import { Button } from '../ui/button'
+import { CalculationsTabs } from './calculations-tabs'
+import { FinalExpressionHelperTable } from './final-expression-helper-table'
 
 export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressionId: string; projectId: string }) => {
   const axiosAuth = useAxiosAuth()
@@ -20,13 +19,7 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
     name: '',
     rawData: '',
   })
-  const [precalcRes, setPrecalcRes] = useState('')
-  const [proveRes, setProveRes] = useState<CalculationRes | undefined>()
-
-  const [period, setPeriod] = useState<{ from: string; to: string }>({
-    from: '',
-    to: '',
-  })
+  const [precalculationResult, setPrecalculationResult] = useState('')
 
   const [tools, setTools] = useState<FinalExpressionTools | undefined>()
 
@@ -61,7 +54,7 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
         expression_type: 'final',
         project_id: projectId,
       })
-      setPrecalcRes(data)
+      setPrecalculationResult(data)
     } catch (error) {}
   }
 
@@ -76,19 +69,6 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
     } catch (error) {}
   }
 
-  const prove = async () => {
-    try {
-      const { data } = await axiosAuth.post<CalculationRes>(ApiRoutes.CALCULATIONS, {
-        expression_id: expression?.id,
-        calculation_type: 'one_time',
-        from_value: period.from,
-        to_value: period.to,
-        period_value: 'block',
-      })
-      setProveRes(data)
-    } catch {}
-  }
-
   if (!expression || !tools) return <></>
 
   return (
@@ -101,13 +81,13 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
           </div>
           <FinalExpressionHelperTable tools={tools} setExpressionValues={setExpressionValues} />
         </div>
-        <div className='mb-6 lg:mb-10 mt-4 text-[12px] leading-[18px] lg:text-sm font-normal'>
+        <div className='mb-6 mt-4 text-[12px] font-normal leading-[18px] lg:mb-10 lg:text-sm'>
           The precalculation uses events in the last 1000 blocks.{' '}
           <span className='text-muted-foreground underline'>Change precalc settings</span>
         </div>
         <Button
           variant='outline'
-          className='mb-10 w-full lg:w-[274px] self-center'
+          className='mb-10 w-full self-center lg:w-[274px]'
           onClick={() => {
             void (async () => {
               await precalculate()
@@ -116,9 +96,9 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
         >
           Precalculation
         </Button>
-        <PrecalcValues res={precalcRes} />
+        <PrecalcValues res={precalculationResult} />
         <Button
-          className='mt-10 lg:mt-20 w-full lg:w-[274px] self-center'
+          className='mt-10 w-full self-center lg:mt-20 lg:w-[274px]'
           onClick={() => {
             void (async () => {
               await save()
@@ -129,45 +109,7 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
           Save
         </Button>
       </div>
-      <Tabs defaultValue='one_time' className='mt-[60px]'>
-        <TabsList className='mb-10 w-full'>
-          <TabsTrigger value='one_time' className='w-full data-[state=active]:bg-transparent'>
-            One time calculation
-          </TabsTrigger>
-          <TabsTrigger value='periodic' disabled className='w-full data-[state=active]:bg-transparent'>
-            Periodic calculation
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value='one_time' className='flex flex-col gap-[60px]'>
-          <div className='grid grid-cols-2 gap-10'>
-            <InputComponent
-              value={period.from}
-              onChange={(e) => {
-                setPeriod((state) => ({ ...state, from: e.target.value }))
-              }}
-              label='From'
-            />
-            <InputComponent
-              value={period.to}
-              onChange={(e) => {
-                setPeriod((state) => ({ ...state, to: e.target.value }))
-              }}
-              label='To'
-            />
-          </div>
-          <Button
-            className='w-[274px] self-center'
-            onClick={() => {
-              void (async () => {
-                await prove()
-              })()
-            }}
-          >
-            Prove
-          </Button>
-        </TabsContent>
-        <p>res={proveRes?.result}</p>
-      </Tabs>
+      <CalculationsTabs projectId={projectId} expressionId={expression.id} />
     </div>
   )
 }

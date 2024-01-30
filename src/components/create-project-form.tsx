@@ -26,7 +26,7 @@ export const CreateProjectForm = () => {
         void (async () => {
           try {
             const { data } = await axiosAuth.post<ProjectCreateResponse>(ApiRoutes.PROJECTS, {
-              name: name,
+              name,
             })
 
             navigate.push(`${Nav.PROJECTS}/${data.id}`)

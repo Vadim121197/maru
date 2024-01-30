@@ -94,13 +94,13 @@ export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string 
             <BaseExpressionHelperTable tools={tools} event={selectedEvent} setExpressionValues={setExpressionValues} />
           )}
         </div>
-        <div className='mb-6 lg:mb-10 mt-4 text-[12px] leading-[18px] lg:text-sm font-normal'>
+        <div className='mb-6 mt-4 text-[12px] font-normal leading-[18px] lg:mb-10 lg:text-sm'>
           The precalculation uses events in the last 1000 blocks.{' '}
           <span className='text-muted-foreground underline'>Change precalc settings</span>
         </div>
         <Button
           variant='outline'
-          className='mb-10 w-full lg:w-[274px] self-center'
+          className='mb-10 w-full self-center lg:w-[274px]'
           onClick={() => {
             void (async () => {
               await precalculate()
@@ -111,7 +111,7 @@ export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string 
         </Button>
         <PrecalcValues res={precalcRes} />
         <Button
-          className='mt-10 lg:mt-20 w-full lg:w-[274px] self-center'
+          className='mt-10 w-full self-center lg:mt-20 lg:w-[274px]'
           onClick={() => {
             void (async () => {
               await save()

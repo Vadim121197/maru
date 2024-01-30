@@ -3,14 +3,13 @@
 import { useEffect, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
-import type { CalculationRes } from '~/types/calculations'
-import type { ExpressionCreateRes, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
+import type { ExpressionCreateResponse, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
 import { ExpressionField } from '../expression-field'
-import { InputComponent, TextLabel } from '../form-components'
-import { FinalExpressionHelperTable } from './final-expression-helper-table'
-import { Button } from '../ui/button'
+import { TextLabel } from '../form-components'
 import { PrecalcValues } from '../precalc-values'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
+import { Button } from '../ui/button'
+import { CalculationsTabs } from './calculations-tabs'
+import { FinalExpressionHelperTable } from './final-expression-helper-table'
 
 const defaultExpression = 'bought_id == 1 ? tokens_bought : 0'
 
@@ -21,14 +20,9 @@ export const FinalExpressionForm = ({ projectId }: { projectId: string }) => {
     name: '',
     rawData: defaultExpression,
   })
-  const [precalcRes, setPrecalcRes] = useState('')
-  const [saveRes, setSaveRes] = useState<ExpressionCreateRes | undefined>()
-  const [proveRes, setProveRes] = useState<CalculationRes | undefined>()
 
-  const [period, setPeriod] = useState<{ from: string; to: string }>({
-    from: '',
-    to: '',
-  })
+  const [precalculationResult, setPrecalculationResult] = useState('')
+  const [createdExpression, setCreatedExpression] = useState<ExpressionCreateResponse | undefined>()
 
   const [tools, setTools] = useState<FinalExpressionTools | undefined>()
 
@@ -52,36 +46,22 @@ export const FinalExpressionForm = ({ projectId }: { projectId: string }) => {
         expression_type: 'final',
         project_id: projectId,
       })
-      setPrecalcRes(data)
+      setPrecalculationResult(data)
     } catch (error) {}
   }
 
   const save = async () => {
     if (!expressionValues.rawData || !expressionValues.name) return
     try {
-      const { data } = await axiosAuth.post<ExpressionCreateRes>(ApiRoutes.EXPRESSIONS, {
+      const { data } = await axiosAuth.post<ExpressionCreateResponse>(ApiRoutes.EXPRESSIONS, {
         raw_data: expressionValues.rawData,
         name: expressionValues.name,
         project_id: projectId,
         expression_type: 'final',
       })
-      setSaveRes(data)
-    } catch (error) {}
-  }
 
-  const prove = async () => {
-    if (!saveRes?.id) return
-    try {
-      const { data } = await axiosAuth.post<CalculationRes>(ApiRoutes.CALCULATIONS, {
-        expression_id: saveRes.id,
-        calculation_type: 'one_time',
-        from_value: period.from,
-        to_value: period.to,
-        period_value: 'block',
-        project_id: projectId,
-      })
-      setProveRes(data)
-    } catch {}
+      setCreatedExpression(data)
+    } catch (error) {}
   }
 
   return (
@@ -95,13 +75,13 @@ export const FinalExpressionForm = ({ projectId }: { projectId: string }) => {
             </div>
             <FinalExpressionHelperTable tools={tools} setExpressionValues={setExpressionValues} />
           </div>
-          <div className='mb-6 lg:mb-10 mt-4 text-[12px] leading-[18px] lg:text-sm font-normal'>
+          <div className='mb-6 mt-4 text-[12px] font-normal leading-[18px] lg:mb-10 lg:text-sm'>
             The precalculation uses events in the last 1000 blocks.{' '}
             <span className='text-muted-foreground underline'>Change precalc settings</span>
           </div>
           <Button
             variant='outline'
-            className='mb-10 w-full lg:w-[274px] self-center'
+            className='mb-10 w-full self-center lg:w-[274px]'
             onClick={() => {
               void (async () => {
                 await precalculate()
@@ -110,9 +90,9 @@ export const FinalExpressionForm = ({ projectId }: { projectId: string }) => {
           >
             Precalculation
           </Button>
-          <PrecalcValues res={precalcRes} />
+          <PrecalcValues res={precalculationResult} />
           <Button
-            className='mt-10 lg:mt-20 w-full lg:w-[274px] self-center'
+            className='mt-10 w-full self-center lg:mt-20 lg:w-[274px]'
             onClick={() => {
               void (async () => {
                 await save()
@@ -124,47 +104,7 @@ export const FinalExpressionForm = ({ projectId }: { projectId: string }) => {
           </Button>
         </div>
       )}
-      {saveRes && (
-        <Tabs defaultValue='one_time' className='mt-[60px]'>
-          <TabsList className='mb-10 w-full'>
-            <TabsTrigger value='one_time' className='w-full data-[state=active]:bg-transparent'>
-              One time calculation
-            </TabsTrigger>
-            <TabsTrigger value='periodic' disabled className='w-full data-[state=active]:bg-transparent'>
-              Periodic calculation
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value='one_time' className='flex flex-col gap-[60px]'>
-            <div className='grid grid-cols-2 gap-10'>
-              <InputComponent
-                value={period.from}
-                onChange={(e) => {
-                  setPeriod((state) => ({ ...state, from: e.target.value }))
-                }}
-                label='From'
-              />
-              <InputComponent
-                value={period.to}
-                onChange={(e) => {
-                  setPeriod((state) => ({ ...state, to: e.target.value }))
-                }}
-                label='To'
-              />
-            </div>
-            <Button
-              className='w-[274px] self-center'
-              onClick={() => {
-                void (async () => {
-                  await prove()
-                })()
-              }}
-            >
-              Prove
-            </Button>
-          </TabsContent>
-          <p>res={proveRes?.result}</p>
-        </Tabs>
-      )}
+      {createdExpression && <CalculationsTabs projectId={projectId} expressionId={createdExpression.id} />}
     </div>
   )
 }

@@ -14,7 +14,6 @@ export interface ExpressionHelperTable {
   constant: ExpressionConstants | undefined
   function: ExpressionFunction | undefined
   param: ExpressionEventParam | undefined
-  global_constants: ExpressionConstants | undefined
 }
 
 export const BaseExpressionHelperTable = ({
@@ -27,12 +26,7 @@ export const BaseExpressionHelperTable = ({
   setExpressionValues: Dispatch<SetStateAction<ExpressionValues>>
 }) => {
   const data = useMemo(() => {
-    const maxLength = Math.max(
-      tools.constants.length,
-      tools.functions.length,
-      tools.global_constants.length,
-      event.params.length,
-    )
+    const maxLength = Math.max(tools.constants.length, tools.functions.length, event.params.length)
 
     const arr: ExpressionHelperTable[] = []
 
@@ -42,7 +36,6 @@ export const BaseExpressionHelperTable = ({
         constant: tools.constants[i],
         function: tools.functions[i],
         param: event.params[i],
-        global_constants: tools.global_constants[i],
       }
 
       arr.push(obj)
@@ -59,25 +52,6 @@ export const BaseExpressionHelperTable = ({
   return (
     <>
       <div className='flex flex-col gap-6 lg:hidden'>
-        {tools.global_constants.length ? (
-          <div className='flex flex-col gap-2'>
-            <p className='text-[12px] font-normal'>Global Consts</p>
-            <div className='grid grid-cols-2 gap-4'>
-              {tools.global_constants.map((i) => (
-                <button
-                  onClick={helperClick(i.name)}
-                  type='button'
-                  key={i.name}
-                  className='text-left text-[12px] font-normal text-muted-foreground'
-                >
-                  {i.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <></>
-        )}
         {tools.constants.length ? (
           <div className='flex flex-col gap-2'>
             <p className='text-[12px] font-normal'>Contract Consts</p>
@@ -106,7 +80,7 @@ export const BaseExpressionHelperTable = ({
                   onClick={helperClick(i.name)}
                   type='button'
                   key={i.name}
-                  className='text-left text-[12px] font-normal text-muted-foreground break-all'
+                  className='break-all text-left text-[12px] font-normal text-muted-foreground'
                 >
                   {i.name}
                 </button>
@@ -139,8 +113,7 @@ export const BaseExpressionHelperTable = ({
       <Table className='hidden lg:table'>
         <TableHeader>
           <TableRow>
-            <TableHead>Global Consts</TableHead>
-            <TableHead className='text-center'>Contract Consts</TableHead>
+            <TableHead>Contract Consts</TableHead>
             <TableHead className='text-center'>Contract Functions</TableHead>
             <TableHead className='text-center'>Event Params</TableHead>
           </TableRow>
@@ -149,11 +122,6 @@ export const BaseExpressionHelperTable = ({
           {data.map((i) => (
             <TableRow key={i.key}>
               <TableCell>
-                <button onClick={helperClick(i.global_constants?.name)} type='button'>
-                  {i.global_constants?.name}
-                </button>
-              </TableCell>
-              <TableCell className='text-center'>
                 <button onClick={helperClick(i.constant?.name)} type='button'>
                   {i.constant?.name}
                 </button>

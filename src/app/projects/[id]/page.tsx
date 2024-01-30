@@ -75,7 +75,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
             <TabsTrigger value='expression'>Expression</TabsTrigger>
             <TabsTrigger value='deployment'>Deployment</TabsTrigger>
           </TabsList>
-          <TabsContent value='expression' className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+          <TabsContent value='expression' className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
             <div className='flex flex-col gap-4'>
               <div className='flex items-center justify-between'>
                 <p className='text-lg font-medium'>Expression</p>
@@ -117,7 +117,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
                     ))}
                   </>
                 ) : (
-                  <div className='flex items-center justify-center mt-10 text-2xl'>Empty List</div>
+                  <div className='mt-10 flex items-center justify-center text-2xl'>Empty List</div>
                 )}
               </div>
             </div>
@@ -159,7 +159,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
                       ))}
                     </>
                   ) : (
-                    <div className='flex items-center justify-center mt-10 text-2xl'>Empty List</div>
+                    <div className='mt-10 flex items-center justify-center text-2xl'>Empty List</div>
                   )}
                 </div>
               </div>
