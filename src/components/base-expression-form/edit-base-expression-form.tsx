@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import useAxiosAuth from '~/hooks/axios-auth'
+import type { PrecalculateResult } from '~/types/calculations'
 import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
 import type { Expression, ExpressionEvent, ExpressionTools, ExpressionValues } from '~/types/expressions'
 import { TextLabel } from '../form-components'
@@ -11,7 +12,6 @@ import { BaseExpressionHelperTable } from './base-expression-helper-table'
 import { Button } from '../ui/button'
 import { PrecalcValues } from '../precalc-values'
 import { PrecalcSettings } from '../precalc-settings'
-import type { PrecalculateResult } from '~/types/calculations'
 
 export const EditBaseExpressionForm = ({ expressionId, projectId }: { expressionId: string; projectId: string }) => {
   const axiosAuth = useAxiosAuth()

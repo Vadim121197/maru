@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import type { Project } from '~/types/project'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
-import { Button } from './ui/button'
 import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
-import { InputBlock } from './input-block'
 import { ApiRoutes } from '~/lib/axios-instance'
+import { InputBlock } from './input-block'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
+import { Button } from './ui/button'
 
 export const PrecalcSettings = ({ projectId }: { projectId: string }) => {
   const axiosAuth = useAxiosAuth()
@@ -54,10 +54,10 @@ export const PrecalcSettings = ({ projectId }: { projectId: string }) => {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className='text-base font-medium color-muted-foreground'>Change precalc settings</DialogTitle>
+            <DialogTitle className='text-base font-medium text-muted-foreground'>Change precalc settings</DialogTitle>
           </DialogHeader>
           <div className='mt-6 flex flex-col items-center gap-10'>
-            <div className='grid grid-cols-2 gap-3 w-full'>
+            <div className='grid w-full grid-cols-2 gap-3'>
               <InputBlock
                 className='w-full'
                 type='number'
@@ -94,7 +94,7 @@ export const PrecalcSettings = ({ projectId }: { projectId: string }) => {
               onClick={() => {
                 void (async () => {
                   try {
-                    await axiosAuth.put(`${AxiosRoutes.PROJECTS}/${projectId}`, {
+                    await axiosAuth.put(`${ApiRoutes.PROJECTS}/${projectId}`, {
                       block_range: `${period.from}-${period.to}`,
                     })
                     setOpen(false)
