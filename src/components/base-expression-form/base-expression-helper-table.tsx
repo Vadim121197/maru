@@ -88,6 +88,7 @@ export const BaseExpressionHelperTable = ({
                   type='button'
                   key={i.name}
                   className='break-all text-left text-[12px] font-normal text-muted-foreground'
+                  disabled={true}
                 >
                   {i.name}
                 </button>
@@ -134,7 +135,7 @@ export const BaseExpressionHelperTable = ({
                 </button>
               </TableCell>
               <TableCell className='text-center'>
-                <button onClick={helperClick(i.function?.name)} type='button'>
+                <button disabled={true} onClick={helperClick(i.function?.name)} type='button'>
                   {i.function?.name}
                 </button>
               </TableCell>

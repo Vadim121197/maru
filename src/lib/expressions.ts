@@ -1,5 +1,6 @@
 export enum Expressions {
   EVENT_DATA = 'event_data',
+  EXPRESSIONS = 'expressions',
   BLOCK_HEADERS = 'block_headers',
   STATE_DATA = 'state_data',
   STORAGE_SLOTS = 'storage_slots',
@@ -9,6 +10,7 @@ export enum Expressions {
 
 export const expressionTypeLabels: Record<Expressions, string> = {
   event_data: 'Event Data',
+  expressions: 'Expressions',
   block_headers: 'Block Headers',
   state_data: 'State Data',
   storage_slots: 'Storage Slots',
@@ -20,6 +22,10 @@ export const expressionTypes = [
   {
     value: Expressions.EVENT_DATA,
     label: expressionTypeLabels[Expressions.EVENT_DATA],
+  },
+  {
+    value: Expressions.EXPRESSIONS,
+    label: expressionTypeLabels[Expressions.EXPRESSIONS],
   },
   // {
   //   value: Expressions.BLOCK_HEADERS,

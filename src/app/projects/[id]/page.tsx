@@ -1,24 +1,17 @@
 'use client'
 
-import { Plus } from 'lucide-react'
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { buttonVariants } from '~/components/ui/button'
+import { ExpressionsTab } from '~/components/expressions-tab'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
-import { cn } from '~/lib/utils'
-import type { ExpressionsRes } from '~/types/expressions'
 import { type Project } from '~/types/project'
 
 const ProjectPage = ({ params }: { params: { id: string } }) => {
   const axiosAuth = useAxiosAuth()
-  const { data: session } = useSession()
 
   const [project, setProject] = useState<Project | undefined>()
-  const [projectExpressions, setProjectExpressions] = useState<ExpressionsRes | undefined>(undefined)
 
   useEffect(() => {
     if (!params.id) return
@@ -30,15 +23,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         )
 
         setProject(project)
-
-        const { data: projectExpressions } = await axiosAuth.get<ExpressionsRes>(
-          ApiRoutes.PROJECTS_PROJECT_ID_EXPRESSIONS.replace(PROJECT_ID, params.id),
-        )
-
-        setProjectExpressions(projectExpressions)
-      } catch (error) {
-        console.log(error)
-      }
+      } catch (error) {}
     })()
   }, [params.id, axiosAuth])
 
@@ -75,97 +60,8 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
             <TabsTrigger value='expression'>Expression</TabsTrigger>
             <TabsTrigger value='deployment'>Deployment</TabsTrigger>
           </TabsList>
-          <TabsContent value='expression' className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
-            <div className='flex flex-col gap-4'>
-              <div className='flex items-center justify-between'>
-                <p className='text-lg font-medium'>Expression</p>
-                {project.user.id === session?.user.id && (
-                  <Link
-                    href={`/projects/${params.id}/expression/create`}
-                    className={cn(
-                      'flex items-center gap-[10px] px-4',
-                      buttonVariants({
-                        variant: 'outline',
-                      }),
-                    )}
-                  >
-                    <div>
-                      <Plus className='h-4 w-4' />
-                    </div>
-                    <p className='text-base font-semibold'>Add Expression</p>
-                  </Link>
-                )}
-              </div>
-              <div className='flex flex-col gap-4'>
-                {projectExpressions?.base_expressions.length ? (
-                  <>
-                    {projectExpressions.base_expressions.map((exp) => (
-                      <Link
-                        href={`/projects/${params.id}/expression/${exp.id}`}
-                        key={exp.id}
-                        className='flex flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px]'
-                      >
-                        <div className='flex items-center justify-between'>
-                          <p className='text-base font-medium'>{exp.name}</p>
-                          <div className='flex items-center gap-3'>
-                            <p className='text-sm font-normal'>Aggregate</p>
-                            <div className='border-2 px-8 py-[2px] text-sm font-normal'>{exp.aggregate_operation}</div>
-                          </div>
-                        </div>
-                        <p className='text-sm font-normal text-muted-foreground'>{exp.raw_data}</p>
-                      </Link>
-                    ))}
-                  </>
-                ) : (
-                  <div className='mt-10 flex items-center justify-center text-2xl'>Empty List</div>
-                )}
-              </div>
-            </div>
-            {projectExpressions?.base_expressions.length ? (
-              <div className='flex flex-col gap-4'>
-                <div className='flex items-center justify-between'>
-                  <p className='text-lg font-medium'>Final Expression</p>
-                  {project.user.id === session?.user.id && (
-                    <Link
-                      href={`/projects/${params.id}/final-expression/create`}
-                      className={cn(
-                        'flex items-center gap-[10px] px-4',
-                        buttonVariants({
-                          variant: 'outline',
-                        }),
-                      )}
-                    >
-                      <div>
-                        <Plus className='h-4 w-4' />
-                      </div>
-                      <p className='text-base font-semibold'>Add Final Expression</p>
-                    </Link>
-                  )}
-                </div>
-                <div className='flex flex-col gap-4'>
-                  {projectExpressions.final_expressions.length ? (
-                    <>
-                      {projectExpressions.final_expressions.map((exp) => (
-                        <Link
-                          href={`/projects/${params.id}/final-expression/${exp.id}`}
-                          key={exp.id}
-                          className='flex flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px]'
-                        >
-                          <div className='flex items-center justify-between'>
-                            <p className='text-base font-medium'>{exp.name}</p>
-                          </div>
-                          <p className='text-sm font-normal text-muted-foreground'>{exp.raw_data}</p>
-                        </Link>
-                      ))}
-                    </>
-                  ) : (
-                    <div className='mt-10 flex items-center justify-center text-2xl'>Empty List</div>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
+          <TabsContent value='expression'>
+            <ExpressionsTab projectId={project.id} />
           </TabsContent>
           <TabsContent value='deployment' />
         </Tabs>

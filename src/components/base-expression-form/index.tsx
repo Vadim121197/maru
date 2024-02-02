@@ -1,12 +1,10 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ADDRESS, ApiRoutes } from '~/lib/axios-instance'
-import { expressionTypes, type Expressions } from '~/lib/expressions'
 import type { PrecalculateResult } from '~/types/calculations'
-import type { ExpressionEvent, ExpressionTools, ExpressionValues } from '~/types/expressions'
+import type { Expression, ExpressionEvent, ExpressionTools, ExpressionValues } from '~/types/expressions'
+import type { AxiosError } from 'axios'
+import { toast } from 'react-toastify'
 import { ExpressionField } from '../expression-field'
 import { InputComponent, SelectComponent, TextLabel } from '../form-components'
 import { PrecalcValues } from '../precalc-values'
@@ -14,13 +12,19 @@ import { Button } from '../ui/button'
 import { BaseExpressionHelperTable } from './base-expression-helper-table'
 import { PrecalcSettings } from '../precalc-settings'
 
+
 const defaultExpression = 'bought_id == 1 ? tokens_bought : 0'
+// 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7
 
-export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
+export const BaseExpressionForm = ({
+  projectId,
+  updateExpressionList,
+}: {
+  projectId: number
+  updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
+}) => {
   const axiosAuth = useAxiosAuth()
-  const router = useRouter()
 
-  const [selectedSource, setSelectedSource] = useState<Expressions | undefined>(expressionTypes[0]?.value)
   const [contractAddress, setContractAddress] = useState('')
   const [selectedEvent, setSelectedEvent] = useState<ExpressionEvent | undefined>()
   const [expressionValues, setExpressionValues] = useState<ExpressionValues>({
@@ -81,7 +85,7 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
     )
       return
     try {
-      await axiosAuth.post(ApiRoutes.EXPRESSIONS, {
+      const { data } = await axiosAuth.post<Expression>(ApiRoutes.EXPRESSIONS, {
         raw_data: expressionValues.rawData,
         name: expressionValues.name,
         project_id: projectId,
@@ -90,8 +94,11 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
         event: `${selectedEvent.name}(${selectedEvent.params.map((i) => i.arg_type).join(',')})`,
         expression_type: 'base',
       })
-      router.push(`/projects/${projectId}`)
-    } catch (error) {}
+      updateExpressionList(data, 'create')
+    } catch (error) {
+      const err = error as AxiosError
+      toast.error(`${err.message} (${err.config?.url}, ${err.config?.method})`)
+    }
   }
 
   const eventsOptions = useMemo(() => {
@@ -100,22 +107,14 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
     return tools.events.map((ev) => {
       return {
         value: ev.name,
-        label: `${ev.name}(${ev.params.map((i) => i.name + ' ' + i.arg_type).join(', ')})`,
+        label: ev.name,
       }
     })
   }, [tools])
 
   return (
-    <div className='flex w-full flex-col gap-6 bg-card p-4 lg:p-6'>
-      <SelectComponent
-        value={selectedSource}
-        onValueChange={(e) => {
-          setSelectedSource(e as Expressions)
-        }}
-        options={expressionTypes}
-        label='Data source'
-      />
-      {selectedSource && (
+    <div className='flex w-full flex-col'>
+      <div className='grid grid-cols-2 gap-4'>
         <InputComponent
           value={contractAddress}
           onChange={(e) => {
@@ -123,18 +122,18 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
           }}
           label='Contact address'
         />
-      )}
-      {tools && (
-        <SelectComponent
-          value={selectedEvent?.name}
-          onValueChange={(e) => {
-            setSelectedEvent(tools.events.find((event) => event.name === e))
-          }}
-          options={eventsOptions}
-          label='Event'
-          triggerClassName='gap-4 py-3 text-left text-sm font-normal'
-        />
-      )}
+        {tools && (
+          <SelectComponent
+            value={selectedEvent?.name}
+            onValueChange={(e) => {
+              setSelectedEvent(tools.events.find((event) => event.name === e))
+            }}
+            options={eventsOptions}
+            label='Event'
+            triggerClassName='h-11 text-base font-medium text-muted'
+          />
+        )}
+      </div>
       {selectedEvent && tools && (
         <div className='flex flex-col'>
           <div className='flex flex-col gap-[38px] border-b pb-4'>
@@ -149,31 +148,31 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
             <BaseExpressionHelperTable tools={tools} event={selectedEvent} setExpressionValues={setExpressionValues} />
           </div>
           <PrecalcSettings projectId={projectId} />
-          <Button
-            variant='outline'
-            className='mb-10 w-full self-center lg:w-[274px]'
-            onClick={() => {
-              void (async () => {
-                await precalculate()
-              })()
-            }}
-          >
-            Precalculation
-          </Button>
-          <PrecalcValues res={precalcRes} />
-          <Button
-            className='mt-10 w-full self-center lg:mt-20 lg:w-[274px]'
-            onClick={() => {
-              void (async () => {
-                await save()
-              })()
-            }}
-            disabled={
-              !expressionValues.rawData || !expressionValues.name || !contractAddress || !expressionValues.aggregate
-            }
-          >
-            Save
-          </Button>
+          <div className='mb-10 grid grid-cols-2 gap-4'>
+            <Button
+              variant='outline'
+              className='w-full'
+              onClick={() => {
+                void (async () => {
+                  await precalculate()
+                })()
+              }}
+            >
+              Precalculation
+            </Button>
+            <Button
+              className='w-full'
+              onClick={() => {
+                void (async () => {
+                  await save()
+                })()
+              }}
+              disabled={!expressionValues.rawData || !contractAddress || !expressionValues.aggregate}
+            >
+              Save
+            </Button>
+          </div>
+          {precalcRes.length ? <PrecalcValues res={precalcRes} /> : <></>}
         </div>
       )}
     </div>

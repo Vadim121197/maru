@@ -14,8 +14,6 @@ export const ExpressionField = ({
   expressionValues,
   setExpressionValues,
 }: ExpressionFieldProps) => {
-  console.log(aggregateFunctions)
-
   const selectOptions = useMemo(() => {
     if (!aggregateFunctions?.length) return []
     return aggregateFunctions.map((aggr) => {

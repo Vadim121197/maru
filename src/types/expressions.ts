@@ -60,7 +60,7 @@ export interface Expression {
   parsed_data: string
 }
 
-export interface ExpressionsRes {
+export interface ExpressionsResponse {
   final_expressions: Expression[]
   base_expressions: Expression[]
 }

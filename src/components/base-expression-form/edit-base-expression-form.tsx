@@ -1,11 +1,10 @@
-'use client'
-
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import useAxiosAuth from '~/hooks/axios-auth'
 import type { PrecalculateResult } from '~/types/calculations'
 import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
 import type { Expression, ExpressionEvent, ExpressionTools, ExpressionValues } from '~/types/expressions'
+import type { AxiosError } from 'axios'
+import { toast } from 'react-toastify'
 import { TextLabel } from '../form-components'
 import { ExpressionField } from '../expression-field'
 import { BaseExpressionHelperTable } from './base-expression-helper-table'
@@ -13,15 +12,23 @@ import { Button } from '../ui/button'
 import { PrecalcValues } from '../precalc-values'
 import { PrecalcSettings } from '../precalc-settings'
 
-export const EditBaseExpressionForm = ({ expressionId, projectId }: { expressionId: string; projectId: string }) => {
-  const axiosAuth = useAxiosAuth()
-  const router = useRouter()
+interface EditBaseExpressionFormProps {
+  expression: Expression
+  projectId: number
+  updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
+}
 
-  const [expression, setExpression] = useState<Expression | undefined>()
+export const EditBaseExpressionForm = ({
+  expression,
+  projectId,
+  updateExpressionList,
+}: EditBaseExpressionFormProps) => {
+  const axiosAuth = useAxiosAuth()
+
   const [expressionValues, setExpressionValues] = useState<ExpressionValues>({
-    name: '',
-    rawData: '',
-    aggregate: undefined,
+    name: expression.name,
+    rawData: expression.raw_data,
+    aggregate: expression.aggregate_operation,
   })
   const [selectedEvent, setSelectedEvent] = useState<ExpressionEvent | undefined>()
   const [precalcRes, setPrecalcRes] = useState<PrecalculateResult[]>([])
@@ -30,37 +37,26 @@ export const EditBaseExpressionForm = ({ expressionId, projectId }: { expression
   useEffect(() => {
     void (async () => {
       try {
-        const { data } = await axiosAuth.get<Expression>(
-          ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, expressionId),
-        )
-        setExpression(data)
-
-        setExpressionValues({
-          name: data.name,
-          rawData: data.raw_data,
-          aggregate: data.aggregate_operation,
-        })
-
         const { data: tools } = await axiosAuth.get<ExpressionTools>(
-          ApiRoutes.EXPRESSIONS_ADDRESS_TOOLS.replace(ADDRESS, data.contract_address),
+          ApiRoutes.EXPRESSIONS_ADDRESS_TOOLS.replace(ADDRESS, expression.contract_address),
         )
 
         setTools(tools)
 
-        setSelectedEvent(tools.events.find((ev) => ev.name === data.event.split('(')[0]))
+        setSelectedEvent(tools.events.find((ev) => ev.name === expression.event.split('(')[0]))
       } catch {}
     })()
-  }, [axiosAuth, expressionId])
+  }, [axiosAuth, expression])
 
   const precalculate = async () => {
     try {
       const { data } = await axiosAuth.post<PrecalculateResult[]>(`${ApiRoutes.EXPRESSIONS}/demo`, {
         raw_data: expressionValues.rawData,
-        projects_id: expression?.project_id,
-        contract_address: expression?.contract_address,
+        projects_id: expression.project_id,
+        contract_address: expression.contract_address,
         block_range: null,
         aggregate_operation: expressionValues.aggregate,
-        event: expression?.event,
+        event: expression.event,
         expression_type: 'base',
       })
 
@@ -69,16 +65,22 @@ export const EditBaseExpressionForm = ({ expressionId, projectId }: { expression
   }
 
   const save = async () => {
-    if (!expression) return
     try {
-      await axiosAuth.put(ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, expression.id.toString()), {
-        ...expression,
-        raw_data: expressionValues.rawData,
-        name: expressionValues.name,
-        aggregate_operation: expressionValues.aggregate,
-      })
-      router.push(`/projects/${expression.project_id}`)
-    } catch (error) {}
+      const { data } = await axiosAuth.put<Expression>(
+        ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, expression.id.toString()),
+        {
+          ...expression,
+          raw_data: expressionValues.rawData,
+          name: expressionValues.name,
+          aggregate_operation: expressionValues.aggregate,
+        },
+      )
+
+      updateExpressionList(data, 'update')
+    } catch (error) {
+      const err = error as AxiosError
+      toast.error(`${err.message} (${err.config?.url}, ${err.config?.method})`)
+    }
   }
 
   return (
@@ -98,29 +100,31 @@ export const EditBaseExpressionForm = ({ expressionId, projectId }: { expression
           )}
         </div>
         <PrecalcSettings projectId={projectId} />
-        <Button
-          variant='outline'
-          className='mb-10 w-full self-center lg:w-[274px]'
-          onClick={() => {
-            void (async () => {
-              await precalculate()
-            })()
-          }}
-        >
-          Precalculation
-        </Button>
-        <PrecalcValues res={precalcRes} />
-        <Button
-          className='mt-10 w-full self-center lg:mt-20 lg:w-[274px]'
-          onClick={() => {
-            void (async () => {
-              await save()
-            })()
-          }}
-          disabled={!expressionValues.rawData || !expressionValues.name || !expressionValues.aggregate}
-        >
-          Save
-        </Button>
+        <div className='mb-10 grid grid-cols-2 gap-4'>
+          <Button
+            variant='outline'
+            className='w-full'
+            onClick={() => {
+              void (async () => {
+                await precalculate()
+              })()
+            }}
+          >
+            Precalculation
+          </Button>
+          <Button
+            className='w-full'
+            onClick={() => {
+              void (async () => {
+                await save()
+              })()
+            }}
+            disabled={!expressionValues.rawData || !expressionValues.name || !expressionValues.aggregate}
+          >
+            Save
+          </Button>
+        </div>
+        {precalcRes.length ? <PrecalcValues res={precalcRes} /> : <></>}
       </div>
     </div>
   )

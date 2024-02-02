@@ -8,7 +8,7 @@ import { InputBlock } from './input-block'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
 import { Button } from './ui/button'
 
-export const PrecalcSettings = ({ projectId }: { projectId: string }) => {
+export const PrecalcSettings = ({ projectId }: { projectId: number }) => {
   const axiosAuth = useAxiosAuth()
 
   const [open, setOpen] = useState<boolean>(false)

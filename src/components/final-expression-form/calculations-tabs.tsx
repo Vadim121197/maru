@@ -6,7 +6,7 @@ import { InputComponent } from '../form-components'
 import { Button } from '../ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 
-export const CalculationsTabs = ({ projectId, expressionId }: { projectId: string; expressionId: number }) => {
+export const CalculationsTabs = ({ projectId, expressionId }: { projectId: number; expressionId: number }) => {
   const axiosAuth = useAxiosAuth()
 
   const [period, setPeriod] = useState<{ from: string; to: string }>({
