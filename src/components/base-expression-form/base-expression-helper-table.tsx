@@ -14,7 +14,7 @@ export interface ExpressionHelperTable {
   constant: ExpressionConstants | undefined
   function: ExpressionFunction | undefined
   param: ExpressionEventParam | undefined
-  global_constants: ExpressionConstants | undefined
+  // global_constants: ExpressionConstants | undefined
 }
 
 export const BaseExpressionHelperTable = ({
@@ -30,7 +30,7 @@ export const BaseExpressionHelperTable = ({
     const maxLength = Math.max(
       tools.constants.length,
       tools.functions.length,
-      tools.global_constants.length,
+      // tools.global_constants.length,
       event.params.length,
     )
 
@@ -42,7 +42,7 @@ export const BaseExpressionHelperTable = ({
         constant: tools.constants[i],
         function: tools.functions[i],
         param: event.params[i],
-        global_constants: tools.global_constants[i],
+        // global_constants: tools.global_constants[i],
       }
 
       arr.push(obj)
@@ -69,11 +69,11 @@ export const BaseExpressionHelperTable = ({
       <TableBody>
         {data.map((i) => (
           <TableRow key={i.key}>
-            <TableCell>
+            {/* <TableCell>
               <button onClick={helperClick(i.global_constants?.name)} type='button'>
                 {i.global_constants?.name}
               </button>
-            </TableCell>
+            </TableCell> */}
             <TableCell className='text-center'>
               <button onClick={helperClick(i.constant?.name)} type='button'>
                 {i.constant?.name}

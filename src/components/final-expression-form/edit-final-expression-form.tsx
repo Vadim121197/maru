@@ -11,6 +11,7 @@ import { FinalExpressionHelperTable } from './final-expression-helper-table'
 import { Button } from '../ui/button'
 import { PrecalcValues } from '../precalc-values'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
+import { PrecalcSettings } from '../precalc-settings'
 
 export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressionId: string; projectId: string }) => {
   const axiosAuth = useAxiosAuth()
@@ -97,10 +98,7 @@ export const EditFinalExpressionForm = ({ expressionId, projectId }: { expressio
           </div>
           <FinalExpressionHelperTable tools={tools} setExpressionValues={setExpressionValues} />
         </div>
-        <div className='mb-10 mt-4 flex items-start gap-1 text-sm font-normal'>
-          <p>The precalculation uses events in the last 1000 blocks.</p>
-          <p className='text-muted-foreground underline'>Change precalc settings</p>
-        </div>
+        <PrecalcSettings projectId={projectId} />
         <Button
           variant='outline'
           className='mb-10 w-[274px] self-center'

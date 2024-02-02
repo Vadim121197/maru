@@ -10,3 +10,9 @@ export interface CalculationRes {
   result: string
   id: number
 }
+
+export interface PrecalculateResult {
+  decimal: number
+  name: string
+  value: number
+}

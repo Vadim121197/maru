@@ -11,6 +11,7 @@ import { InputComponent, SelectComponent, TextLabel } from '../form-components'
 import { PrecalcValues } from '../precalc-values'
 import { Button } from '../ui/button'
 import { BaseExpressionHelperTable } from './base-expression-helper-table'
+import { PrecalcSettings } from '../precalc-settings'
 
 const defaultExpression = 'bought_id == 1 ? tokens_bought : 0'
 
@@ -143,10 +144,7 @@ export const BaseExpressionForm = ({ projectId }: { projectId: string }) => {
             </div>
             <BaseExpressionHelperTable tools={tools} event={selectedEvent} setExpressionValues={setExpressionValues} />
           </div>
-          <div className='mb-10 mt-4 flex items-start gap-1 text-sm font-normal'>
-            <p>The precalculation uses events in the last 1000 blocks.</p>
-            <p className='text-muted-foreground underline'>Change precalc settings</p>
-          </div>
+          <PrecalcSettings projectId={projectId} />
           <Button
             variant='outline'
             className='mb-10 w-[274px] self-center'

@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import { axiosInstance } from '~/lib/axios-instance'
 import { useRefreshToken } from './refresh-token'
+import { toast } from 'react-toastify'
 
 const useAxiosAuth = () => {
   const { data: session } = useSession()

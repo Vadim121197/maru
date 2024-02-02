@@ -11,8 +11,8 @@ export const ChartIcon = () => {
       />
       <defs>
         <linearGradient id='paint0_linear_893_19160' x1='142' y1='1' x2='142' y2='92' gradientUnits='userSpaceOnUse'>
-          <stop stop-color='#6D23F8' stop-opacity='0.4' />
-          <stop offset='1' stop-color='#6D23F8' stop-opacity='0.1' />
+          <stop stopColor='#6D23F8' stopOpacity='0.4' />
+          <stop offset='1' stopColor='#6D23F8' stopOpacity='0.1' />
         </linearGradient>
       </defs>
     </svg>

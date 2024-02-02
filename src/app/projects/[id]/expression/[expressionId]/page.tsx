@@ -8,7 +8,7 @@ const ExpressionPage = ({ params }: { params: { id: string; expressionId: string
         <BackButton />
         <div className='flex flex-col items-center gap-4'>
           <p className='text-2xl font-bold'>Edit Expression</p>
-          <EditBaseExpressionForm expressionId={params.expressionId} />
+          <EditBaseExpressionForm expressionId={params.expressionId} projectId={params.id} />
         </div>
       </div>
     </section>

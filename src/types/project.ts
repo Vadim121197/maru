@@ -4,6 +4,7 @@ export interface Tag {
 }
 
 export interface Project {
+  block_range: string
   name: string | null
   created_at: Date
   updated_at: Date

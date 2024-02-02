@@ -10,8 +10,10 @@ import { ExpressionField } from '../expression-field'
 import { BaseExpressionHelperTable } from './base-expression-helper-table'
 import { Button } from '../ui/button'
 import { PrecalcValues } from '../precalc-values'
+import { PrecalcSettings } from '../precalc-settings'
+import type { PrecalculateResult } from '~/types/calculations'
 
-export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string }) => {
+export const EditBaseExpressionForm = ({ expressionId, projectId }: { expressionId: string; projectId: string }) => {
   const axiosAuth = useAxiosAuth()
   const router = useRouter()
 
@@ -22,7 +24,7 @@ export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string 
     aggregate: undefined,
   })
   const [selectedEvent, setSelectedEvent] = useState<ExpressionEvent | undefined>()
-  const [precalcRes, setPrecalcRes] = useState('')
+  const [precalcRes, setPrecalcRes] = useState<PrecalculateResult[]>([])
   const [tools, setTools] = useState<ExpressionTools | undefined>()
 
   useEffect(() => {
@@ -50,7 +52,7 @@ export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string 
 
   const precalculate = async () => {
     try {
-      const { data } = await axiosAuth.post<string>(`${AxiosRoutes.EXPRESSIONS}/demo`, {
+      const { data } = await axiosAuth.post<PrecalculateResult[]>(`${AxiosRoutes.EXPRESSIONS}/demo`, {
         raw_data: expressionValues.rawData,
         projects_id: expression?.project_id,
         contract_address: expression?.contract_address,
@@ -59,6 +61,9 @@ export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string 
         event: expression?.event,
         expression_type: 'base',
       })
+
+      console.log(data)
+
       setPrecalcRes(data)
     } catch (error) {}
   }
@@ -91,10 +96,7 @@ export const EditBaseExpressionForm = ({ expressionId }: { expressionId: string 
             <BaseExpressionHelperTable tools={tools} event={selectedEvent} setExpressionValues={setExpressionValues} />
           )}
         </div>
-        <div className='mb-10 mt-4 flex items-start gap-1 text-sm font-normal'>
-          <p>The precalculation uses events in the last 1000 blocks.</p>
-          <p className='text-muted-foreground underline'>Change precalc settings</p>
-        </div>
+        <PrecalcSettings projectId={projectId} />
         <Button
           variant='outline'
           className='mb-10 w-[274px] self-center'

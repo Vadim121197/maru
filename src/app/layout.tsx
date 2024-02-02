@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
+import { ToastContainer } from 'react-toastify'
 import { authOptions } from '~/auth'
 import { SessionProvider } from '~/components/providers/session-provider'
 import { SignInProvider } from '~/components/providers/sign-in-provider'
@@ -10,6 +11,7 @@ import { siteConfig } from '~/config/site'
 import { fontSans } from '~/lib/fonts'
 import { cn } from '~/lib/utils'
 import '../styles/globals.css'
+import 'react-toastify/dist/ReactToastify.css'
 
 export const metadata: Metadata = {
   title: {
@@ -32,6 +34,17 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
     <html lang='en' suppressHydrationWarning>
       <body className={cn('min-h-screen bg-background font-sans antialiased relative', fontSans.variable)}>
         <div className='absolute bottom-0 left-[-200px] hidden h-[576px] w-[600px] rounded-full bg-[rgba(32,27,47,0.75)] blur-[250px] lg:block' />
+        <ToastContainer
+          position='top-right'
+          autoClose={3000}
+          hideProgressBar
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          draggable
+          pauseOnHover={false}
+          theme='dark'
+        />
         <SessionProvider session={session}>
           <SignInProvider>
             <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
