@@ -8,6 +8,7 @@ import { NotAuth } from '~/components/not-auth'
 import { ProjectCard } from '~/components/project-card'
 import { buttonVariants } from '~/components/ui/button'
 import useAxiosAuth from '~/hooks/axios-auth'
+import { ApiRoutes } from '~/lib/axios-instance'
 import { cn } from '~/lib/utils'
 import { Nav } from '~/types/nav'
 import type { Project } from '~/types/project'
@@ -22,7 +23,7 @@ const ProjectsPage = () => {
 
     void (async () => {
       try {
-        const { data } = await axiosAuth.get<Project[]>('/users/me/projects')
+        const { data } = await axiosAuth.get<Project[]>(ApiRoutes.USERS_ME_ROJECTS)
 
         setProjects(data)
       } catch {}

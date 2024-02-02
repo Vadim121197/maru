@@ -7,7 +7,7 @@ import { ProjectCard } from '~/components/project-card'
 import { buttonVariants } from '~/components/ui/button'
 import { UserCard } from '~/components/user-card'
 import { siteConfig } from '~/config/site'
-import { AxiosRoutes, axiosInstance } from '~/lib/axios-instance'
+import { ApiRoutes, axiosInstance } from '~/lib/axios-instance'
 import { cn } from '~/lib/utils'
 import { Nav } from '~/types/nav'
 import type { Project } from '~/types/project'
@@ -57,7 +57,7 @@ const IndexPage = async () => {
 
   let projects: Project[] = []
   try {
-    const { data } = await axiosInstance.get<Project[]>(AxiosRoutes.PROJECTS)
+    const { data } = await axiosInstance.get<Project[]>(ApiRoutes.PROJECTS)
 
     projects = data
   } catch (error) {}

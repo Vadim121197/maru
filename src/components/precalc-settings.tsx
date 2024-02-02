@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
-import { AxiosRoutes } from '~/lib/axios-instance'
 import type { Project } from '~/types/project'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
 import { Button } from './ui/button'
 import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import { InputBlock } from './input-block'
+import { ApiRoutes } from '~/lib/axios-instance'
 
 export const PrecalcSettings = ({ projectId }: { projectId: string }) => {
   const axiosAuth = useAxiosAuth()
@@ -20,7 +20,7 @@ export const PrecalcSettings = ({ projectId }: { projectId: string }) => {
   useEffect(() => {
     void (async () => {
       try {
-        const { data: project } = await axiosAuth.get<Project>(`${AxiosRoutes.PROJECTS}/${projectId}`)
+        const { data: project } = await axiosAuth.get<Project>(`${ApiRoutes.PROJECTS}/${projectId}`)
 
         const period = project.block_range.split('-')
 
@@ -34,10 +34,10 @@ export const PrecalcSettings = ({ projectId }: { projectId: string }) => {
 
   return (
     <>
-      <p className='mb-10 mt-4 text-sm font-normal'>
-        The precalculation uses events in the last 1000 blocks.
+      <p className='mb-6 mt-4 text-[12px] font-normal leading-[18px] lg:mb-10 lg:text-sm'>
+        The precalculation uses events in the last 1000 blocks.{' '}
         <span
-          className='pl-1 text-muted-foreground underline cursor-pointer'
+          className='text-muted-foreground underline'
           onClick={() => {
             setOpen(true)
           }}
@@ -45,6 +45,7 @@ export const PrecalcSettings = ({ projectId }: { projectId: string }) => {
           Change precalc settings
         </span>
       </p>
+
       <Dialog
         open={open}
         onOpenChange={(value) => {

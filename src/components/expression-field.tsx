@@ -1,8 +1,8 @@
-import { type Dispatch, type SetStateAction } from 'react'
+import { useMemo, type Dispatch, type SetStateAction } from 'react'
 import type { ExpressionAggregateFunctions, ExpressionValues } from '~/types/expressions'
 import { Input } from './ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Textarea } from './ui/textarea'
+import { SelectComponent } from './form-components'
 
 interface ExpressionFieldProps {
   aggregateFunctions?: ExpressionAggregateFunctions[]
@@ -14,11 +14,22 @@ export const ExpressionField = ({
   expressionValues,
   setExpressionValues,
 }: ExpressionFieldProps) => {
+  console.log(aggregateFunctions)
+
+  const selectOptions = useMemo(() => {
+    if (!aggregateFunctions?.length) return []
+    return aggregateFunctions.map((aggr) => {
+      return {
+        value: aggr.name,
+      }
+    })
+  }, [aggregateFunctions])
+
   return (
-    <div className='flex w-full flex-col gap-2 border-2 border-border bg-background p-4 text-base font-medium'>
-      <div className='flex justify-between'>
+    <div className='flex w-full flex-col gap-2 border-2 border-border bg-background p-3 text-base font-medium lg:p-4'>
+      <div className='flex flex-col justify-between gap-3 lg:flex-row lg:gap-5'>
         <Input
-          className='h-7 w-[200px] text-sm font-normal placeholder:text-[12px]'
+          className='h-7 w-full text-[12px] font-normal placeholder:text-[12px] lg:w-[200px] lg:text-sm'
           placeholder='Enter expression name'
           value={expressionValues.name}
           onChange={(e) => {
@@ -26,32 +37,26 @@ export const ExpressionField = ({
           }}
         />
         {aggregateFunctions && aggregateFunctions.length ? (
-          <div className='flex items-center gap-3'>
-            <p className='text-sm font-normal'>Aggregate</p>
-            <Select
+          <div className='flex items-center gap-1 lg:gap-3'>
+            <p className='text-[12px] font-normal lg:text-sm'>Aggregate</p>
+            <SelectComponent
               defaultValue={expressionValues.aggregate}
+              value={expressionValues.aggregate}
               onValueChange={(aggregate) => {
                 setExpressionValues((state) => ({ ...state, aggregate }))
               }}
-            >
-              <SelectTrigger className='h-7 min-h-7 w-[105px] text-sm font-normal uppercase'>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {aggregateFunctions.map((agr) => (
-                  <SelectItem value={agr.name} key={agr.name} className='uppercase'>
-                    {agr.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              options={selectOptions}
+              triggerClassName='h-7 min-h-7 w-[105px] text-sm font-normal uppercase'
+              selectItemClassName='uppercase'
+              selectContentClassName='w-[105px] min-w-[105px]'
+            />
           </div>
         ) : (
           <></>
         )}
       </div>
       <Textarea
-        className='border-0 p-0 text-base font-medium text-muted-foreground  placeholder:text-[12px]'
+        className='border-0 p-0 text-sm font-medium text-muted-foreground placeholder:text-[12px]  lg:text-base'
         placeholder='Enter expression'
         value={expressionValues.rawData}
         onChange={(e) => {

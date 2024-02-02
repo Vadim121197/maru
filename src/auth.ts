@@ -4,6 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import type { AuthOptions, Session, User } from 'next-auth'
 import type { Auth, User as CustomUser } from '~/types/auth'
 import type { JWT } from 'next-auth/jwt'
+import { ApiRoutes } from './lib/axios-instance'
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -13,7 +14,7 @@ export const authOptions: AuthOptions = {
       // @ts-expect-error
       async authorize(credentials: { code: string }) {
         try {
-          const url = process.env.NEXT_PUBLIC_API_URL + '/auth/callback' + `?code=${credentials.code}`
+          const url = process.env.NEXT_PUBLIC_API_URL + ApiRoutes.AUTH_CALLBACK + `?code=${credentials.code}`
 
           const { data } = await axios.get<Auth>(url)
 
@@ -43,7 +44,7 @@ export const authOptions: AuthOptions = {
 
       if (session.accessToken) {
         try {
-          const url = process.env.NEXT_PUBLIC_API_URL + '/users/me'
+          const url = process.env.NEXT_PUBLIC_API_URL + ApiRoutes.USERS_ME
 
           const { data } = await axios.get<CustomUser>(url, {
             headers: {

@@ -1,4 +1,4 @@
-export interface CalculationRes {
+export interface CalculationResponse {
   expression_id: number
   calculation_type: 'one_time' | 'periodic'
   from_value: string

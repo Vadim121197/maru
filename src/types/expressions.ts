@@ -71,7 +71,7 @@ export interface ExpressionValues {
   aggregate?: string
 }
 
-export interface ExpressionCreateRes {
+export interface ExpressionCreateResponse {
   raw_data: string
   name: string
   project_id: number

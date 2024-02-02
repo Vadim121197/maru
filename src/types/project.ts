@@ -3,6 +3,14 @@ export interface Tag {
   id: number
 }
 
+export interface ProjectCreateResponse {
+  name: string
+  created_at: Date
+  updated_at: Date
+  id: number
+  user_id: number
+}
+
 export interface Project {
   block_range: string
   name: string | null
