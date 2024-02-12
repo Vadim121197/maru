@@ -4,6 +4,7 @@ import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import { Expressions, expressionTypes } from '~/lib/expressions'
 import type { Expression, ExpressionsResponse } from '~/types/expressions'
+import type { Project } from '~/types/project'
 import { BaseExpressionForm } from './base-expression-form'
 import { EditBaseExpressionForm } from './base-expression-form/edit-base-expression-form'
 import { FinalExpressionForm } from './final-expression-form'
@@ -12,7 +13,13 @@ import { SelectComponent } from './form-components'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
 import { Button } from './ui/button'
 
-export const ExpressionsTab = ({ projectId }: { projectId: number }) => {
+export const ExpressionsTab = ({
+  project,
+  updateProject,
+}: {
+  project: Project
+  updateProject: (newProject: Project) => void
+}) => {
   const axiosAuth = useAxiosAuth()
 
   const [loading, setLoading] = useState<boolean>(true)
@@ -29,7 +36,7 @@ export const ExpressionsTab = ({ projectId }: { projectId: number }) => {
     void (async () => {
       try {
         const { data: projectExpressions } = await axiosAuth.get<ExpressionsResponse>(
-          ApiRoutes.PROJECTS_PROJECT_ID_EXPRESSIONS.replace(PROJECT_ID, projectId.toString()),
+          ApiRoutes.PROJECTS_PROJECT_ID_EXPRESSIONS.replace(PROJECT_ID, project.id.toString()),
         )
 
         setProjectExpressions(projectExpressions)
@@ -38,7 +45,7 @@ export const ExpressionsTab = ({ projectId }: { projectId: number }) => {
         setLoading(false)
       }
     })()
-  }, [projectId, axiosAuth])
+  }, [project.id, axiosAuth])
 
   if (loading) return <></>
 
@@ -137,10 +144,18 @@ export const ExpressionsTab = ({ projectId }: { projectId: number }) => {
               label='Data source'
             />
             {selectedSource === Expressions.EVENT_DATA && (
-              <BaseExpressionForm projectId={projectId} updateExpressionList={updateExpressionList} />
+              <BaseExpressionForm
+                project={project}
+                updateExpressionList={updateExpressionList}
+                updateProject={updateProject}
+              />
             )}
             {selectedSource === Expressions.EXPRESSIONS && (
-              <FinalExpressionForm projectId={projectId} updateExpressionList={updateFinaleExpressionList} />
+              <FinalExpressionForm
+                project={project}
+                updateExpressionList={updateFinaleExpressionList}
+                updateProject={updateProject}
+              />
             )}
           </div>
         )}
@@ -168,8 +183,9 @@ export const ExpressionsTab = ({ projectId }: { projectId: number }) => {
               <AccordionContent>
                 <EditBaseExpressionForm
                   expression={exp}
-                  projectId={projectId}
+                  project={project}
                   updateExpressionList={updateExpressionList}
+                  updateProject={updateProject}
                 />
               </AccordionContent>
             </AccordionItem>
@@ -199,7 +215,8 @@ export const ExpressionsTab = ({ projectId }: { projectId: number }) => {
                 <AccordionContent>
                   <EditFinalExpressionForm
                     expression={exp}
-                    projectId={projectId}
+                    project={project}
+                    updateProject={updateProject}
                     updateExpressionList={updateFinaleExpressionList}
                   />
                 </AccordionContent>

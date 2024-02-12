@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import type { Project } from '~/types/project'
 import type { AxiosError } from 'axios'
@@ -8,29 +8,36 @@ import { InputBlock } from './input-block'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
 import { Button } from './ui/button'
 
-export const PrecalcSettings = ({ projectId }: { projectId: number }) => {
+export const PrecalcSettings = ({
+  project,
+  updateProject,
+}: {
+  project: Project
+  updateProject: (newProject: Project) => void
+}) => {
   const axiosAuth = useAxiosAuth()
 
   const [open, setOpen] = useState<boolean>(false)
   const [period, setPeriod] = useState<{ from: string; to: string }>({
-    from: '',
-    to: '',
+    from: project.block_range.split('-')[0] ?? '',
+    to: project.block_range.split('-')[1] ?? '',
   })
 
-  useEffect(() => {
+  const updateBlockRange = () => {
     void (async () => {
       try {
-        const { data: project } = await axiosAuth.get<Project>(`${ApiRoutes.PROJECTS}/${projectId}`)
-
-        const period = project.block_range.split('-')
-
-        setPeriod({
-          from: period[0] ?? '',
-          to: period[1] ?? '',
+        const { data } = await axiosAuth.put<Project>(`${ApiRoutes.PROJECTS}/${project.id}`, {
+          block_range: `${period.from}-${period.to}`,
         })
-      } catch (error) {}
+        updateProject(data)
+
+        setOpen(false)
+      } catch (error) {
+        const err = error as AxiosError
+        toast.error(`${err.message} (${err.config?.url}, ${err.config?.method})`)
+      }
     })()
-  }, [projectId, axiosAuth])
+  }
 
   return (
     <>
@@ -88,23 +95,7 @@ export const PrecalcSettings = ({ projectId }: { projectId: number }) => {
                 }}
               />
             </div>
-            <Button
-              className='w-[50%]'
-              disabled={Number(period.from) > Number(period.to)}
-              onClick={() => {
-                void (async () => {
-                  try {
-                    await axiosAuth.put(`${ApiRoutes.PROJECTS}/${projectId}`, {
-                      block_range: `${period.from}-${period.to}`,
-                    })
-                    setOpen(false)
-                  } catch (error) {
-                    const err = error as AxiosError
-                    toast.error(`${err.message} (${err.config?.url}, ${err.config?.method})`)
-                  }
-                })()
-              }}
-            >
+            <Button className='w-[50%]' disabled={Number(period.from) > Number(period.to)} onClick={updateBlockRange}>
               Save
             </Button>
           </div>

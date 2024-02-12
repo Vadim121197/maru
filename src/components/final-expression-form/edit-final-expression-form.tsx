@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import type { Expression, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
+import type { Project } from '~/types/project'
 import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import type { PrecalculateResult } from '~/types/calculations'
@@ -12,14 +13,15 @@ import { FinalExpressionHelperTable } from './final-expression-helper-table'
 import { PrecalcSettings } from '../precalc-settings'
 import { Button } from '../ui/button'
 
-
 export const EditFinalExpressionForm = ({
-  projectId,
+  project,
   expression,
+  updateProject,
   updateExpressionList,
 }: {
-  projectId: number
+  project: Project
   expression: Expression
+  updateProject: (newProject: Project) => void
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
 }) => {
   const axiosAuth = useAxiosAuth()
@@ -47,10 +49,10 @@ export const EditFinalExpressionForm = ({
   const precalculate = async () => {
     try {
       const { data } = await axiosAuth.post<PrecalculateResult[]>(ApiRoutes.EXPRESSIONS_DEMO, {
-        block_range: null,
+        block_range: project.block_range,
         raw_data: expressionValues.rawData,
         expression_type: 'final',
-        project_id: projectId,
+        project_id: project.id,
       })
       setPrecalculationResult(data)
     } catch (error) {}
@@ -86,7 +88,7 @@ export const EditFinalExpressionForm = ({
           </div>
           <FinalExpressionHelperTable tools={tools} setExpressionValues={setExpressionValues} />
         </div>
-        <PrecalcSettings projectId={projectId} />
+        <PrecalcSettings project={project} updateProject={updateProject} />
         <div className='mb-10 grid grid-cols-2 gap-4'>
           <Button
             variant='outline'

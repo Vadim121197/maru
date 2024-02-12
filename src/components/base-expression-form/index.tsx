@@ -4,6 +4,7 @@ import { ADDRESS, ApiRoutes } from '~/lib/axios-instance'
 import type { PrecalculateResult } from '~/types/calculations'
 import type { Expression, ExpressionEvent, ExpressionTools, ExpressionValues } from '~/types/expressions'
 import type { AxiosError } from 'axios'
+import type { Project } from '~/types/project'
 import { toast } from 'react-toastify'
 import { ExpressionField } from '../expression-field'
 import { InputComponent, SelectComponent, TextLabel } from '../form-components'
@@ -12,17 +13,16 @@ import { Button } from '../ui/button'
 import { BaseExpressionHelperTable } from './base-expression-helper-table'
 import { PrecalcSettings } from '../precalc-settings'
 
-
 const defaultExpression = 'bought_id == 1 ? tokens_bought : 0'
 // 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7
 
-export const BaseExpressionForm = ({
-  projectId,
-  updateExpressionList,
-}: {
-  projectId: number
+interface BaseExpressionFormProps {
+  project: Project
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
-}) => {
+  updateProject: (newProject: Project) => void
+}
+
+export const BaseExpressionForm = ({ project, updateExpressionList, updateProject }: BaseExpressionFormProps) => {
   const axiosAuth = useAxiosAuth()
 
   const [contractAddress, setContractAddress] = useState('')
@@ -65,8 +65,8 @@ export const BaseExpressionForm = ({
       const { data } = await axiosAuth.post<PrecalculateResult[]>(ApiRoutes.EXPRESSIONS_DEMO, {
         contract_address: contractAddress,
         event: `${selectedEvent.name}(${selectedEvent.params.map((i) => i.arg_type).join(',')})`,
-        block_range: null,
-        project_id: projectId,
+        block_range: project.block_range,
+        project_id: project.id,
         raw_data: expressionValues.rawData,
         aggregate_operation: expressionValues.aggregate,
         expression_type: 'base',
@@ -88,7 +88,7 @@ export const BaseExpressionForm = ({
       const { data } = await axiosAuth.post<Expression>(ApiRoutes.EXPRESSIONS, {
         raw_data: expressionValues.rawData,
         name: expressionValues.name,
-        project_id: projectId,
+        project_id: project.id,
         contract_address: contractAddress,
         aggregate_operation: expressionValues.aggregate,
         event: `${selectedEvent.name}(${selectedEvent.params.map((i) => i.arg_type).join(',')})`,
@@ -147,7 +147,7 @@ export const BaseExpressionForm = ({
             </div>
             <BaseExpressionHelperTable tools={tools} event={selectedEvent} setExpressionValues={setExpressionValues} />
           </div>
-          <PrecalcSettings projectId={projectId} />
+          <PrecalcSettings project={project} updateProject={updateProject} />
           <div className='mb-10 grid grid-cols-2 gap-4'>
             <Button
               variant='outline'

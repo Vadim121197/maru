@@ -61,7 +61,12 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
             <TabsTrigger value='deployment'>Deployment</TabsTrigger>
           </TabsList>
           <TabsContent value='expression'>
-            <ExpressionsTab projectId={project.id} />
+            <ExpressionsTab
+              project={project}
+              updateProject={(newProject) => {
+                setProject(newProject)
+              }}
+            />
           </TabsContent>
           <TabsContent value='deployment' />
         </Tabs>

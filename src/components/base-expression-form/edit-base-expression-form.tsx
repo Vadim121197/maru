@@ -3,6 +3,7 @@ import useAxiosAuth from '~/hooks/axios-auth'
 import type { PrecalculateResult } from '~/types/calculations'
 import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
 import type { Expression, ExpressionEvent, ExpressionTools, ExpressionValues } from '~/types/expressions'
+import type { Project } from '~/types/project'
 import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import { TextLabel } from '../form-components'
@@ -14,13 +15,15 @@ import { PrecalcSettings } from '../precalc-settings'
 
 interface EditBaseExpressionFormProps {
   expression: Expression
-  projectId: number
+  project: Project
+  updateProject: (newProject: Project) => void
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
 }
 
 export const EditBaseExpressionForm = ({
   expression,
-  projectId,
+  project,
+  updateProject,
   updateExpressionList,
 }: EditBaseExpressionFormProps) => {
   const axiosAuth = useAxiosAuth()
@@ -54,7 +57,7 @@ export const EditBaseExpressionForm = ({
         raw_data: expressionValues.rawData,
         projects_id: expression.project_id,
         contract_address: expression.contract_address,
-        block_range: null,
+        block_range: project.block_range,
         aggregate_operation: expressionValues.aggregate,
         event: expression.event,
         expression_type: 'base',
@@ -99,7 +102,7 @@ export const EditBaseExpressionForm = ({
             <BaseExpressionHelperTable tools={tools} event={selectedEvent} setExpressionValues={setExpressionValues} />
           )}
         </div>
-        <PrecalcSettings projectId={projectId} />
+        <PrecalcSettings project={project} updateProject={updateProject} />
         <div className='mb-10 grid grid-cols-2 gap-4'>
           <Button
             variant='outline'
