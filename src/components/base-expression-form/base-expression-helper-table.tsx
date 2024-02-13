@@ -1,11 +1,11 @@
 import { useMemo, type Dispatch, type SetStateAction } from 'react'
 import type {
+  BaseExpressionValues,
   ExpressionConstants,
   ExpressionEvent,
   ExpressionEventParam,
   ExpressionFunction,
   ExpressionTools,
-  ExpressionValues,
 } from '~/types/expressions'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 
@@ -24,7 +24,7 @@ export const BaseExpressionHelperTable = ({
 }: {
   tools: ExpressionTools
   event: ExpressionEvent
-  setExpressionValues: Dispatch<SetStateAction<ExpressionValues>>
+  setExpressionValues: Dispatch<SetStateAction<BaseExpressionValues>>
 }) => {
   const data = useMemo(() => {
     const maxLength = Math.max(

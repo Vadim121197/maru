@@ -20,7 +20,7 @@ export const SelectComponent = ({
   selectContentClassName?: string
 } & SelectProps) => {
   return (
-    <div className='flex flex-col gap-[10px]'>
+    <div className='flex flex-col gap-2'>
       {label && <TextLabel label={label} />}
       <Select {...props}>
         <SelectTrigger className={cn('w-full', triggerClassName)}>
@@ -40,7 +40,7 @@ export const SelectComponent = ({
 
 export const InputComponent = ({ label, ...props }: { label: string } & InputProps) => {
   return (
-    <div className='flex flex-col gap-[10px]'>
+    <div className='flex flex-col gap-2'>
       <TextLabel label={label} />
       <Input {...props} />
     </div>

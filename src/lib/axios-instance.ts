@@ -7,6 +7,7 @@ export const TAG_ID = '{tag_id}'
 export const ADDRESS = '{address}'
 export const EXPRESSION_ID = '{expression_id}'
 export const CALCULATION_ID = '{calculation_id}'
+export const CONTRACT_ID = '{contract_id}'
 
 export enum ApiRoutes {
   USERS_INSTALLATIONS = '/users/installations',
@@ -32,6 +33,9 @@ export enum ApiRoutes {
 
   CALCULATIONS = '/calculations',
   CALCULATIONS_CALCULATION_ID = '/calculations/{calculation_id}',
+
+  CONTRACTS = '/contracts',
+  CONTRACTS_CONTRACT_ID = '/contracts/{contract_id}',
 }
 
 export const axiosInstance = axios.create({

@@ -2,12 +2,18 @@ import { useEffect, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import type { PrecalculateResult } from '~/types/calculations'
 import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
-import type { Expression, ExpressionEvent, ExpressionTools, ExpressionValues } from '~/types/expressions'
+import type {
+  BaseExpressionValues,
+  Expression,
+  ExpressionEvent,
+  ExpressionTools,
+  ExpressionValues,
+} from '~/types/expressions'
 import type { Project } from '~/types/project'
 import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import { TextLabel } from '../form-components'
-import { ExpressionField } from '../expression-field'
+import { BaseExpressionField } from '../expression-field'
 import { BaseExpressionHelperTable } from './base-expression-helper-table'
 import { Button } from '../ui/button'
 import { PrecalcValues } from '../precalc-values'
@@ -28,10 +34,11 @@ export const EditBaseExpressionForm = ({
 }: EditBaseExpressionFormProps) => {
   const axiosAuth = useAxiosAuth()
 
-  const [expressionValues, setExpressionValues] = useState<ExpressionValues>({
+  const [expressionValues, setExpressionValues] = useState<BaseExpressionValues>({
     name: expression.name,
     rawData: expression.raw_data,
     aggregate: expression.aggregate_operation,
+    filter: '',
   })
   const [selectedEvent, setSelectedEvent] = useState<ExpressionEvent | undefined>()
   const [precalcRes, setPrecalcRes] = useState<PrecalculateResult[]>([])
@@ -92,7 +99,7 @@ export const EditBaseExpressionForm = ({
         <div className='flex flex-col gap-[38px] border-b pb-4'>
           <div className='flex w-full flex-col gap-2'>
             <TextLabel label='Expression' />
-            <ExpressionField
+            <BaseExpressionField
               aggregateFunctions={tools?.aggregate_operations ?? []}
               expressionValues={expressionValues}
               setExpressionValues={setExpressionValues}

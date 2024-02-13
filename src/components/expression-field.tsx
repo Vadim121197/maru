@@ -1,5 +1,5 @@
 import { useMemo, type Dispatch, type SetStateAction } from 'react'
-import type { ExpressionAggregateFunctions, ExpressionValues } from '~/types/expressions'
+import type { BaseExpressionValues, ExpressionAggregateFunctions, ExpressionValues } from '~/types/expressions'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
 import { SelectComponent } from './form-components'
@@ -61,6 +61,79 @@ export const ExpressionField = ({
           setExpressionValues((state) => ({ ...state, rawData: e.target.value }))
         }}
       />
+    </div>
+  )
+}
+
+interface BaseExpressionFieldProps {
+  aggregateFunctions?: ExpressionAggregateFunctions[]
+  expressionValues: BaseExpressionValues
+  setExpressionValues: Dispatch<SetStateAction<BaseExpressionValues>>
+}
+
+export const BaseExpressionField = ({
+  aggregateFunctions,
+  expressionValues,
+  setExpressionValues,
+}: BaseExpressionFieldProps) => {
+  const selectOptions = useMemo(() => {
+    if (!aggregateFunctions?.length) return []
+    return aggregateFunctions.map((aggr) => {
+      return {
+        value: aggr.name,
+      }
+    })
+  }, [aggregateFunctions])
+
+  return (
+    <div className='flex w-full flex-col gap-2 border-2 border-border bg-background p-3 text-base font-medium lg:p-4'>
+      <div className='flex items-center gap-4'>
+        <Input
+          className='h-7 w-full text-[12px] font-normal placeholder:text-[12px] lg:w-[200px] lg:text-sm'
+          placeholder='Enter expression name'
+          value={expressionValues.name}
+          onChange={(e) => {
+            setExpressionValues((state) => ({ ...state, name: e.target.value }))
+          }}
+        />
+        <p className='text-sm font-normal'>=</p>
+        <p className='text-sm font-normal'>map(</p>
+      </div>
+      <Textarea
+        className='border-0 p-0 text-sm font-medium text-muted-foreground placeholder:text-[12px]  lg:text-base'
+        placeholder='Enter expression'
+        value={expressionValues.rawData}
+        onChange={(e) => {
+          setExpressionValues((state) => ({ ...state, rawData: e.target.value }))
+        }}
+      />
+      <div className='flex items-center gap-4 justify-between'>
+        <p className='text-sm font-normal'>).filter(|result| ={'>'}</p>
+        <Input
+          className='h-7 w-[50%] text-[12px] font-normal placeholder:text-[12px] lg:text-sm'
+          placeholder='Enter filter'
+          value={expressionValues.filter}
+          onChange={(e) => {
+            setExpressionValues((state) => ({ ...state, filter: e.target.value }))
+          }}
+        />
+        <p className='text-sm font-normal'>).</p>
+        {aggregateFunctions && aggregateFunctions.length ? (
+          <SelectComponent
+            defaultValue={expressionValues.aggregate}
+            value={expressionValues.aggregate}
+            onValueChange={(aggregate) => {
+              setExpressionValues((state) => ({ ...state, aggregate }))
+            }}
+            options={selectOptions}
+            triggerClassName='h-7 min-h-7 w-[105px] text-sm font-normal uppercase'
+            selectItemClassName='uppercase'
+            selectContentClassName='w-[105px] min-w-[105px]'
+          />
+        ) : (
+          <></>
+        )}
+      </div>
     </div>
   )
 }

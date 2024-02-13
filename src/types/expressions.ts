@@ -71,6 +71,10 @@ export interface ExpressionValues {
   aggregate?: string
 }
 
+export interface BaseExpressionValues extends ExpressionValues {
+  filter: string
+}
+
 export interface ExpressionCreateResponse {
   raw_data: string
   name: string

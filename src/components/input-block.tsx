@@ -1,5 +1,6 @@
 import { cn } from '~/lib/utils'
 import { Input, type InputProps } from './ui/input'
+import { TextLabel } from './form-components'
 
 export interface Validation {
   checkFn: (txt: string) => boolean
@@ -36,7 +37,7 @@ export const InputBlock = ({
   return (
     <div
       className={cn(
-        'flex flex-col gap-1',
+        'flex flex-col gap-2',
         vResult?.type === 'error' && 'border-red-400',
         vResult?.type === 'warn' && 'border-yellow-300',
         className,
@@ -44,7 +45,7 @@ export const InputBlock = ({
     >
       {label && (
         <div className='flex items-center gap-2 self-start'>
-          <p className='text-base font-bold'>{label}</p>
+          <TextLabel label={label} />
           {vResult ? <div className={cn('italic', 'text-red-400')}>{vResult.issue}</div> : null}
         </div>
       )}
