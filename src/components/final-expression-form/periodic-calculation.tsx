@@ -1,5 +1,6 @@
 import type { AxiosError } from 'axios'
 import { useMemo, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes } from '~/lib/axios-instance'
@@ -8,6 +9,8 @@ import { InputBlock } from '../input-block'
 import { Button } from '../ui/button'
 
 export const PeriodicCalculation = ({ expressionId }: { expressionId: number }) => {
+  const navigate = useRouter()
+  const pathname = usePathname()
   const axiosAuth = useAxiosAuth()
 
   const [period, setPeriod] = useState<{ from: string; to: string }>({
@@ -26,6 +29,7 @@ export const PeriodicCalculation = ({ expressionId }: { expressionId: number }) 
         chunk_size: chunkSize,
         period_value: ProofPeridoValue.BLOCK,
       })
+      navigate.push(`${pathname}/proofs`)
     } catch (error) {
       const err = error as AxiosError
       toast.error(`${err.message} (${err.config?.url}, ${err.config?.method})`)

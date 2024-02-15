@@ -1,13 +1,14 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 import moment from 'moment'
 import { Copy } from 'lucide-react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
-import type { Project } from '~/types/project'
 import type { Proof } from '~/types/proof'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
 
-export const ProofsTab = ({ project }: { project: Project }) => {
+export const ProofsTab = ({ projectId }: { projectId: string }) => {
   const axiosAuth = useAxiosAuth()
   const [proofs, setProofs] = useState<Proof[]>([])
 
@@ -15,15 +16,13 @@ export const ProofsTab = ({ project }: { project: Project }) => {
     void (async () => {
       try {
         const { data: proofs } = await axiosAuth.get<Proof[]>(
-          ApiRoutes.PROJECTS_PROJECT_ID_PROOFS.replace(PROJECT_ID, project.id.toString()),
+          ApiRoutes.PROJECTS_PROJECT_ID_PROOFS.replace(PROJECT_ID, projectId),
         )
 
         setProofs(proofs)
       } catch (error) {}
     })()
-  }, [project.id, axiosAuth])
-
-  console.log({ proofs })
+  }, [projectId, axiosAuth])
 
   return (
     <div className='bg-card px-5'>
