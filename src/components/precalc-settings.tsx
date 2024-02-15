@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import type { Project } from '~/types/project'
 import type { AxiosError } from 'axios'
@@ -17,10 +17,17 @@ export const PrecalcSettings = ({
 }) => {
   const axiosAuth = useAxiosAuth()
 
+  const projectCalcPeriod = useMemo(() => {
+    return {
+      from: project.block_range.split('-')[0] ?? '',
+      to: project.block_range.split('-')[1] ?? '',
+    }
+  }, [project])
+
   const [open, setOpen] = useState<boolean>(false)
   const [period, setPeriod] = useState<{ from: string; to: string }>({
-    from: project.block_range.split('-')[0] ?? '',
-    to: project.block_range.split('-')[1] ?? '',
+    from: projectCalcPeriod.from,
+    to: projectCalcPeriod.to,
   })
 
   const updateBlockRange = () => {
@@ -42,15 +49,16 @@ export const PrecalcSettings = ({
   return (
     <>
       <p className='mb-6 mt-4 text-[12px] font-normal leading-[18px] lg:mb-10 lg:text-sm'>
-        The precalculation uses events in the last 1000 blocks.{' '}
+        The precalculation uses events in the{' '}
         <span
-          className='text-muted-foreground underline'
+          className='text-muted-foreground underline font-semibold cursor-pointer'
           onClick={() => {
             setOpen(true)
           }}
         >
-          Change precalc settings
+          {projectCalcPeriod.from}-{projectCalcPeriod.to}{' '}
         </span>
+        blocks.
       </p>
 
       <Dialog

@@ -6,8 +6,9 @@ export interface EventExample {
 
 export interface ExpressionEventParam {
   name: string
-  arg_type: 'address' | 'int128' | 'uint256' | 'uint256[]'
+  arg_type: string
   value: string
+  is_indexed: boolean
 }
 
 export interface ExpressionEvent {
@@ -19,11 +20,14 @@ export interface ExpressionEvent {
 export interface ExpressionFunction {
   name: string
   value: string
+  is_active: boolean
+  arg_type: string
 }
 
 export interface ExpressionConstants {
   name: string
   value: string
+  arg_type: string
 }
 
 export interface ExpressionAggregateFunctions {
@@ -46,18 +50,26 @@ export interface ExpressionTools {
   proved_expressions: string[]
 }
 
+export enum ExpressionType {
+  BASE = 'base',
+  FINAL = 'final',
+}
+
 export interface Expression {
-  raw_data: string
-  name: string
-  project_id: number
-  contract_address: string
   aggregate_operation: string
-  event: string
-  expression_type: 'base' | 'final'
-  id: number
+  contract_address: string
   created_at: Date
-  updated_at: Date
+  event: string
+  expression_type: ExpressionType
+  filter_data: string
+  id: number
+  name: string
   parsed_data: string
+  project_id: number
+  raw_data: string
+  rpn_data: null
+  to_prove_data: null
+  updated_at: Date
 }
 
 export interface ExpressionsResponse {
@@ -82,7 +94,7 @@ export interface ExpressionCreateResponse {
   contract_address: string
   aggregate_operation: string
   event: string
-  expression_type: 'base' | 'final'
+  expression_type: ExpressionType
   id: number
   created_at: Date
   updated_at: Date

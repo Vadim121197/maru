@@ -7,8 +7,8 @@ import type {
   ExpressionFunction,
   ExpressionTools,
 } from '~/types/expressions'
+import { Info } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
-
 export interface ExpressionHelperTable {
   key: number
   constant: ExpressionConstants | undefined
@@ -64,14 +64,16 @@ export const BaseExpressionHelperTable = ({
             <p className='text-[12px] font-normal'>Contract Consts</p>
             <div className='grid grid-cols-2 gap-4'>
               {tools.constants.map((i) => (
-                <button
-                  onClick={helperClick(i.name)}
-                  type='button'
-                  key={i.name}
-                  className='text-left text-[12px] font-normal text-muted-foreground'
-                >
-                  {i.name}
-                </button>
+                <div className='flex flex-col items-start gap-1' key={i.name}>
+                  <p className='text-[10px] leading-3 font-semibold text-primary'>{i.arg_type}</p>
+                  <button
+                    onClick={helperClick(i.name)}
+                    type='button'
+                    className='text-left text-[12px] font-normal text-muted-foreground'
+                  >
+                    {i.name}
+                  </button>
+                </div>
               ))}
             </div>
           </div>
@@ -83,15 +85,17 @@ export const BaseExpressionHelperTable = ({
             <p className='text-[12px] font-normal'>Contract Functions</p>
             <div className='grid grid-cols-2 gap-4'>
               {tools.functions.map((i) => (
-                <button
-                  onClick={helperClick(i.name)}
-                  type='button'
-                  key={i.name}
-                  className='break-all text-left text-[12px] font-normal text-muted-foreground'
-                  disabled={true}
-                >
-                  {i.name}
-                </button>
+                <div className='flex flex-col items-start gap-1' key={i.name}>
+                  <p className='text-[10px] leading-3 font-semibold text-primary'>{i.arg_type}</p>
+                  <button
+                    onClick={helperClick(i.name)}
+                    type='button'
+                    className='break-all text-left text-[12px] font-normal text-muted-foreground'
+                    disabled={!i.is_active}
+                  >
+                    {i.name}
+                  </button>
+                </div>
               ))}
             </div>
           </div>
@@ -103,14 +107,17 @@ export const BaseExpressionHelperTable = ({
             <p className='text-[12px] font-normal'>Event Params</p>
             <div className='grid grid-cols-2 gap-4'>
               {event.params.map((i) => (
-                <button
-                  onClick={helperClick(i.name)}
-                  type='button'
-                  key={i.name}
-                  className='text-left text-[12px] font-normal text-muted-foreground'
-                >
-                  {i.name}
-                </button>
+                <div className='flex flex-col items-start gap-1' key={i.name}>
+                  <p className='text-[10px] leading-3 font-semibold text-primary'>{i.arg_type}</p>
+                  <button
+                    onClick={helperClick(i.name)}
+                    type='button'
+                    className='text-left text-[12px] font-normal text-muted-foreground'
+                    disabled={i.is_indexed}
+                  >
+                    {i.name}
+                  </button>
+                </div>
               ))}
             </div>
           </div>
@@ -121,7 +128,12 @@ export const BaseExpressionHelperTable = ({
       <Table className='hidden lg:table'>
         <TableHeader>
           <TableRow>
-            <TableHead>Contract Consts</TableHead>
+            <TableHead className='flex items-start gap-4'>
+              <p>Contract Consts</p>
+              <div>
+                <Info className='w-4 h-4 text-primary' />
+              </div>
+            </TableHead>
             <TableHead className='text-center'>Contract Functions</TableHead>
             <TableHead className='text-center'>Event Params</TableHead>
           </TableRow>
@@ -130,17 +142,22 @@ export const BaseExpressionHelperTable = ({
           {data.map((i) => (
             <TableRow key={i.key}>
               <TableCell>
+                <p className='text-[10px] pb-1 leading-3 font-semibold text-primary'>{i.constant?.arg_type}</p>
                 <button onClick={helperClick(i.constant?.name)} type='button'>
                   {i.constant?.name}
                 </button>
               </TableCell>
+
               <TableCell className='text-center'>
-                <button disabled={true} onClick={helperClick(i.function?.name)} type='button'>
+                <p className='text-[10px] pb-1 leading-3 font-semibold text-primary'>{i.function?.arg_type}</p>
+                <button disabled={!i.function?.is_active} onClick={helperClick(i.function?.name)} type='button'>
                   {i.function?.name}
                 </button>
               </TableCell>
+
               <TableCell className='text-center'>
-                <button onClick={helperClick(i.param?.name)} type='button'>
+                <p className='text-[10px] pb-1 leading-3 font-semibold text-primary'>{i.param?.arg_type}</p>
+                <button disabled={i.param?.is_indexed} onClick={helperClick(i.param?.name)} type='button'>
                   {i.param?.name}
                 </button>
               </TableCell>

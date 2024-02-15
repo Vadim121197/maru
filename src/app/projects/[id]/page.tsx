@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { ExpressionsTab } from '~/components/expressions-tab'
+import { ProofsTab } from '~/components/proofs-tab'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
@@ -58,7 +59,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         <Tabs defaultValue='expression'>
           <TabsList className='mb-10'>
             <TabsTrigger value='expression'>Expression</TabsTrigger>
-            <TabsTrigger value='deployment'>Deployment</TabsTrigger>
+            <TabsTrigger value='proofs'>Proofs</TabsTrigger>
           </TabsList>
           <TabsContent value='expression'>
             <ExpressionsTab
@@ -68,7 +69,10 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
               }}
             />
           </TabsContent>
-          <TabsContent value='deployment' />
+
+          <TabsContent value='proofs'>
+            <ProofsTab project={project} />
+          </TabsContent>
         </Tabs>
       </div>
     </section>

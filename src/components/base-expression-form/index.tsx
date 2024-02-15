@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ADDRESS, ApiRoutes } from '~/lib/axios-instance'
 import type { PrecalculateResult } from '~/types/calculations'
-import type { BaseExpressionValues, Expression, ExpressionEvent, ExpressionTools, ExpressionValues } from '~/types/expressions'
+import type { BaseExpressionValues, Expression, ExpressionEvent, ExpressionTools } from '~/types/expressions'
 import type { AxiosError } from 'axios'
 import type { Project } from '~/types/project'
 import { toast } from 'react-toastify'
@@ -15,7 +15,6 @@ import { PrecalcSettings } from '../precalc-settings'
 import { InputBlock } from '../input-block'
 import { FailedFetchAbiModal } from '../failed-fetch-abi-modal'
 
-const defaultExpression = 'bought_id == 1 ? tokens_bought : 0'
 // 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7
 
 interface BaseExpressionFormProps {
@@ -33,7 +32,7 @@ export const BaseExpressionForm = ({ project, updateExpressionList, updateProjec
     name: '',
     rawData: '',
     aggregate: undefined,
-    filter: ''
+    filter: '',
   })
   const [tools, setTools] = useState<ExpressionTools | undefined>()
   const [fetchAddressError, setFetchAddressError] = useState<boolean>(false)
@@ -86,13 +85,16 @@ export const BaseExpressionForm = ({ project, updateExpressionList, updateProjec
   const precalculate = async () => {
     try {
       const { data } = await axiosAuth.post<PrecalculateResult[]>(ApiRoutes.EXPRESSIONS_DEMO, {
-        contract_address: contractAddress,
-        event: `${selectedEvent?.name}(${selectedEvent?.params.map((i) => i.arg_type).join(',')})`,
-        block_range: project.block_range,
-        project_id: project.id,
         raw_data: expressionValues.rawData,
+        name: expressionValues.name,
+        project_id: project.id,
+        contract_address: contractAddress,
         aggregate_operation: expressionValues.aggregate,
+        event: `${selectedEvent?.name}(${selectedEvent?.params.map((i) => i.arg_type).join(',')})`,
         expression_type: 'base',
+        filter_data: expressionValues.filter,
+        block_range: project.block_range,
+        
       })
       setPrecalcRes(data)
     } catch (error) {}
@@ -108,6 +110,7 @@ export const BaseExpressionForm = ({ project, updateExpressionList, updateProjec
         aggregate_operation: expressionValues.aggregate,
         event: `${selectedEvent?.name}(${selectedEvent?.params.map((i) => i.arg_type).join(',')})`,
         expression_type: 'base',
+        filter_data: expressionValues.filter
       })
       updateExpressionList(data, 'create')
     } catch (error) {
@@ -161,7 +164,7 @@ export const BaseExpressionForm = ({ project, updateExpressionList, updateProjec
                 setSelectedEvent(tools.events.find((event) => event.name === e))
               }}
               options={eventsOptions}
-              label='Event'
+              label='Signature'
               triggerClassName='h-11 text-base font-medium text-muted'
             />
           )}
@@ -184,7 +187,7 @@ export const BaseExpressionForm = ({ project, updateExpressionList, updateProjec
               />
             </div>
             <PrecalcSettings project={project} updateProject={updateProject} />
-            <div className='mb-10 grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-2 gap-4'>
               <Button
                 variant='outline'
                 className='w-full'

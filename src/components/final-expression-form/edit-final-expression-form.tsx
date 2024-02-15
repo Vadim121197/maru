@@ -12,6 +12,7 @@ import { PrecalcValues } from '../precalc-values'
 import { FinalExpressionHelperTable } from './final-expression-helper-table'
 import { PrecalcSettings } from '../precalc-settings'
 import { Button } from '../ui/button'
+import { CalculationsTabs } from './calculations-tabs'
 
 export const EditFinalExpressionForm = ({
   project,
@@ -89,7 +90,7 @@ export const EditFinalExpressionForm = ({
           <FinalExpressionHelperTable tools={tools} setExpressionValues={setExpressionValues} />
         </div>
         <PrecalcSettings project={project} updateProject={updateProject} />
-        <div className='mb-10 grid grid-cols-2 gap-4'>
+        <div className='grid grid-cols-2 gap-4'>
           <Button
             variant='outline'
             className='w-full'
@@ -115,7 +116,7 @@ export const EditFinalExpressionForm = ({
         </div>
         {precalculationResult.length ? <PrecalcValues res={precalculationResult} /> : <></>}
       </div>
-      {/* <CalculationsTabs projectId={projectId} expressionId={expression.id} /> */}
+      <CalculationsTabs expressionId={expression.id} />
     </div>
   )
 }

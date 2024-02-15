@@ -134,7 +134,8 @@ export const ExpressionsTab = ({
           <></>
         )}
         {addNew && (
-          <div className='flex w-full flex-col gap-6 bg-card p-4 lg:w-[50%] lg:p-6'>
+          <div className='flex w-full flex-col gap-6 bg-card p-4 lg:w-[50%] lg:px-6 lg:pt-4 lg:pb-[50px]'>
+            <p className='text-lg font-medium text-muted-foreground text-center'>Editor</p>
             <SelectComponent
               value={selectedSource}
               onValueChange={(e) => {
@@ -164,6 +165,7 @@ export const ExpressionsTab = ({
           value={opened}
           onValueChange={(value) => {
             setOpened(value)
+            setAddNew(false)
           }}
           collapsible
           className='flex w-full flex-col gap-4 lg:w-[50%]'
@@ -171,14 +173,16 @@ export const ExpressionsTab = ({
           {projectExpressions.base_expressions.map((exp) => (
             <AccordionItem value={exp.id.toString()} key={exp.id}>
               <AccordionTrigger className='flex w-full flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px] data-[state=open]:border-primary'>
-                <div className='flex w-full items-center justify-between'>
-                  <p className='text-base font-medium'>{exp.name}</p>
+                <div className='flex flex-col w-full gap-10'>
+                  <p className='text-base font-medium text-left'>
+                    {exp.name}=map({exp.raw_data}).filter(|result| ={'>'}
+                    {exp.filter_data})
+                  </p>
                   <div className='flex items-center gap-3'>
                     <p className='text-sm font-normal'>Aggregate</p>
                     <div className='border-2 px-8 py-[2px] text-sm font-normal'>{exp.aggregate_operation}</div>
                   </div>
                 </div>
-                <p className='text-sm font-normal text-muted-foreground'>{exp.raw_data}</p>
               </AccordionTrigger>
               <AccordionContent>
                 <EditBaseExpressionForm
@@ -200,6 +204,7 @@ export const ExpressionsTab = ({
             value={openedFinal}
             onValueChange={(value) => {
               setOpenedFinal(value)
+              setAddNew(false)
             }}
             collapsible
             className='flex w-full flex-col gap-4 lg:w-[50%]'

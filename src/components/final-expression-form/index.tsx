@@ -13,8 +13,6 @@ import { FinalExpressionHelperTable } from './final-expression-helper-table'
 import { PrecalcSettings } from '../precalc-settings'
 import { Button } from '../ui/button'
 
-const defaultExpression = 'bought_id == 1 ? tokens_bought : 0'
-
 export const FinalExpressionForm = ({
   project,
   updateProject,
@@ -28,7 +26,7 @@ export const FinalExpressionForm = ({
 
   const [expressionValues, setExpressionValues] = useState<ExpressionValues>({
     name: '',
-    rawData: defaultExpression,
+    rawData: '',
   })
 
   const [precalculationResult, setPrecalculationResult] = useState<PrecalculateResult[]>([])
@@ -89,7 +87,7 @@ export const FinalExpressionForm = ({
             <FinalExpressionHelperTable tools={tools} setExpressionValues={setExpressionValues} />
           </div>
           <PrecalcSettings project={project} updateProject={updateProject} />
-          <div className='mb-10 grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-2 gap-4'>
             <Button
               variant='outline'
               className='w-full'

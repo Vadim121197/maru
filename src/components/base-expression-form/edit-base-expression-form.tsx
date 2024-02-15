@@ -110,7 +110,7 @@ export const EditBaseExpressionForm = ({
           )}
         </div>
         <PrecalcSettings project={project} updateProject={updateProject} />
-        <div className='mb-10 grid grid-cols-2 gap-4'>
+        <div className='grid grid-cols-2 gap-4'>
           <Button
             variant='outline'
             className='w-full'

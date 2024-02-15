@@ -1,6 +1,8 @@
 export interface Auth {
   created_at: Date
   username: string
+  avatar_url: string | null
+  installation_id: null | number
   id: number
   access_token: string
   refresh_token: string

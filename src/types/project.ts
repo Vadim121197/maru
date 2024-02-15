@@ -12,7 +12,7 @@ export interface ProjectCreateResponse {
 }
 
 export interface Project {
-  block_range: string
+  block_range: string | null
   name: string | null
   created_at: Date
   updated_at: Date
