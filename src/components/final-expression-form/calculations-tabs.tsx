@@ -9,7 +9,7 @@ export const CalculationsTabs = ({ expressionId }: { expressionId: number }) => 
         <TabsTrigger value='one_time' className='w-full data-[state=active]:bg-transparent'>
           One time calculation
         </TabsTrigger>
-        <TabsTrigger value='periodic'  className='w-full data-[state=active]:bg-transparent'>
+        <TabsTrigger value='periodic' className='w-full data-[state=active]:bg-transparent'>
           Periodic calculation
         </TabsTrigger>
       </TabsList>

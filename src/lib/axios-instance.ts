@@ -26,7 +26,7 @@ export enum ApiRoutes {
   PROJECTS_PROJECT_ID_TOOLS = '/projects/{project_id}/tools',
   PROJECTS_PROJECT_ID_TAGS_TAG_ID = '/projects/{project_id}/tags/{tag_id}',
   PROJECTS_PROJECT_ID_EXPRESSIONS = '/projects/{project_id}/expressions',
-  PROJECTS_PROJECT_ID_PROOFS='/projects/{project_id}/proofs',
+  PROJECTS_PROJECT_ID_PROOFS = '/projects/{project_id}/proofs',
 
   EXPRESSIONS = '/expressions',
   EXPRESSIONS_ADDRESS_TOOLS = '/expressions/{address}/tools',

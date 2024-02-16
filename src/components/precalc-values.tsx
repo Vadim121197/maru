@@ -3,7 +3,7 @@ import type { PrecalculateResult } from '~/types/calculations'
 
 export const PrecalcValues = ({ res }: { res: PrecalculateResult[] }) => {
   return (
-    <div className='flex flex-col gap-4 mt-10'>
+    <div className='mt-10 flex flex-col gap-4'>
       <p className='text-base font-medium'>Expression Values</p>
       <div className='grid grid-cols-3'>
         {res.map((i) => (

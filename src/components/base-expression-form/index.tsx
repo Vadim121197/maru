@@ -94,7 +94,6 @@ export const BaseExpressionForm = ({ project, updateExpressionList, updateProjec
         expression_type: 'base',
         filter_data: expressionValues.filter,
         block_range: project.block_range,
-        
       })
       setPrecalcRes(data)
     } catch (error) {}
@@ -110,7 +109,7 @@ export const BaseExpressionForm = ({ project, updateExpressionList, updateProjec
         aggregate_operation: expressionValues.aggregate,
         event: `${selectedEvent?.name}(${selectedEvent?.params.map((i) => i.arg_type).join(',')})`,
         expression_type: 'base',
-        filter_data: expressionValues.filter
+        filter_data: expressionValues.filter,
       })
       updateExpressionList(data, 'create')
     } catch (error) {
@@ -170,7 +169,7 @@ export const BaseExpressionForm = ({ project, updateExpressionList, updateProjec
           )}
         </div>
         {selectedEvent && tools && (
-          <div className='flex flex-col mt-10'>
+          <div className='mt-10 flex flex-col'>
             <div className='flex flex-col gap-[38px] border-b pb-4'>
               <div className='flex w-full flex-col gap-2'>
                 <TextLabel label='Expression' />

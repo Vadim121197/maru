@@ -19,8 +19,8 @@ export const PrecalcSettings = ({
 
   const projectCalcPeriod = useMemo(() => {
     return {
-      from: project.block_range.split('-')[0] ?? '',
-      to: project.block_range.split('-')[1] ?? '',
+      from: project.block_range?.split('-')[0] ?? '',
+      to: project.block_range?.split('-')[1] ?? '',
     }
   }, [project])
 
@@ -51,7 +51,7 @@ export const PrecalcSettings = ({
       <p className='mb-6 mt-4 text-[12px] font-normal leading-[18px] lg:mb-10 lg:text-sm'>
         The precalculation uses events in the{' '}
         <span
-          className='text-muted-foreground underline font-semibold cursor-pointer'
+          className='cursor-pointer font-semibold text-muted-foreground underline'
           onClick={() => {
             setOpen(true)
           }}

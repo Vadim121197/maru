@@ -12,25 +12,25 @@ export const Dropzone = ({ file, onDrop }: { file: File | undefined; onDrop: Dro
       onClick={(e) => {
         e.stopPropagation()
       }}
-      className='w-full bg-input border-[1px] py-4'
+      className='w-full border-[1px] bg-input py-4'
     >
       <input {...getInputProps()} />
       {file ? (
         <div className='flex flex-col items-center gap-1 px-10'>
-          <CheckCircle2 className='w-6 h-6 text-primary' />
-          <p className='text-sm font-normal break-all text-center'>{file.name}</p>
-          <span onClick={open} className='mt-1 text-primary underline cursor-pointer'>
+          <CheckCircle2 className='h-6 w-6 text-primary' />
+          <p className='break-all text-center text-sm font-normal'>{file.name}</p>
+          <span onClick={open} className='mt-1 cursor-pointer text-primary underline'>
             Browse Files
           </span>
         </div>
       ) : (
         <div className='flex flex-col items-center gap-5'>
           <div>
-            <UploadCloud className='w-6 h-6 text-primary' />
+            <UploadCloud className='h-6 w-6 text-primary' />
           </div>
           <p className='text-sm font-normal'>
             Drag and Drop here or{' '}
-            <span onClick={open} className='text-primary underline cursor-pointer'>
+            <span onClick={open} className='cursor-pointer text-primary underline'>
               Browse Files
             </span>
           </p>

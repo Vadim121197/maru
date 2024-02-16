@@ -29,29 +29,29 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
       <Table className='hidden lg:table'>
         <TableHeader className='h-[60px]'>
           <TableRow>
-            <TableHead className='text-lg font-medium align-middle'>Status</TableHead>
-            <TableHead className='text-center text-lg font-medium align-middle'>Version</TableHead>
-            <TableHead className='text-center text-lg font-medium align-middle'>Expression</TableHead>
-            <TableHead className='text-center text-lg font-medium align-middle'>Time</TableHead>
-            <TableHead className='text-center text-lg font-medium align-middle'>Input</TableHead>
-            <TableHead className='text-center text-lg font-medium align-middle'>Proofs</TableHead>
+            <TableHead className='align-middle text-lg font-medium'>Status</TableHead>
+            <TableHead className='text-center align-middle text-lg font-medium'>Version</TableHead>
+            <TableHead className='text-center align-middle text-lg font-medium'>Expression</TableHead>
+            <TableHead className='text-center align-middle text-lg font-medium'>Time</TableHead>
+            <TableHead className='text-center align-middle text-lg font-medium'>Input</TableHead>
+            <TableHead className='text-center align-middle text-lg font-medium'>Proofs</TableHead>
             <TableHead />
           </TableRow>
         </TableHeader>
         <TableBody className='text-muted'>
           {proofs.map((i) => (
             <TableRow key={i.id} className='h-[56px]'>
-              <TableCell className='capitalize border-t-[1px] text-base font-medium'>{i.status}</TableCell>
-              <TableCell className='text-center border-t-[1px] text-base font-medium'>{i.version}</TableCell>
-              <TableCell className='text-center border-t-[1px] text-base font-medium'>{i.name}</TableCell>
-              <TableCell className='text-center border-t-[1px] text-base font-medium'>
+              <TableCell className='border-t-[1px] text-base font-medium capitalize'>{i.status}</TableCell>
+              <TableCell className='border-t-[1px] text-center text-base font-medium'>{i.version}</TableCell>
+              <TableCell className='border-t-[1px] text-center text-base font-medium'>{i.name}</TableCell>
+              <TableCell className='border-t-[1px] text-center text-base font-medium'>
                 {moment.utc(i.updated_at).startOf('minutes').fromNow()}
               </TableCell>
-              <TableCell className='text-center border-t-[1px] text-base font-medium'>0x12345....6789</TableCell>
-              <TableCell className='text-center border-t-[1px] text-base font-medium'>{'{}'}</TableCell>
-              <TableCell className='text-center border-t-[1px] text-base font-medium'>
+              <TableCell className='border-t-[1px] text-center text-base font-medium'>0x12345....6789</TableCell>
+              <TableCell className='border-t-[1px] text-center text-base font-medium'>{'{}'}</TableCell>
+              <TableCell className='border-t-[1px] text-center text-base font-medium'>
                 <div>
-                  <Copy className='w-5 h-5' strokeWidth={1} />
+                  <Copy className='h-5 w-5' strokeWidth={1} />
                 </div>
               </TableCell>
             </TableRow>

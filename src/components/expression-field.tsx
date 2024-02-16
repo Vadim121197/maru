@@ -107,7 +107,7 @@ export const BaseExpressionField = ({
           setExpressionValues((state) => ({ ...state, rawData: e.target.value }))
         }}
       />
-      <div className='flex items-center gap-4 justify-between'>
+      <div className='flex items-center justify-between gap-4'>
         <p className='text-sm font-normal'>).filter(|result| ={'>'}</p>
         <Input
           className='h-7 w-[50%] text-[12px] font-normal placeholder:text-[12px] lg:text-sm'

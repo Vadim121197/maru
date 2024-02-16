@@ -61,7 +61,7 @@ export const FinalExpressionForm = ({
   const save = async () => {
     if (!expressionValues.rawData || !expressionValues.name) return
     try {
-      const { data } = await axiosAuth.post<ExpressionCreateResponse>(ApiRoutes.EXPRESSIONS, {
+      const { data } = await axiosAuth.post<Expression>(ApiRoutes.EXPRESSIONS, {
         raw_data: expressionValues.rawData,
         name: expressionValues.name,
         project_id: project.id,

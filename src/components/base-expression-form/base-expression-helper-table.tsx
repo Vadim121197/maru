@@ -65,7 +65,7 @@ export const BaseExpressionHelperTable = ({
             <div className='grid grid-cols-2 gap-4'>
               {tools.constants.map((i) => (
                 <div className='flex flex-col items-start gap-1' key={i.name}>
-                  <p className='text-[10px] leading-3 font-semibold text-primary'>{i.arg_type}</p>
+                  <p className='text-[10px] font-semibold leading-3 text-primary'>{i.arg_type}</p>
                   <button
                     onClick={helperClick(i.name)}
                     type='button'
@@ -86,7 +86,7 @@ export const BaseExpressionHelperTable = ({
             <div className='grid grid-cols-2 gap-4'>
               {tools.functions.map((i) => (
                 <div className='flex flex-col items-start gap-1' key={i.name}>
-                  <p className='text-[10px] leading-3 font-semibold text-primary'>{i.arg_type}</p>
+                  <p className='text-[10px] font-semibold leading-3 text-primary'>{i.arg_type}</p>
                   <button
                     onClick={helperClick(i.name)}
                     type='button'
@@ -108,7 +108,7 @@ export const BaseExpressionHelperTable = ({
             <div className='grid grid-cols-2 gap-4'>
               {event.params.map((i) => (
                 <div className='flex flex-col items-start gap-1' key={i.name}>
-                  <p className='text-[10px] leading-3 font-semibold text-primary'>{i.arg_type}</p>
+                  <p className='text-[10px] font-semibold leading-3 text-primary'>{i.arg_type}</p>
                   <button
                     onClick={helperClick(i.name)}
                     type='button'
@@ -131,7 +131,7 @@ export const BaseExpressionHelperTable = ({
             <TableHead className='flex items-start gap-4'>
               <p>Contract Consts</p>
               <div>
-                <Info className='w-4 h-4 text-primary' />
+                <Info className='h-4 w-4 text-primary' />
               </div>
             </TableHead>
             <TableHead className='text-center'>Contract Functions</TableHead>
@@ -142,21 +142,21 @@ export const BaseExpressionHelperTable = ({
           {data.map((i) => (
             <TableRow key={i.key}>
               <TableCell>
-                <p className='text-[10px] pb-1 leading-3 font-semibold text-primary'>{i.constant?.arg_type}</p>
+                <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{i.constant?.arg_type}</p>
                 <button onClick={helperClick(i.constant?.name)} type='button'>
                   {i.constant?.name}
                 </button>
               </TableCell>
 
               <TableCell className='text-center'>
-                <p className='text-[10px] pb-1 leading-3 font-semibold text-primary'>{i.function?.arg_type}</p>
+                <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{i.function?.arg_type}</p>
                 <button disabled={!i.function?.is_active} onClick={helperClick(i.function?.name)} type='button'>
                   {i.function?.name}
                 </button>
               </TableCell>
 
               <TableCell className='text-center'>
-                <p className='text-[10px] pb-1 leading-3 font-semibold text-primary'>{i.param?.arg_type}</p>
+                <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{i.param?.arg_type}</p>
                 <button disabled={i.param?.is_indexed} onClick={helperClick(i.param?.name)} type='button'>
                   {i.param?.name}
                 </button>

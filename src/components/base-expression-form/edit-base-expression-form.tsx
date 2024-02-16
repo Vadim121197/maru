@@ -7,7 +7,6 @@ import type {
   Expression,
   ExpressionEvent,
   ExpressionTools,
-  ExpressionValues,
 } from '~/types/expressions'
 import type { Project } from '~/types/project'
 import type { AxiosError } from 'axios'

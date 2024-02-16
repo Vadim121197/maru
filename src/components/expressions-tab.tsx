@@ -134,8 +134,8 @@ export const ExpressionsTab = ({
           <></>
         )}
         {addNew && (
-          <div className='flex w-full flex-col gap-6 bg-card p-4 lg:w-[50%] lg:px-6 lg:pt-4 lg:pb-[50px]'>
-            <p className='text-lg font-medium text-muted-foreground text-center'>Editor</p>
+          <div className='flex w-full flex-col gap-6 bg-card p-4 lg:w-[50%] lg:px-6 lg:pb-[50px] lg:pt-4'>
+            <p className='text-center text-lg font-medium text-muted-foreground'>Editor</p>
             <SelectComponent
               value={selectedSource}
               onValueChange={(e) => {
@@ -173,8 +173,8 @@ export const ExpressionsTab = ({
           {projectExpressions.base_expressions.map((exp) => (
             <AccordionItem value={exp.id.toString()} key={exp.id}>
               <AccordionTrigger className='flex w-full flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px] data-[state=open]:border-primary'>
-                <div className='flex flex-col w-full gap-10'>
-                  <p className='text-base font-medium text-left'>
+                <div className='flex w-full flex-col gap-10'>
+                  <p className='text-left text-base font-medium'>
                     {exp.name}=map({exp.raw_data}).filter(|result| ={'>'}
                     {exp.filter_data})
                   </p>

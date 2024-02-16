@@ -1,4 +1,4 @@
-import { useCallback, useState, type Dispatch, type SetStateAction } from 'react'
+import { useCallback, useState } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import type { DialogProps } from '@radix-ui/react-dialog'
 import useAxiosAuth from '~/hooks/axios-auth'
@@ -49,10 +49,10 @@ export const FailedFetchAbiModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='py-[36px] px-7'>
+      <DialogContent className='px-7 py-[36px]'>
         <DialogHeader className='pb-3'>
-          <DialogTitle className='text-base font-medium text-muted-foreground flex items-center gap-2'>
-            <AlertTriangle className='w-4 h-4 text-[rgba(255,219,0,1)]' />
+          <DialogTitle className='flex items-center gap-2 text-base font-medium text-muted-foreground'>
+            <AlertTriangle className='h-4 w-4 text-[rgba(255,219,0,1)]' />
             Failed to fetch contract ABI.
           </DialogTitle>
         </DialogHeader>
@@ -61,7 +61,7 @@ export const FailedFetchAbiModal = ({
             You can attach ABI file or continue with a demo contract address
           </p>
           <Dropzone onDrop={onDrop} file={file} />
-          <div className='mt-6 w-full flex gap-5'>
+          <div className='mt-6 flex w-full gap-5'>
             <Button className='w-full' variant='outline' disabled>
               Use demo address
             </Button>
