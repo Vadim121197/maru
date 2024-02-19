@@ -1,11 +1,11 @@
-import { Link2, PlusIcon, TrendingUp } from 'lucide-react'
+import { Link2, TrendingUp } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import { authOptions } from '~/auth'
+import { AuthSidebar } from '~/components/auth-sidebar'
 import { ChartIcon } from '~/components/chart-icon'
 import { ProjectCard } from '~/components/project-card'
 import { buttonVariants } from '~/components/ui/button'
-import { UserCard } from '~/components/user-card'
 import { siteConfig } from '~/config/site'
 import { ApiRoutes, axiosInstance } from '~/lib/axios-instance'
 import { cn } from '~/lib/utils'
@@ -30,28 +30,6 @@ const resources = [
   },
 ]
 
-const AuthSidebar = () => (
-  <div className='flex w-full flex-col gap-4'>
-    <p className='mb-2 text-base font-semibold lg:text-lg lg:font-medium'>Account</p>
-    <UserCard />
-    <div className='mt-2 flex flex-col gap-4'>
-      {siteConfig.secondaryNav.map((i) => (
-        <Link href={i.href} key={i.href} className='flex items-center gap-2'>
-          <div>{i.icon}</div>
-          <p className='text-[12px] font-normal leading-[18px] lg:text-sm'>{i.title}</p>
-        </Link>
-      ))}
-    </div>
-    <Link
-      href={Nav.PROJECT_CREATE}
-      className={cn('w-full gap-[10px] mt-6 lg:mt-0 lg:w-[196px] text-primary', buttonVariants())}
-    >
-      <PlusIcon className='h-4 w-4 ' />
-      <span>New Project</span>
-    </Link>
-  </div>
-)
-
 const IndexPage = async () => {
   const session = await getServerSession(authOptions)
 
@@ -68,7 +46,7 @@ const IndexPage = async () => {
         <div className='order-2 flex flex-col gap-10 lg:order-1 lg:w-[20%]'>
           {session && (
             <div className='hidden w-full lg:block'>
-              <AuthSidebar />
+              <AuthSidebar nav={siteConfig.secondaryNav} />
             </div>
           )}
           <div className='flex flex-col gap-[2px]'>
@@ -94,7 +72,7 @@ const IndexPage = async () => {
           </div>
           {session && (
             <div className='order-2 mt-10 block w-full lg:mt-0 lg:hidden'>
-              <AuthSidebar />
+              <AuthSidebar nav={siteConfig.secondaryNav} />
             </div>
           )}
           {projects.length ? (
