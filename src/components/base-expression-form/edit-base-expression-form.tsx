@@ -1,14 +1,9 @@
 import { useEffect, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import type { PrecalculateResult } from '~/types/calculations'
+import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
-import type {
-  BaseExpressionValues,
-  Expression,
-  ExpressionEvent,
-  ExpressionTools,
-} from '~/types/expressions'
-import type { Project } from '~/types/project'
+import type { BaseExpressionValues, Expression, ExpressionEvent, ExpressionTools } from '~/types/expressions'
 import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import { TextLabel } from '../form-components'
@@ -20,24 +15,18 @@ import { PrecalcSettings } from '../precalc-settings'
 
 interface EditBaseExpressionFormProps {
   expression: Expression
-  project: Project
-  updateProject: (newProject: Project) => void
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
 }
 
-export const EditBaseExpressionForm = ({
-  expression,
-  project,
-  updateProject,
-  updateExpressionList,
-}: EditBaseExpressionFormProps) => {
+export const EditBaseExpressionForm = ({ expression, updateExpressionList }: EditBaseExpressionFormProps) => {
+  const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
 
   const [expressionValues, setExpressionValues] = useState<BaseExpressionValues>({
     name: expression.name,
     rawData: expression.raw_data,
     aggregate: expression.aggregate_operation,
-    filter: '',
+    filter: expression.filter_data,
   })
   const [selectedEvent, setSelectedEvent] = useState<ExpressionEvent | undefined>()
   const [precalcRes, setPrecalcRes] = useState<PrecalculateResult[]>([])
@@ -63,7 +52,7 @@ export const EditBaseExpressionForm = ({
         raw_data: expressionValues.rawData,
         projects_id: expression.project_id,
         contract_address: expression.contract_address,
-        block_range: project.block_range,
+        block_range: project?.block_range,
         aggregate_operation: expressionValues.aggregate,
         event: expression.event,
         expression_type: 'base',
@@ -92,6 +81,8 @@ export const EditBaseExpressionForm = ({
     }
   }
 
+  if (!project) return
+
   return (
     <div className='flex w-full flex-col gap-6 bg-card p-4 lg:p-6'>
       <div className='flex flex-col'>
@@ -108,7 +99,12 @@ export const EditBaseExpressionForm = ({
             <BaseExpressionHelperTable tools={tools} event={selectedEvent} setExpressionValues={setExpressionValues} />
           )}
         </div>
-        <PrecalcSettings project={project} updateProject={updateProject} />
+        <PrecalcSettings
+          project={project}
+          updateProject={(newProject) => {
+            setProject(newProject)
+          }}
+        />
         <div className='grid grid-cols-2 gap-4'>
           <Button
             variant='outline'

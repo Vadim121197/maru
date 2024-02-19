@@ -23,7 +23,7 @@ const ProjectsPage = () => {
 
     void (async () => {
       try {
-        const { data } = await axiosAuth.get<Project[]>(ApiRoutes.USERS_ME_ROJECTS)
+        const { data } = await axiosAuth.get<Project[]>(ApiRoutes.USERS_ME_PROJECTS)
 
         setProjects(data)
       } catch {}

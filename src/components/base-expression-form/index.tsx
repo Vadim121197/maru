@@ -4,7 +4,7 @@ import { ADDRESS, ApiRoutes } from '~/lib/axios-instance'
 import type { PrecalculateResult } from '~/types/calculations'
 import type { BaseExpressionValues, Expression, ExpressionEvent, ExpressionTools } from '~/types/expressions'
 import type { AxiosError } from 'axios'
-import type { Project } from '~/types/project'
+import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import { toast } from 'react-toastify'
 import { BaseExpressionField } from '../expression-field'
 import { SelectComponent, TextLabel } from '../form-components'
@@ -18,12 +18,11 @@ import { FailedFetchAbiModal } from '../failed-fetch-abi-modal'
 // 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7
 
 interface BaseExpressionFormProps {
-  project: Project
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
-  updateProject: (newProject: Project) => void
 }
 
-export const BaseExpressionForm = ({ project, updateExpressionList, updateProject }: BaseExpressionFormProps) => {
+export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormProps) => {
+  const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
 
   const [contractAddress, setContractAddress] = useState('')
@@ -82,6 +81,19 @@ export const BaseExpressionForm = ({ project, updateExpressionList, updateProjec
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contractAddress, axiosAuth, addressValidationErrors])
 
+  const eventsOptions = useMemo(() => {
+    if (!tools) return []
+
+    return tools.events.map((ev) => {
+      return {
+        value: ev.name,
+        label: ev.name,
+      }
+    })
+  }, [tools])
+
+  if (!project) return
+
   const precalculate = async () => {
     try {
       const { data } = await axiosAuth.post<PrecalculateResult[]>(ApiRoutes.EXPRESSIONS_DEMO, {
@@ -117,17 +129,6 @@ export const BaseExpressionForm = ({ project, updateExpressionList, updateProjec
       toast.error(`${err.message} (${err.config?.url}, ${err.config?.method})`)
     }
   }
-
-  const eventsOptions = useMemo(() => {
-    if (!tools) return []
-
-    return tools.events.map((ev) => {
-      return {
-        value: ev.name,
-        label: ev.name,
-      }
-    })
-  }, [tools])
 
   return (
     <>
@@ -185,7 +186,12 @@ export const BaseExpressionForm = ({ project, updateExpressionList, updateProjec
                 setExpressionValues={setExpressionValues}
               />
             </div>
-            <PrecalcSettings project={project} updateProject={updateProject} />
+            <PrecalcSettings
+              project={project}
+              updateProject={(newProject) => {
+                setProject(newProject)
+              }}
+            />
             <div className='grid grid-cols-2 gap-4'>
               <Button
                 variant='outline'

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
-import type { Expression, ExpressionCreateResponse, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
+import type { Expression, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
+import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
-import type { Project } from '~/types/project'
 import type { PrecalculateResult } from '~/types/calculations'
 import { ExpressionField } from '../expression-field'
 import { TextLabel } from '../form-components'
@@ -14,14 +14,11 @@ import { PrecalcSettings } from '../precalc-settings'
 import { Button } from '../ui/button'
 
 export const FinalExpressionForm = ({
-  project,
-  updateProject,
   updateExpressionList,
 }: {
-  project: Project
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
-  updateProject: (newProject: Project) => void
 }) => {
+  const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
 
   const [expressionValues, setExpressionValues] = useState<ExpressionValues>({
@@ -35,6 +32,7 @@ export const FinalExpressionForm = ({
   const [tools, setTools] = useState<FinalExpressionTools | undefined>()
 
   useEffect(() => {
+    if (!project?.id) return
     void (async () => {
       try {
         const { data } = await axiosAuth.get<FinalExpressionTools>(
@@ -44,7 +42,9 @@ export const FinalExpressionForm = ({
         setTools(data)
       } catch {}
     })()
-  }, [project.id, axiosAuth])
+  }, [project?.id, axiosAuth])
+
+  if (!project) return
 
   const precalculate = async () => {
     try {
@@ -86,7 +86,12 @@ export const FinalExpressionForm = ({
             </div>
             <FinalExpressionHelperTable tools={tools} setExpressionValues={setExpressionValues} />
           </div>
-          <PrecalcSettings project={project} updateProject={updateProject} />
+          <PrecalcSettings
+            project={project}
+            updateProject={(newProject) => {
+              setProject(newProject)
+            }}
+          />
           <div className='grid grid-cols-2 gap-4'>
             <Button
               variant='outline'

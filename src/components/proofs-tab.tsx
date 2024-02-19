@@ -2,27 +2,46 @@
 
 import { useEffect, useState } from 'react'
 import moment from 'moment'
-import { Copy } from 'lucide-react'
+import { Bird, Copy } from 'lucide-react'
 import useAxiosAuth from '~/hooks/axios-auth'
+import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import type { Proof } from '~/types/proof'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
 
 export const ProofsTab = ({ projectId }: { projectId: string }) => {
+  const { proofs, setProofs } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
-  const [proofs, setProofs] = useState<Proof[]>([])
+  const [loading, setLoading] = useState<boolean | undefined>()
 
   useEffect(() => {
     void (async () => {
       try {
+        setLoading(true)
         const { data: proofs } = await axiosAuth.get<Proof[]>(
           ApiRoutes.PROJECTS_PROJECT_ID_PROOFS.replace(PROJECT_ID, projectId),
         )
 
         setProofs(proofs)
-      } catch (error) {}
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+      }
     })()
-  }, [projectId, axiosAuth])
+  }, [projectId, axiosAuth, setProofs])
+
+  if (loading === undefined && !proofs.length) return <></>
+
+  if (!loading && !proofs.length)
+
+    return (
+      <section className='mt-[100px] flex flex-col items-center justify-center px-7 lg:container lg:mt-[150px]'>
+        <Bird className='w-20 h-20' strokeWidth={1} />
+        <p className='text-xl font-semibold'>No proofs</p>
+      </section>
+    )
+
+  if (loading && !proofs.length) return <></>
 
   return (
     <div className='bg-card px-5'>
