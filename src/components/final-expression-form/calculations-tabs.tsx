@@ -4,7 +4,7 @@ import { PeriodicCalculation } from './periodic-calculation'
 
 export const CalculationsTabs = ({ expressionId }: { expressionId: number }) => {
   return (
-    <Tabs defaultValue='periodic' className=''>
+    <Tabs defaultValue='one_time' className=''>
       <TabsList className='mb-10 w-full'>
         <TabsTrigger value='one_time' className='w-full data-[state=active]:bg-transparent'>
           One time calculation

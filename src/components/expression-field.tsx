@@ -24,7 +24,12 @@ export const ExpressionField = ({
   }, [aggregateFunctions])
 
   return (
-    <div className='flex w-full flex-col gap-2 border-2 border-border bg-background p-3 text-base font-medium lg:p-4'>
+    <div
+      className='flex w-full flex-col gap-2 border-2 border-border bg-background p-3 text-base font-medium lg:p-4'
+      onClick={(e) => {
+        e.stopPropagation()
+      }}
+    >
       <div className='flex flex-col justify-between gap-3 lg:flex-row lg:gap-5'>
         <Input
           className='h-7 w-full text-[12px] font-normal placeholder:text-[12px] lg:w-[200px] lg:text-sm'
@@ -86,7 +91,12 @@ export const BaseExpressionField = ({
   }, [aggregateFunctions])
 
   return (
-    <div className='flex w-full flex-col gap-2 border-2 border-border bg-background p-3 text-base font-medium lg:p-4'>
+    <div
+      className='flex w-full flex-col gap-2 border-2 border-border bg-background p-3 text-base font-medium lg:p-4'
+      onClick={(e) => {
+        e.stopPropagation()
+      }}
+    >
       <div className='flex items-center gap-4'>
         <Input
           className='h-7 w-full text-[12px] font-normal placeholder:text-[12px] lg:w-[200px] lg:text-sm'

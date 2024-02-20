@@ -38,9 +38,9 @@ export const SelectComponent = ({
   )
 }
 
-export const InputComponent = ({ label, ...props }: { label: string } & InputProps) => {
+export const InputComponent = ({ label, className, ...props }: { label: string; className?: string } & InputProps) => {
   return (
-    <div className='flex flex-col gap-2'>
+    <div className={cn('flex flex-col gap-2', className)}>
       <TextLabel label={label} />
       <Input {...props} />
     </div>

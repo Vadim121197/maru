@@ -2,10 +2,12 @@
 
 import { Plus } from 'lucide-react'
 import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { AxiosError } from 'axios'
+import { toast } from 'react-toastify'
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
-import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
+import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import { Expressions, expressionTypes } from '~/lib/expressions'
 import type { Expression, ExpressionsResponse } from '~/types/expressions'
 import { BaseExpressionForm } from '../../../components/base-expression-form'
@@ -13,7 +15,7 @@ import { EditBaseExpressionForm } from '../../../components/base-expression-form
 import { FinalExpressionForm } from '../../../components/final-expression-form'
 import { EditFinalExpressionForm } from '../../../components/final-expression-form/edit-final-expression-form'
 import { SelectComponent } from '../../../components/form-components'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../../../components/ui/accordion'
+import { Accordion } from '../../../components/ui/accordion'
 import { Button } from '../../../components/ui/button'
 
 export const ExpressionsTab = () => {
@@ -21,9 +23,11 @@ export const ExpressionsTab = () => {
   const { data: session } = useSession()
   const axiosAuth = useAxiosAuth()
 
-  const [loading, setLoading] = useState<boolean>(true)
-  const [opened, setOpened] = useState('')
-  const [openedFinal, setOpenedFinal] = useState('')
+  const ref = useRef<HTMLInputElement>(null)
+
+  const [loading, setLoading] = useState<boolean | undefined>()
+  const [selectedBaseExpression, setSelectedBaseExpression] = useState<string>('')
+  const [selectedFinaleExpression, setSelectedFinaleExpression] = useState('')
   const [addNew, setAddNew] = useState<boolean>(false)
   const [selectedSource, setSelectedSource] = useState<Expressions | undefined>()
 
@@ -32,6 +36,7 @@ export const ExpressionsTab = () => {
 
     void (async () => {
       try {
+        setLoading(true)
         const { data: projectExpressions } = await axiosAuth.get<ExpressionsResponse>(
           ApiRoutes.PROJECTS_PROJECT_ID_EXPRESSIONS.replace(PROJECT_ID, project.id.toString()),
         )
@@ -43,8 +48,6 @@ export const ExpressionsTab = () => {
       }
     })()
   }, [project?.id, axiosAuth, setExpressions])
-
-  if (loading && !expressions.base_expressions.length) return <></>
 
   const updateExpressionList = (expression: Expression, type: 'create' | 'update') => {
     let index: number
@@ -63,7 +66,7 @@ export const ExpressionsTab = () => {
       base_expressions: newList,
     })
 
-    setOpened('')
+    setSelectedBaseExpression('')
     setAddNew(false)
     setSelectedSource(undefined)
   }
@@ -85,24 +88,66 @@ export const ExpressionsTab = () => {
       final_expressions: newList,
     })
 
-    setOpenedFinal('')
+    setSelectedFinaleExpression('')
     setAddNew(false)
     setSelectedSource(undefined)
   }
 
   if (!project) return <></>
 
+  const deleteExpression = async (id: number, type: 'base_expressions' | 'final_expressions') => {
+    try {
+      await axiosAuth.delete<Expression>(ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, id.toString()))
+
+      const filteredExpression = expressions[type].filter((exp) => exp.id !== id)
+
+      expressions[type] = filteredExpression
+
+      setExpressions(expressions)
+    } catch (error) {
+      const err = error as AxiosError
+      toast.error(`${err.message} (${err.config?.url}, ${err.config?.method})`)
+    }
+  }
+
+  if (loading === undefined && !expressions.base_expressions.length) return <></>
+
+  if (!loading && !expressions.base_expressions.length && session?.user.id === project.user.id && !addNew)
+    return (
+      <div className='mt-[160px] flex flex-col items-center gap-2'>
+        <p className='text-lg font-medium'>You don’t have any expression yet</p>
+        <p className='mb-4 text-base font-medium'>Start creating expression by clicking on “ + Expression ”</p>
+        <Button
+          variant='outline'
+          className='flex w-[274px] items-center gap-[10px]'
+          onClick={() => {
+            setAddNew(true)
+          }}
+        >
+          <div>
+            <Plus className='h-6 w-4' />
+          </div>
+          <p>Expression</p>
+        </Button>
+      </div>
+    )
+
+  if (loading && !expressions.base_expressions.length) return <></>
+
   return (
     <div className='flex flex-col gap-10'>
       <div className='flex flex-col gap-6'>
-        <div className='flex w-full items-center justify-between lg:w-[50%]'>
+        <div className='flex w-full items-center justify-between'>
           <p className='text-lg font-medium'>Expression</p>
           {expressions.base_expressions.length ? (
             <Button
               variant='outline'
               className='flex w-[274px] items-center gap-[10px]'
               onClick={() => {
+                ref.current?.scrollIntoView({ behavior: 'smooth' })
                 setAddNew(true)
+                setSelectedBaseExpression('')
+                setSelectedFinaleExpression('')
               }}
             >
               <div>
@@ -114,101 +159,72 @@ export const ExpressionsTab = () => {
             <></>
           )}
         </div>
-        {session?.user.id === project.user.id && !expressions.base_expressions.length && !addNew ? (
-          <div className='mt-[160px] flex flex-col items-center gap-2'>
-            <p className='text-lg font-medium'>You don’t have any expression yet</p>
-            <p className='mb-4 text-base font-medium'>Start creating expression by clicking on “ + Expression ”</p>
-            <Button
-              variant='outline'
-              className='flex w-[274px] items-center gap-[10px]'
-              onClick={() => {
-                setAddNew(true)
-              }}
-            >
-              <div>
-                <Plus className='h-6 w-4' />
-              </div>
-              <p>Expression</p>
-            </Button>
-          </div>
-        ) : (
-          <></>
-        )}
-        {addNew && (
-          <div className='flex w-full flex-col gap-6 bg-card p-4 lg:w-[50%] lg:px-6 lg:pb-[50px] lg:pt-4'>
-            <p className='text-center text-lg font-medium text-muted-foreground'>Editor</p>
-            <SelectComponent
-              value={selectedSource}
-              onValueChange={(e) => {
-                setSelectedSource(e as Expressions)
-              }}
-              options={expressionTypes}
-              label='Data source'
-            />
-            {selectedSource === Expressions.EVENT_DATA && (
-              <BaseExpressionForm updateExpressionList={updateExpressionList} />
-            )}
-            {selectedSource === Expressions.EXPRESSIONS && (
-              <FinalExpressionForm updateExpressionList={updateFinaleExpressionList} />
-            )}
-          </div>
-        )}
+
         <Accordion
           type='single'
-          value={opened}
+          value={selectedBaseExpression}
           onValueChange={(value) => {
-            setOpened(value)
+            setSelectedBaseExpression(value)
+            setSelectedFinaleExpression('')
             setAddNew(false)
           }}
           collapsible
-          className='flex w-full flex-col gap-4 lg:w-[50%]'
+          className='grid w-full grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
         >
           {expressions.base_expressions.map((exp) => (
-            <AccordionItem value={exp.id.toString()} key={exp.id}>
-              <AccordionTrigger className='flex w-full flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px] data-[state=open]:border-primary'>
-                <div className='flex w-full flex-col gap-10'>
-                  <p className='text-left text-base font-medium'>
-                    {exp.name}=map({exp.raw_data}).filter(|result| ={'>'}
-                    {exp.filter_data})
-                  </p>
-                  <div className='flex items-center gap-3'>
-                    <p className='text-sm font-normal'>Aggregate</p>
-                    <div className='border-2 px-8 py-[2px] text-sm font-normal'>{exp.aggregate_operation}</div>
-                  </div>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent>
-                <EditBaseExpressionForm expression={exp} updateExpressionList={updateExpressionList} />
-              </AccordionContent>
-            </AccordionItem>
+            <EditBaseExpressionForm
+              expression={exp}
+              updateExpressionList={updateExpressionList}
+              key={exp.id}
+              selectedExpression={selectedBaseExpression}
+              deleteExpression={deleteExpression}
+            />
           ))}
         </Accordion>
+        <div ref={ref}>
+          {addNew && (
+            <div className='flex w-full flex-col gap-6 bg-card p-4 lg:w-[50%] lg:px-6 lg:pb-[50px] lg:pt-4'>
+              <p className='text-center text-lg font-medium text-muted-foreground'>Editor</p>
+              <SelectComponent
+                value={selectedSource}
+                onValueChange={(e) => {
+                  setSelectedSource(e as Expressions)
+                }}
+                options={expressionTypes}
+                label='Data source'
+              />
+              {selectedSource === Expressions.EVENT_DATA && (
+                <BaseExpressionForm updateExpressionList={updateExpressionList} />
+              )}
+              {selectedSource === Expressions.EXPRESSIONS && (
+                <FinalExpressionForm updateExpressionList={updateFinaleExpressionList} />
+              )}
+            </div>
+          )}
+        </div>
       </div>
       {expressions.final_expressions.length ? (
         <div className='flex flex-col gap-6'>
-          <p className='text-lg font-medium'>Final Expressions Expression</p>
+          <p className='text-lg font-medium'>Final Expressions</p>
           <Accordion
             type='single'
-            value={openedFinal}
+            value={selectedFinaleExpression}
             onValueChange={(value) => {
-              setOpenedFinal(value)
+              setSelectedFinaleExpression(value)
+              setSelectedBaseExpression('')
               setAddNew(false)
             }}
             collapsible
-            className='flex w-full flex-col gap-4 lg:w-[50%]'
+            className='grid w-full grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
           >
             {expressions.final_expressions.map((exp) => (
-              <AccordionItem value={exp.id.toString()} key={exp.id}>
-                <AccordionTrigger className='flex w-full flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px] data-[state=open]:border-primary'>
-                  <div className='flex w-full items-center justify-between'>
-                    <p className='text-base font-medium'>{exp.name}</p>
-                  </div>
-                  <p className='text-sm font-normal text-muted-foreground'>{exp.raw_data}</p>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <EditFinalExpressionForm expression={exp} updateExpressionList={updateFinaleExpressionList} />
-                </AccordionContent>
-              </AccordionItem>
+              <EditFinalExpressionForm
+                expression={exp}
+                updateExpressionList={updateFinaleExpressionList}
+                key={exp.id}
+                selectedExpression={selectedFinaleExpression}
+                deleteExpression={deleteExpression}
+              />
             ))}
           </Accordion>
         </div>
