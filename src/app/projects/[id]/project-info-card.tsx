@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import { BackButton } from '~/components/back-button'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import type { Project } from '~/types/project'
@@ -25,30 +26,28 @@ export const ProjectInfoCard = ({ id }: { id: string }) => {
   if (!project) return
 
   return (
-    <>
-      <div className='flex items-center justify-between'>
-        <p className='text-2xl font-bold'>{project.name}</p>
+    <div className='flex flex-col gap-6'>
+      <BackButton href='/projects' />
+      <div className='mt-[14px] flex items-center justify-between lg:mt-[26px]'>
+        <p className='text-xl font-medium lg:text-2xl lg:font-bold'>{project.name}</p>
       </div>
       <div className='flex flex-col gap-6'>
         <div className='flex items-center gap-3'>
           {project.user.avatar_url && (
             <Image src={project.user.avatar_url} width={24} height={24} className='rounded-full' alt='avatar' />
           )}
-          <p className='text-sm font-medium lg:text-base'>{project.user.username}</p>
+          <p className='text-base font-semibold lg:text-lg lg:font-medium'>{project.user.username}</p>
         </div>
 
-        <div className='flex flex-col gap-2'>
-          <p className='text-lg font-medium'>Tags</p>
-          {project.tags.map((tag) => (
-            <div
-              key={tag.id}
-              className='border-2 border-border bg-background px-[26px] py-[5px] text-[12px] font-normal leading-[18px] text-muted-foreground'
-            >
-              {tag.name}
-            </div>
-          ))}
-        </div>
+        {project.description && (
+          <div className='flex flex-col gap-2'>
+            <p className='text-base font-semibold lg:text-lg lg:font-medium'>Description</p>
+            <p className='text-base font-semibold text-muted-foreground lg:text-lg lg:font-medium'>
+              {project.description}
+            </p>
+          </div>
+        )}
       </div>
-    </>
+    </div>
   )
 }

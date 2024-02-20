@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import type { AxiosError } from 'axios'
 import { usePathname, useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
-import { ProofType, type Proof, ProofPeridoValue } from '~/types/proof'
+import type { Task } from '~/types/task'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes } from '~/lib/axios-instance'
 import { InputBlock } from '../input-block'
@@ -20,12 +20,9 @@ export const OneTimeCalculation = ({ expressionId }: { expressionId: number }) =
 
   const prove = async () => {
     try {
-      await axiosAuth.post<Proof>(ApiRoutes.PROOFS, {
+      await axiosAuth.post<Task>(ApiRoutes.TASKS, {
+        block_range: `${period.from}-${period.to}`,
         expression_id: expressionId,
-        proof_type: ProofType.ONE_TIME,
-        from_value: period.from,
-        to_value: period.to,
-        period_value: ProofPeridoValue.BLOCK,
       })
       navigate.push(`${pathname}/proofs`)
     } catch (error) {

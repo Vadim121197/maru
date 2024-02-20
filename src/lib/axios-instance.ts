@@ -27,6 +27,8 @@ export enum ApiRoutes {
   PROJECTS_PROJECT_ID_TAGS_TAG_ID = '/projects/{project_id}/tags/{tag_id}',
   PROJECTS_PROJECT_ID_EXPRESSIONS = '/projects/{project_id}/expressions',
   PROJECTS_PROJECT_ID_PROOFS = '/projects/{project_id}/proofs',
+  PROJECTS_PROJECT_ID_TASKS = '/projects/{project_id}/tasks',
+  PROJECTS_PROJECT_ID_DEPLOYMENTS = '/projects/{project_id}/deployments',
 
   EXPRESSIONS = '/expressions',
   EXPRESSIONS_ADDRESS_TOOLS = '/expressions/{address}/tools',
@@ -41,6 +43,11 @@ export enum ApiRoutes {
 
   PROOFS = '/proofs',
   PROOFS_PROOF_ID = '/proofs/{proof_id}',
+  PROOFS_PROOF_ID_VERIFY = '/proofs/{proof_id}/verify',
+
+  TASKS = '/tasks',
+
+  DEPLOYMENTS = '/deployments',
 }
 
 export const axiosInstance = axios.create({

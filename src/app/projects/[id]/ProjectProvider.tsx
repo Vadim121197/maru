@@ -2,17 +2,23 @@
 
 import { useState, createContext, useContext } from 'react'
 import { create } from 'zustand'
+import type { Deployment } from '~/types/deployment'
 import type { ExpressionsResponse } from '~/types/expressions'
 import type { Project } from '~/types/project'
 import type { Proof } from '~/types/proof'
+import type { Task } from '~/types/task'
 
 interface ProjectSlice {
   project: Project | null
   proofs: Proof[]
+  tasks: Task[]
   expressions: ExpressionsResponse
+  deployments: Deployment[]
   setProject: (project: Project) => void
   setProofs: (proofs: Proof[]) => void
+  setTask: (tasks: Task[]) => void
   setExpressions: (expression: ExpressionsResponse) => void
+  setDeployments: (deployments: Deployment[]) => void
 }
 
 const createStore = () => {
@@ -20,18 +26,26 @@ const createStore = () => {
     return {
       project: null,
       proofs: [],
+      tasks: [],
       expressions: {
         base_expressions: [],
         final_expressions: [],
       },
+      deployments: [],
       setProject(project) {
         set({ project })
       },
       setProofs(proofs) {
         set({ proofs })
       },
+      setTask(tasks) {
+        set({ tasks })
+      },
       setExpressions(expressions) {
         set({ expressions })
+      },
+      setDeployments(deployments) {
+        set({ deployments })
       },
     }
   })

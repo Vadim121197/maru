@@ -1,4 +1,3 @@
-
 import { SigninButton } from './signin-button'
 import { Icons } from './icons'
 

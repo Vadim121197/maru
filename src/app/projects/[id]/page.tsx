@@ -1,4 +1,5 @@
-import { ExpressionsTab } from '~/components/expressions-tab'
+import { ExpressionsTab } from './expressions-tab'
+
 const ProjectPage = () => {
   return <ExpressionsTab />
 }

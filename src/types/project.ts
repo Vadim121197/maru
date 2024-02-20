@@ -15,6 +15,7 @@ export interface Project {
   block_range: string | null
   name: string | null
   created_at: Date
+  description: string | null
   updated_at: Date
   id: number
   stars_count: number

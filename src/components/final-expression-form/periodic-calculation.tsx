@@ -4,7 +4,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes } from '~/lib/axios-instance'
-import { ProofType, type Proof, ProofPeridoValue } from '~/types/proof'
+import type { Task } from '~/types/task'
 import { InputBlock } from '../input-block'
 import { Button } from '../ui/button'
 
@@ -17,17 +17,14 @@ export const PeriodicCalculation = ({ expressionId }: { expressionId: number }) 
     from: '',
     to: '',
   })
-  const [chunkSize, setChunkSize] = useState<string>('')
+  const [periodical, setPeriodical] = useState<string>('')
 
   const prove = async () => {
     try {
-      await axiosAuth.post<Proof>(ApiRoutes.PROOFS, {
+      await axiosAuth.post<Task>(ApiRoutes.TASKS, {
+        block_range: `${period.from}-${period.to}`,
         expression_id: expressionId,
-        proof_type: ProofType.PERIODIC,
-        from_value: period.from,
-        to_value: period.to,
-        chunk_size: chunkSize,
-        period_value: ProofPeridoValue.BLOCK,
+        periodical,
       })
       navigate.push(`${pathname}/proofs`)
     } catch (error) {
@@ -78,16 +75,16 @@ export const PeriodicCalculation = ({ expressionId }: { expressionId: number }) 
         <InputBlock
           className='w-full'
           type='number'
-          label='Chunk size'
-          value={chunkSize}
+          label='Periodical'
+          value={periodical}
           onChange={(e) => {
-            setChunkSize(e.target.value)
+            setPeriodical(e.target.value)
           }}
         />
       </div>
       <Button
         className='w-[274px] self-center'
-        disabled={addressValidationErrors || !period.from || !period.to || !chunkSize}
+        disabled={addressValidationErrors || !period.from || !period.to || !periodical}
         onClick={() => {
           void (async () => {
             await prove()

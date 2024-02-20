@@ -17,19 +17,16 @@ export enum ProofStatus {
 
 export interface Proof {
   expression_id: number
-  proof_type: ProofType
-  from_value: string
-  to_value: string
-  chunk_size: null | number
-  period_value: ProofPeridoValue
+  task_id: number
+  input: string
+  block_range: string
   status: ProofStatus
   version: number | null
   name: string | null
   created_at: Date
   updated_at: Date
-  input: string | null
   result: string | null
-  task_id: string | null
+  verification: string | null
   id: number
 }
 

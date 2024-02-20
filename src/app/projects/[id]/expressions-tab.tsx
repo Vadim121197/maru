@@ -1,20 +1,20 @@
 'use client'
 
 import { Plus } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import { Expressions, expressionTypes } from '~/lib/expressions'
 import type { Expression, ExpressionsResponse } from '~/types/expressions'
-import { BaseExpressionForm } from './base-expression-form'
-import { EditBaseExpressionForm } from './base-expression-form/edit-base-expression-form'
-import { FinalExpressionForm } from './final-expression-form'
-import { EditFinalExpressionForm } from './final-expression-form/edit-final-expression-form'
-import { SelectComponent } from './form-components'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
-import { Button } from './ui/button'
+import { BaseExpressionForm } from '../../../components/base-expression-form'
+import { EditBaseExpressionForm } from '../../../components/base-expression-form/edit-base-expression-form'
+import { FinalExpressionForm } from '../../../components/final-expression-form'
+import { EditFinalExpressionForm } from '../../../components/final-expression-form/edit-final-expression-form'
+import { SelectComponent } from '../../../components/form-components'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../../../components/ui/accordion'
+import { Button } from '../../../components/ui/button'
 
 export const ExpressionsTab = () => {
   const { project, expressions, setExpressions } = useProject()((state) => state)
