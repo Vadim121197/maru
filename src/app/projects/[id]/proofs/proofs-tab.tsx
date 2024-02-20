@@ -98,20 +98,20 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
             </TableRow>
           </TableHeader>
           <TableBody className='text-muted'>
-            {proofs.map((i) => (
-              <TableRow key={i.id} className='h-[56px]'>
+            {proofs.map((pr) => (
+              <TableRow key={pr.id} className='h-[56px]'>
                 <TableCell className='border-t-[1px]'>
-                  <Status status={i.status} />
+                  <Status status={pr.status} />
                 </TableCell>
-                <TableCell className='border-t-[1px] text-center text-base font-medium'>{i.version}</TableCell>
-                <TableCell className='border-t-[1px] text-center text-base font-medium'>{i.name}</TableCell>
+                <TableCell className='border-t-[1px] text-center text-base font-medium'>{pr.version}</TableCell>
+                <TableCell className='border-t-[1px] text-center text-base font-medium'>{pr.name}</TableCell>
                 <TableCell className='border-t-[1px] text-center text-base font-medium'>
-                  {moment.utc(i.updated_at).startOf('minutes').fromNow()}
+                  {moment.utc(pr.updated_at).startOf('minutes').fromNow()}
                 </TableCell>
                 <TableCell className='border-t-[1px] text-base font-medium'>
                   <div className='flex items-center justify-center gap-5'>
                     <a
-                      href={`${BASE_URL}/proofs/${i.id}/input`}
+                      href={`${BASE_URL}/proofs/${pr.id}/input`}
                       target='_blank'
                       rel='noopener noreferrer'
                       className='flex items-center justify-center'
@@ -119,15 +119,15 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                       <InfoIcon strokeWidth={1} className='h-5 w-5' />
                     </a>
                     <div>
-                      <Copy strokeWidth={1} className='h-5 w-5 cursor-pointer' onClick={copyToClipboard(i.input)} />
+                      <Copy strokeWidth={1} className='h-5 w-5 cursor-pointer' onClick={copyToClipboard(pr.input)} />
                     </div>
                   </div>
                 </TableCell>
                 <TableCell className='border-t-[1px] text-center text-base font-medium'>
-                  {i.result ? (
+                  {pr.result ? (
                     <div className='flex items-center justify-center gap-5'>
                       <a
-                        href={`${BASE_URL}/proofs/${i.id}/result`}
+                        href={`${BASE_URL}/proofs/${pr.id}/result`}
                         target='_blank'
                         rel='noopener noreferrer'
                         className='flex items-center justify-center'
@@ -135,7 +135,7 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                         <InfoIcon strokeWidth={1} className='h-5 w-5' />
                       </a>
                       <div>
-                        <Copy strokeWidth={1} className='h-5 w-5' onClick={copyToClipboard(i.result)} />
+                        <Copy strokeWidth={1} className='h-5 w-5' onClick={copyToClipboard(pr.result)} />
                       </div>
                     </div>
                   ) : (
@@ -143,12 +143,16 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                   )}
                 </TableCell>
                 <TableCell className='flex justify-center border-t-[1px] text-center text-base font-medium'>
-                  {i.verification ? (
-                    <div className='w-[86px] border-b-[1px] border-primary p-1 text-center'>Verified</div>
+                  {pr.status === ProofStatus.SUCCESS ? (
+                    pr.verification ? (
+                      <div className='w-[86px] border-b-[1px] border-primary p-1 text-center'>Verified</div>
+                    ) : (
+                      <Button variant='outline' className='h-9 w-[86px]' onClick={verify(pr.id)}>
+                        Verify
+                      </Button>
+                    )
                   ) : (
-                    <Button variant='outline' className='h-9 w-[86px]' onClick={verify(i.id)}>
-                      Verify
-                    </Button>
+                    <></>
                   )}
                 </TableCell>
               </TableRow>
@@ -213,12 +217,16 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
             </div>
             <div className='flex items-center justify-between pt-3'>
               <p className='text-base font-semibold'>Verification</p>
-              {pr.verification ? (
-                <div className='w-[86px] border-b-[1px] border-primary p-1 text-center'>Verified</div>
+              {pr.status === ProofStatus.SUCCESS ? (
+                pr.verification ? (
+                  <div className='w-[86px] border-b-[1px] border-primary p-1 text-center'>Verified</div>
+                ) : (
+                  <Button variant='outline' className='h-9 w-[86px]' onClick={verify(pr.id)}>
+                    Verify
+                  </Button>
+                )
               ) : (
-                <Button variant='outline' className='h-9 w-[86px]' onClick={verify(pr.id)}>
-                  Verify
-                </Button>
+                <></>
               )}
             </div>
           </div>
