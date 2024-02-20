@@ -7,13 +7,44 @@ import { Nav } from '~/types/nav'
 import ProjectProvider from './ProjectProvider'
 import { ProjectInfoCard } from './project-info-card'
 
+enum Tab {
+  EXPRESSION = 'expression',
+  TASKS = 'tasks',
+  PROOFS = 'proofs',
+  DEPLOYMENTS = 'deployments',
+  SETINGS = 'settings',
+}
+
+const tabs = [
+  {
+    value: Tab.EXPRESSION,
+    href: '/',
+  },
+  {
+    value: Tab.TASKS,
+    href: '/tasks',
+  },
+  {
+    value: Tab.PROOFS,
+    href: '/proofs',
+  },
+  {
+    value: Tab.DEPLOYMENTS,
+    href: '/deployments',
+  },
+  {
+    value: Tab.SETINGS,
+    href: '/settings',
+  },
+]
+
 const Layout = ({ children, params }: { children: React.ReactNode; params: { id: string } }) => {
   const navigate = useRouter()
   const pathname = usePathname()
 
   const tabValue = useMemo(() => {
     const splittedPathname = pathname.split('/')
-    return splittedPathname.length === 3 ? 'expression' : splittedPathname[splittedPathname.length - 1]
+    return splittedPathname.length === 3 ? Tab.EXPRESSION : splittedPathname[splittedPathname.length - 1]
   }, [pathname])
 
   return (
@@ -22,47 +53,24 @@ const Layout = ({ children, params }: { children: React.ReactNode; params: { id:
         <div className='flex flex-col gap-10'>
           <ProjectInfoCard id={params.id} />
           <Tabs value={tabValue}>
-            <TabsList className='mb-10'>
-              <TabsTrigger
-                value='expression'
-                onClick={() => {
-                  navigate.push(`${Nav.PROJECTS}/${params.id}`)
-                }}
-              >
-                Expression
-              </TabsTrigger>
-              <TabsTrigger
-                value='tasks'
-                onClick={() => {
-                  navigate.push(`${Nav.PROJECTS}/${params.id}/tasks`)
-                }}
-              >
-                Tasks
-              </TabsTrigger>
-              <TabsTrigger
-                value='proofs'
-                onClick={() => {
-                  navigate.push(`${Nav.PROJECTS}/${params.id}/proofs`)
-                }}
-              >
-                Proofs
-              </TabsTrigger>
-              <TabsTrigger
-                value='deployments'
-                onClick={() => {
-                  navigate.push(`${Nav.PROJECTS}/${params.id}/deployments`)
-                }}
-              >
-                Deployments
-              </TabsTrigger>
-              <TabsTrigger
-                value='settings'
-                onClick={() => {
-                  navigate.push(`${Nav.PROJECTS}/${params.id}/settings`)
-                }}
-              >
-                Settings
-              </TabsTrigger>
+            <TabsList className='mb-10 w-full'>
+              {tabs.map((t) => {
+                return (
+                  <TabsTrigger
+                    key={t.href}
+                    value={t.value}
+                    onClick={() => {
+                      navigate.push(`${Nav.PROJECTS}/${params.id}${t.href}`)
+                    }}
+                    className='capitalize'
+                    style={{
+                      width: 100 / tabs.length + '%',
+                    }}
+                  >
+                    {t.value}
+                  </TabsTrigger>
+                )
+              })}
             </TabsList>
             {children}
           </Tabs>
