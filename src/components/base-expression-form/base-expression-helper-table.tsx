@@ -58,11 +58,16 @@ export const BaseExpressionHelperTable = ({
 
   return (
     <>
-      <div className='flex flex-col gap-6 lg:hidden'>
+      <div className='flex flex-col gap-10 lg:hidden'>
         {tools.constants.length ? (
-          <div className='flex flex-col gap-2'>
-            <p className='text-[12px] font-normal'>Contract Consts</p>
-            <div className='grid grid-cols-2 gap-4'>
+          <div className='flex flex-col gap-4'>
+            <div className='flex items-start gap-4'>
+              <p className='text-[12px] leading-[18px] font-normal'>Contract Consts</p>
+              <div>
+                <Info className='h-4 w-4 text-primary' />
+              </div>
+            </div>
+            <div className='grid grid-cols-3 gap-6'>
               {tools.constants.map((i) => (
                 <div className='flex flex-col items-start gap-1' key={i.name}>
                   <p className='text-[10px] font-semibold leading-3 text-primary'>{i.arg_type}</p>
@@ -81,9 +86,14 @@ export const BaseExpressionHelperTable = ({
           <></>
         )}
         {tools.functions.length ? (
-          <div className='flex flex-col gap-2'>
-            <p className='text-[12px] font-normal'>Contract Functions</p>
-            <div className='grid grid-cols-2 gap-4'>
+          <div className='flex flex-col gap-4'>
+            <div className='flex items-start gap-4'>
+              <p className='text-[12px] leading-[18px] font-normal'>Contract Functions</p>
+              <div>
+                <Info className='h-4 w-4 text-primary' />
+              </div>
+            </div>
+            <div className='grid grid-cols-3 gap-6'>
               {tools.functions.map((i) => (
                 <div className='flex flex-col items-start gap-1' key={i.name}>
                   <p className='text-[10px] font-semibold leading-3 text-primary'>{i.arg_type}</p>
@@ -103,9 +113,14 @@ export const BaseExpressionHelperTable = ({
           <></>
         )}
         {event.params.length ? (
-          <div className='flex flex-col gap-2'>
-            <p className='text-[12px] font-normal'>Event Params</p>
-            <div className='grid grid-cols-2 gap-4'>
+          <div className='flex flex-col gap-4'>
+            <div className='flex items-start gap-4'>
+              <p className='text-[12px] leading-[18px] font-normal'>Event Params</p>
+              <div>
+                <Info className='h-4 w-4 text-primary' />
+              </div>
+            </div>
+            <div className='grid grid-cols-3 gap-6'>
               {event.params.map((i) => (
                 <div className='flex flex-col items-start gap-1' key={i.name}>
                   <p className='text-[10px] font-semibold leading-3 text-primary'>{i.arg_type}</p>
@@ -127,15 +142,31 @@ export const BaseExpressionHelperTable = ({
       </div>
       <Table className='hidden lg:table'>
         <TableHeader>
-          <TableRow>
-            <TableHead className='flex items-start gap-4'>
-              <p>Contract Consts</p>
-              <div>
-                <Info className='h-4 w-4 text-primary' />
+          <TableRow className='h-6'>
+            <TableHead>
+              <div className='flex items-start gap-4'>
+                <p className='text-sm font-normal'>Contract Consts</p>
+                <div>
+                  <Info className='h-4 w-4 text-primary' />
+                </div>
               </div>
             </TableHead>
-            <TableHead className='text-center'>Contract Functions</TableHead>
-            <TableHead className='text-center'>Event Params</TableHead>
+            <TableHead className='text-center'>
+              <div className='flex items-start justify-center gap-4'>
+                <p className='text-sm font-normal'>Contract Functions</p>
+                <div>
+                  <Info className='h-4 w-4 text-primary' />
+                </div>
+              </div>
+            </TableHead>
+            <TableHead className='text-center'>
+              <div className='flex items-start justify-center gap-4'>
+                <p className='text-sm font-normal'>Event Params</p>
+                <div>
+                  <Info className='h-4 w-4 text-primary' />
+                </div>
+              </div>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -147,14 +178,12 @@ export const BaseExpressionHelperTable = ({
                   {i.constant?.name}
                 </button>
               </TableCell>
-
               <TableCell className='text-center'>
                 <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{i.function?.arg_type}</p>
                 <button disabled={!i.function?.is_active} onClick={helperClick(i.function?.name)} type='button'>
                   {i.function?.name}
                 </button>
               </TableCell>
-
               <TableCell className='text-center'>
                 <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{i.param?.arg_type}</p>
                 <button disabled={i.param?.is_indexed} onClick={helperClick(i.param?.name)} type='button'>

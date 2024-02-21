@@ -86,17 +86,17 @@ export const EditFinalExpressionForm = ({
 
   return (
     <AccordionItem value={expression.id.toString()} key={expression.id}>
-      <AccordionTrigger className='flex w-full flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px] data-[state=open]:border-b-0 data-[state=open]:pb-0'>
+      <AccordionTrigger className='flex w-full flex-col gap-2 lg:gap-3 border-2 p-4 data-[state=open]:border-b-0 data-[state=open]:pb-0'>
         {selectedExpression === expression.id.toString() ? (
           <ExpressionField expressionValues={expressionValues} setExpressionValues={setExpressionValues} />
         ) : (
           <>
             <div className='flex w-full items-center justify-between'>
-              <p className='text-base font-medium'>{expression.name}</p>
+              <p className='text-sm lg:text-base font-medium'>{expression.name}</p>
               <div>
                 <Trash
                   strokeWidth={1}
-                  className='h-5 w-5 text-muted-foreground'
+                  className='h-4 w-4 lg:h-5 lg:w-5 text-muted-foreground'
                   onClick={(e) => {
                     e.stopPropagation()
                     void deleteExpression(expression.id, 'final_expressions')
@@ -104,7 +104,9 @@ export const EditFinalExpressionForm = ({
                 />
               </div>
             </div>
-            <p className='text-sm font-normal text-muted-foreground'>{expression.raw_data}</p>
+            <p className='text-[12px] leading-[18px] lg:text-sm font-normal text-muted-foreground'>
+              {expression.raw_data}
+            </p>
           </>
         )}
       </AccordionTrigger>

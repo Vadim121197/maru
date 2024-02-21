@@ -132,8 +132,8 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
 
   return (
     <>
-      <div className='flex w-full flex-col'>
-        <div className='grid grid-cols-2 gap-4'>
+      <div className='flex w-full flex-col mt-6'>
+        <div className='grid lg:grid-cols-2 gap-6 lg:gap-4'>
           <InputBlock
             label='Contact address'
             className='w-full'
@@ -171,8 +171,8 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
         </div>
         {selectedEvent && tools && (
           <div className='mt-10 flex flex-col'>
-            <div className='flex flex-col gap-[38px] border-b pb-4'>
-              <div className='flex w-full flex-col gap-2'>
+            <div className='flex flex-col'>
+              <div className='flex w-full flex-col gap-2 mb-10 lg:mb-6'>
                 <TextLabel label='Expression' />
                 <BaseExpressionField
                   aggregateFunctions={tools.aggregate_operations}
@@ -180,11 +180,13 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
                   setExpressionValues={setExpressionValues}
                 />
               </div>
-              <BaseExpressionHelperTable
-                tools={tools}
-                event={selectedEvent}
-                setExpressionValues={setExpressionValues}
-              />
+              <div className='border-b pb-6 lg:pb-10'>
+                <BaseExpressionHelperTable
+                  tools={tools}
+                  event={selectedEvent}
+                  setExpressionValues={setExpressionValues}
+                />
+              </div>
             </div>
             <PrecalcSettings
               project={project}
@@ -192,7 +194,7 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
                 setProject(newProject)
               }}
             />
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-[30px]'>
               <Button
                 variant='outline'
                 className='w-full'

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import type { AxiosError } from 'axios'
 import { usePathname, useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
+import { MIN_BLOCK_HEIGHT } from '~/lib/constants'
 import type { Task } from '~/types/task'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes } from '~/lib/axios-instance'
@@ -36,6 +37,11 @@ export const OneTimeCalculation = ({ expressionId }: { expressionId: number }) =
     return Number(period.from) > Number(period.to)
   }, [period])
 
+  const minBlockHeightError = useMemo(() => {
+    if (!period.from) return false
+    return Number(period.from) < MIN_BLOCK_HEIGHT
+  }, [period])
+
   return (
     <>
       <div className='grid grid-cols-2 gap-10'>
@@ -43,6 +49,7 @@ export const OneTimeCalculation = ({ expressionId }: { expressionId: number }) =
           className='w-full'
           type='number'
           label='From'
+          placeholder='Enter block number'
           value={period.from}
           onChange={(e) => {
             setPeriod((state) => ({
@@ -53,7 +60,27 @@ export const OneTimeCalculation = ({ expressionId }: { expressionId: number }) =
           validations={[
             {
               type: 'error',
-              issue: 'From bigger than to',
+              issue: (
+                <p>
+                  Input should exceed{' '}
+                  <span
+                    className='underline cursor-pointer'
+                    onClick={() => {
+                      setPeriod({
+                        from: MIN_BLOCK_HEIGHT.toString(),
+                        to: (MIN_BLOCK_HEIGHT + 1000).toString(),
+                      })
+                    }}
+                  >
+                    {MIN_BLOCK_HEIGHT}
+                  </span>
+                </p>
+              ),
+              checkFn: () => minBlockHeightError,
+            },
+            {
+              type: 'error',
+              issue: 'From smaller to larger',
               checkFn: () => addressValidationErrors,
             },
           ]}
@@ -62,6 +89,7 @@ export const OneTimeCalculation = ({ expressionId }: { expressionId: number }) =
           className='w-full'
           type='number'
           label='To'
+          placeholder='Enter block number'
           value={period.to}
           onChange={(e) => {
             setPeriod((state) => ({
@@ -73,7 +101,7 @@ export const OneTimeCalculation = ({ expressionId }: { expressionId: number }) =
       </div>
       <Button
         className='w-[274px] self-center'
-        disabled={addressValidationErrors || !period.from || !period.to}
+        disabled={addressValidationErrors || !period.from || !period.to || minBlockHeightError}
         onClick={() => {
           void (async () => {
             await prove()

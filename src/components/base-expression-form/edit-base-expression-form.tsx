@@ -96,28 +96,32 @@ export const EditBaseExpressionForm = ({
 
   return (
     <AccordionItem value={expression.id.toString()} key={expression.id}>
-      <AccordionTrigger className='flex w-full flex-col gap-4 border-2 px-4 pb-[26px] pt-[18px] data-[state=open]:border-b-0 data-[state=open]:pb-0'>
+      <AccordionTrigger className='flex w-full flex-col border-2 px-3 py-3 lg:px-4 lg:py-4 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:data-[state=open]:px-5'>
         {selectedExpression === expression.id.toString() ? (
           <BaseExpressionField
             aggregateFunctions={tools?.aggregate_operations ?? []}
             expressionValues={expressionValues}
             setExpressionValues={setExpressionValues}
+            className='bg-card'
+            textAreaClassName='border-2 border-border'
           />
         ) : (
           <div className='flex w-full flex-col gap-10'>
-            <p className='text-left text-base font-medium'>
+            <p className='text-left text-[12px] leading-[18px] lg:text-sm font-normal'>
               {expression.name}=map({expression.raw_data}).filter(|result| ={'>'}
               {expression.filter_data})
             </p>
-            <div className='flex justify-between'>
-              <div className='flex items-center gap-3'>
-                <p className='text-sm font-normal'>Aggregate</p>
-                <div className='border-2 px-8 py-[2px] text-sm font-normal'>{expression.aggregate_operation}</div>
+            <div className='flex justify-between items-end'>
+              <div className='flex items-center gap-4'>
+                <p className='text-[12px] leading-[18px] lg:text-sm'>Aggregate</p>
+                <div className='border-2 px-3 lg:px-8 py-1 text-[12px] leading-[18px] lg:text-sm '>
+                  {expression.aggregate_operation}
+                </div>
               </div>
               <div>
                 <Trash
                   strokeWidth={1}
-                  className='h-5 w-5 text-muted-foreground'
+                  className='h-4 w-4 lg:h-5 lg:w-5 text-muted-foreground'
                   onClick={(e) => {
                     e.stopPropagation()
                     void deleteExpression(expression.id, 'base_expressions')
@@ -129,9 +133,9 @@ export const EditBaseExpressionForm = ({
         )}
       </AccordionTrigger>
       <AccordionContent>
-        <div className='flex w-full flex-col gap-6 border-x-[2px] border-b-[2px] p-4 lg:p-6'>
+        <div className='flex w-full flex-col gap-6 border-x-[2px] border-b-[2px] px-3 lg:px-5 pt-6 pb-[62px]'>
           <div className='flex flex-col'>
-            <div className='flex flex-col gap-[38px] border-b pb-4'>
+            <div className='border-b pb-6 lg:pb-10'>
               {tools && selectedEvent && (
                 <BaseExpressionHelperTable
                   tools={tools}
@@ -146,7 +150,7 @@ export const EditBaseExpressionForm = ({
                 setProject(newProject)
               }}
             />
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-[30px]'>
               <Button
                 variant='outline'
                 className='w-full'
@@ -172,7 +176,7 @@ export const EditBaseExpressionForm = ({
             </div>
             {precalcRes.length ? <PrecalcValues res={precalcRes} /> : <></>}
           </div>
-          <div className='mt-11 flex w-full gap-4'>
+          <div className='mt-[40px] grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-4'>
             <InputComponent value={expression.contract_address} label='Contact address' className='w-full' />
             <InputComponent value={selectedEvent?.name} label='Signature' className='w-full' />
           </div>

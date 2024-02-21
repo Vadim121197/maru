@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Info } from 'lucide-react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import type { Project } from '~/types/project'
 import type { AxiosError } from 'axios'
@@ -7,6 +8,7 @@ import { ApiRoutes } from '~/lib/axios-instance'
 import { InputBlock } from './input-block'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
 import { Button } from './ui/button'
+
 
 export const PrecalcSettings = ({
   project,
@@ -48,18 +50,23 @@ export const PrecalcSettings = ({
 
   return (
     <>
-      <p className='mb-6 mt-4 text-[12px] font-normal leading-[18px] lg:mb-10 lg:text-sm'>
-        The precalculation uses events in the{' '}
-        <span
-          className='cursor-pointer font-semibold text-muted-foreground underline'
-          onClick={() => {
-            setOpen(true)
-          }}
-        >
-          {projectCalcPeriod.from}-{projectCalcPeriod.to}{' '}
-        </span>
-        blocks.
-      </p>
+      <div className='mt-4 mb-10 flex justify-between gap-4 lg:justify-start'>
+        <p className='text-[12px] font-normal leading-[18px] lg:text-sm'>
+          The precalculation uses events in the{' '}
+          <span
+            className='cursor-pointer font-bold lg:font-semibold text-muted-foreground underline'
+            onClick={() => {
+              setOpen(true)
+            }}
+          >
+            {projectCalcPeriod.from}-{projectCalcPeriod.to}{' '}
+          </span>
+          blocks.
+        </p>
+        <div>
+          <Info className='h-4 w-4 text-primary' />
+        </div>
+      </div>
 
       <Dialog
         open={open}
