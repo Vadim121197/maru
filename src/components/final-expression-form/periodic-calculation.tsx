@@ -9,7 +9,6 @@ import type { Task } from '~/types/task'
 import { InputBlock } from '../input-block'
 import { Button } from '../ui/button'
 
-
 export const PeriodicCalculation = ({ expressionId }: { expressionId: number }) => {
   const navigate = useRouter()
   const pathname = usePathname()
@@ -47,7 +46,7 @@ export const PeriodicCalculation = ({ expressionId }: { expressionId: number }) 
 
   return (
     <>
-      <div className='grid grid-cols-3 gap-5'>
+      <div className='grid  gap-4 lg:grid-cols-3 lg:gap-5'>
         <InputBlock
           className='w-full'
           type='number'
@@ -67,7 +66,7 @@ export const PeriodicCalculation = ({ expressionId }: { expressionId: number }) 
                 <p>
                   Input should exceed{' '}
                   <span
-                    className='underline cursor-pointer'
+                    className='cursor-pointer underline'
                     onClick={() => {
                       setPeriod({
                         from: MIN_BLOCK_HEIGHT.toString(),
@@ -113,7 +112,7 @@ export const PeriodicCalculation = ({ expressionId }: { expressionId: number }) 
         />
       </div>
       <Button
-        className='w-[274px] self-center'
+        className='w-full self-center lg:w-[274px]'
         disabled={addressValidationErrors || !period.from || !period.to || !periodical || minBlockHeightError}
         onClick={() => {
           void (async () => {

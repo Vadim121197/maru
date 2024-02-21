@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Trash } from 'lucide-react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import type { PrecalculateResult } from '~/types/calculations'
@@ -30,6 +30,7 @@ export const EditBaseExpressionForm = ({
 }: EditBaseExpressionFormProps) => {
   const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
+  const textarea = useRef<HTMLTextAreaElement>(null)
 
   const [expressionValues, setExpressionValues] = useState<BaseExpressionValues>({
     name: expression.name,
@@ -63,10 +64,11 @@ export const EditBaseExpressionForm = ({
         raw_data: expressionValues.rawData,
         projects_id: expression.project_id,
         contract_address: expression.contract_address,
-        block_range: project?.block_range,
         aggregate_operation: expressionValues.aggregate,
         event: expression.event,
         expression_type: 'base',
+        filter_data: expressionValues.filter,
+        block_range: project?.block_range,
       })
 
       setPrecalcRes(data)
@@ -82,6 +84,7 @@ export const EditBaseExpressionForm = ({
           raw_data: expressionValues.rawData,
           name: expressionValues.name,
           aggregate_operation: expressionValues.aggregate,
+          filter_data: expressionValues.filter,
         },
       )
 
@@ -96,7 +99,7 @@ export const EditBaseExpressionForm = ({
 
   return (
     <AccordionItem value={expression.id.toString()} key={expression.id}>
-      <AccordionTrigger className='flex w-full flex-col border-2 px-3 py-3 lg:px-4 lg:py-4 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:data-[state=open]:px-5'>
+      <AccordionTrigger className='flex w-full flex-col border-2 p-3 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5'>
         {selectedExpression === expression.id.toString() ? (
           <BaseExpressionField
             aggregateFunctions={tools?.aggregate_operations ?? []}
@@ -104,24 +107,25 @@ export const EditBaseExpressionForm = ({
             setExpressionValues={setExpressionValues}
             className='bg-card'
             textAreaClassName='border-2 border-border'
+            textareaRef={textarea}
           />
         ) : (
           <div className='flex w-full flex-col gap-10'>
-            <p className='text-left text-[12px] leading-[18px] lg:text-sm font-normal'>
-              {expression.name}=map({expression.raw_data}).filter(|result| ={'>'}
-              {expression.filter_data})
+            <p className='text-left text-[12px] font-normal leading-[18px] lg:text-sm'>
+              {expression.name}=map({expression.raw_data})
+              {expression.filter_data && `.filter(|result| => ${expression.filter_data})`}
             </p>
-            <div className='flex justify-between items-end'>
+            <div className='flex items-end justify-between'>
               <div className='flex items-center gap-4'>
                 <p className='text-[12px] leading-[18px] lg:text-sm'>Aggregate</p>
-                <div className='border-2 px-3 lg:px-8 py-1 text-[12px] leading-[18px] lg:text-sm '>
+                <div className='border-2 px-3 py-1 text-[12px] leading-[18px] lg:px-8 lg:text-sm '>
                   {expression.aggregate_operation}
                 </div>
               </div>
               <div>
                 <Trash
                   strokeWidth={1}
-                  className='h-4 w-4 lg:h-5 lg:w-5 text-muted-foreground'
+                  className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5'
                   onClick={(e) => {
                     e.stopPropagation()
                     void deleteExpression(expression.id, 'base_expressions')
@@ -133,7 +137,7 @@ export const EditBaseExpressionForm = ({
         )}
       </AccordionTrigger>
       <AccordionContent>
-        <div className='flex w-full flex-col gap-6 border-x-[2px] border-b-[2px] px-3 lg:px-5 pt-6 pb-[62px]'>
+        <div className='flex w-full flex-col gap-6 border-x-[2px] border-b-[2px] px-3 pb-[62px] pt-6 lg:px-5'>
           <div className='flex flex-col'>
             <div className='border-b pb-6 lg:pb-10'>
               {tools && selectedEvent && (
@@ -141,6 +145,7 @@ export const EditBaseExpressionForm = ({
                   tools={tools}
                   event={selectedEvent}
                   setExpressionValues={setExpressionValues}
+                  textareaRef={textarea}
                 />
               )}
             </div>
@@ -150,7 +155,7 @@ export const EditBaseExpressionForm = ({
                 setProject(newProject)
               }}
             />
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-[30px]'>
+            <div className='grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-[30px]'>
               <Button
                 variant='outline'
                 className='w-full'
@@ -176,9 +181,9 @@ export const EditBaseExpressionForm = ({
             </div>
             {precalcRes.length ? <PrecalcValues res={precalcRes} /> : <></>}
           </div>
-          <div className='mt-[40px] grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-4'>
-            <InputComponent value={expression.contract_address} label='Contact address' className='w-full' />
-            <InputComponent value={selectedEvent?.name} label='Signature' className='w-full' />
+          <div className='mt-[40px] grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-4'>
+            <InputComponent value={expression.contract_address} label='Contact address' className='w-full' readOnly />
+            <InputComponent value={selectedEvent?.name} label='Signature' className='w-full' readOnly />
           </div>
         </div>
       </AccordionContent>

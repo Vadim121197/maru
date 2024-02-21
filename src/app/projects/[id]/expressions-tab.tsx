@@ -138,11 +138,11 @@ export const ExpressionsTab = () => {
     <div className='flex flex-col'>
       <div className='flex flex-col gap-6'>
         <div className='flex w-full items-center justify-between'>
-          <p className='text-sm lg:text-lg font-medium'>Expression</p>
+          <p className='text-sm font-medium lg:text-lg'>Expression</p>
           {expressions.base_expressions.length ? (
             <Button
               variant='outline'
-              className='flex w-[152px] lg:w-[274px] items-center gap-[10px]'
+              className='flex w-[152px] items-center gap-[10px] lg:w-[274px]'
               onClick={() => {
                 ref.current?.scrollIntoView({ behavior: 'smooth' })
                 setAddNew(true)
@@ -184,8 +184,10 @@ export const ExpressionsTab = () => {
       </div>
       <div ref={ref} className={!addNew ? 'h-0' : ''}>
         {addNew && (
-          <div className='flex w-full flex-col bg-card mt-6 lg:w-[calc(50%-11px)] pt-4 px-4 lg:px-5 pb-[60px]'>
-            <p className='text-center text-xl font-medium text-muted-foreground lg:text-2xl lg:font-bold mb-6'>Editor</p>
+          <div className='mt-6 flex w-full flex-col bg-card px-4 pb-[60px] pt-4 lg:w-[calc(50%-11px)] lg:px-5'>
+            <p className='mb-6 text-center text-xl font-medium text-muted-foreground lg:text-2xl lg:font-bold'>
+              Editor
+            </p>
             <SelectComponent
               value={selectedSource}
               onValueChange={(e) => {
@@ -204,8 +206,8 @@ export const ExpressionsTab = () => {
         )}
       </div>
       {expressions.final_expressions.length ? (
-        <div className='flex flex-col gap-4 lg:gap-6 mt-[60px] lg:mt-10'>
-          <p className='text-sm lg:text-lg font-medium'>Final Expressions</p>
+        <div className='mt-[60px] flex flex-col gap-4 lg:mt-10 lg:gap-6'>
+          <p className='text-sm font-medium lg:text-lg'>Final Expressions</p>
           <Accordion
             type='single'
             value={selectedFinaleExpression}

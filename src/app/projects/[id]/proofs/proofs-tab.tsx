@@ -8,6 +8,7 @@ import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
+import type { Pagination } from '~/types/pagination'
 import { copyToClipboard } from '~/lib/copy-to-clipboard'
 import { ApiRoutes, BASE_URL, PROJECT_ID, PROOF_ID } from '~/lib/axios-instance'
 import { ProofStatus, type Proof } from '~/types/proof'
@@ -39,11 +40,13 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
     void (async () => {
       try {
         setLoading(true)
-        const { data: proofs } = await axiosAuth.get<Proof[]>(
+        const {
+          data: { data },
+        } = await axiosAuth.get<Pagination<Proof[]>>(
           ApiRoutes.PROJECTS_PROJECT_ID_PROOFS.replace(PROJECT_ID, projectId),
         )
 
-        setProofs(proofs)
+        setProofs(data)
         setLoading(false)
       } catch (error) {
         setLoading(false)

@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react'
-import useAxiosAuth from '~/hooks/axios-auth'
-import { Trash } from 'lucide-react'
-import { useProject } from '~/app/projects/[id]/ProjectProvider'
-import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
-import type { Expression, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
 import type { AxiosError } from 'axios'
+import { Trash } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
+import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import useAxiosAuth from '~/hooks/axios-auth'
+import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import type { PrecalculateResult } from '~/types/calculations'
-import { ExpressionField } from '../expression-field'
-import { PrecalcValues } from '../precalc-values'
-import { FinalExpressionHelperTable } from './final-expression-helper-table'
+import type { Expression, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
+import { FinalExpressionField } from '../expression-field'
 import { PrecalcSettings } from '../precalc-settings'
+import { PrecalcValues } from '../precalc-values'
+import { AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
 import { Button } from '../ui/button'
 import { CalculationsTabs } from './calculations-tabs'
-import { AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
+import { FinalExpressionHelperTable } from './final-expression-helper-table'
 
 interface EditFinalExpressionFormProps {
   expression: Expression
@@ -30,6 +30,7 @@ export const EditFinalExpressionForm = ({
 }: EditFinalExpressionFormProps) => {
   const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
+  const textarea = useRef<HTMLTextAreaElement>(null)
 
   const [expressionValues, setExpressionValues] = useState<ExpressionValues>({
     name: expression.name,
@@ -86,17 +87,23 @@ export const EditFinalExpressionForm = ({
 
   return (
     <AccordionItem value={expression.id.toString()} key={expression.id}>
-      <AccordionTrigger className='flex w-full flex-col gap-2 lg:gap-3 border-2 p-4 data-[state=open]:border-b-0 data-[state=open]:pb-0'>
+      <AccordionTrigger className='flex w-full flex-col gap-2 border-2 p-4 data-[state=open]:border-b-0 data-[state=open]:px-3 data-[state=open]:pb-0 data-[state=open]:pt-3 lg:gap-3 lg:data-[state=open]:px-5'>
         {selectedExpression === expression.id.toString() ? (
-          <ExpressionField expressionValues={expressionValues} setExpressionValues={setExpressionValues} />
+          <FinalExpressionField
+            expressionValues={expressionValues}
+            setExpressionValues={setExpressionValues}
+            className='bg-card'
+            textAreaClassName='border-2 border-border'
+            textareaRef={textarea}
+          />
         ) : (
           <>
             <div className='flex w-full items-center justify-between'>
-              <p className='text-sm lg:text-base font-medium'>{expression.name}</p>
+              <p className='text-sm font-medium lg:text-base'>{expression.name}</p>
               <div>
                 <Trash
                   strokeWidth={1}
-                  className='h-4 w-4 lg:h-5 lg:w-5 text-muted-foreground'
+                  className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5'
                   onClick={(e) => {
                     e.stopPropagation()
                     void deleteExpression(expression.id, 'final_expressions')
@@ -104,17 +111,23 @@ export const EditFinalExpressionForm = ({
                 />
               </div>
             </div>
-            <p className='text-[12px] leading-[18px] lg:text-sm font-normal text-muted-foreground'>
+            <p className='text-[12px] font-normal leading-[18px] text-muted-foreground lg:text-sm'>
               {expression.raw_data}
             </p>
           </>
         )}
       </AccordionTrigger>
       <AccordionContent>
-        <div className='flex w-full flex-col gap-6 border-x-[2px] border-b-[2px] p-4 lg:p-6'>
+        <div className='flex w-full flex-col border-x-[2px] border-b-[2px] px-3 pb-[62px] pt-6 lg:px-5'>
           <div className='flex flex-col'>
             <div className='flex flex-col gap-[38px] border-b pb-4'>
-              {tools && <FinalExpressionHelperTable tools={tools} setExpressionValues={setExpressionValues} />}
+              {tools && (
+                <FinalExpressionHelperTable
+                  tools={tools}
+                  setExpressionValues={setExpressionValues}
+                  textareaRef={textarea}
+                />
+              )}
             </div>
             <PrecalcSettings
               project={project}
@@ -122,7 +135,7 @@ export const EditFinalExpressionForm = ({
                 setProject(newProject)
               }}
             />
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-[30px]'>
               <Button
                 variant='outline'
                 className='w-full'

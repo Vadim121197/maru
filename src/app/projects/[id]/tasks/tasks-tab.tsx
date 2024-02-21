@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Bird } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
+import type { Pagination } from '~/types/pagination'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import type { Task } from '~/types/task'
@@ -18,11 +19,11 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
     void (async () => {
       try {
         setLoading(true)
-        const { data: tasks } = await axiosAuth.get<Task[]>(
-          ApiRoutes.PROJECTS_PROJECT_ID_TASKS.replace(PROJECT_ID, projectId),
-        )
+        const {
+          data: { data },
+        } = await axiosAuth.get<Pagination<Task[]>>(ApiRoutes.PROJECTS_PROJECT_ID_TASKS.replace(PROJECT_ID, projectId))
 
-        setTask(tasks)
+        setTask(data)
         setLoading(false)
       } catch (error) {
         setLoading(false)

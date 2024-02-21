@@ -9,7 +9,6 @@ import { InputBlock } from './input-block'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
 import { Button } from './ui/button'
 
-
 export const PrecalcSettings = ({
   project,
   updateProject,
@@ -50,11 +49,11 @@ export const PrecalcSettings = ({
 
   return (
     <>
-      <div className='mt-4 mb-10 flex justify-between gap-4 lg:justify-start'>
+      <div className='mb-10 mt-4 flex justify-between gap-4 lg:justify-start'>
         <p className='text-[12px] font-normal leading-[18px] lg:text-sm'>
           The precalculation uses events in the{' '}
           <span
-            className='cursor-pointer font-bold lg:font-semibold text-muted-foreground underline'
+            className='cursor-pointer font-bold text-muted-foreground underline lg:font-semibold'
             onClick={() => {
               setOpen(true)
             }}

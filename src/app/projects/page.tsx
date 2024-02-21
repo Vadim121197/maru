@@ -11,6 +11,7 @@ import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes } from '~/lib/axios-instance'
 import { cn } from '~/lib/utils'
 import { Nav } from '~/types/nav'
+import type { Pagination } from '~/types/pagination'
 import type { Project } from '~/types/project'
 
 const ProjectsPage = () => {
@@ -23,7 +24,9 @@ const ProjectsPage = () => {
 
     void (async () => {
       try {
-        const { data } = await axiosAuth.get<Project[]>(ApiRoutes.USERS_ME_PROJECTS)
+        const {
+          data: { data },
+        } = await axiosAuth.get<Pagination<Project[]>>(ApiRoutes.USERS_ME_PROJECTS)
 
         setProjects(data)
       } catch {}

@@ -1,4 +1,4 @@
-import { useMemo, type Dispatch, type SetStateAction } from 'react'
+import { useMemo, type Dispatch, type SetStateAction, type RefObject, useState, useEffect } from 'react'
 import type {
   BaseExpressionValues,
   ExpressionConstants,
@@ -18,14 +18,27 @@ export interface ExpressionHelperTable {
 }
 
 export const BaseExpressionHelperTable = ({
+  textareaRef,
   tools,
   event,
   setExpressionValues,
 }: {
   tools: ExpressionTools
   event: ExpressionEvent
+  textareaRef: RefObject<HTMLTextAreaElement>
   setExpressionValues: Dispatch<SetStateAction<BaseExpressionValues>>
 }) => {
+  const [selection, setSelection] = useState<{ start: number; end: number } | undefined>()
+
+  // The basic problem as I see it is that .setSelectionRange() is being used in-line in the template, and should be wrapped in a useEffect().
+  //https://stackoverflow.com/questions/60129605/is-javascripts-setselectionrange-incompatible-with-react-hooks
+  useEffect(() => {
+    if (!selection || !textareaRef.current) return
+    const { start, end } = selection
+    textareaRef.current.focus()
+    textareaRef.current.setSelectionRange(start, end)
+  }, [selection, textareaRef])
+
   const data = useMemo(() => {
     const maxLength = Math.max(
       tools.constants.length,
@@ -52,17 +65,27 @@ export const BaseExpressionHelperTable = ({
   }, [tools, event])
 
   const helperClick = (value: string | undefined) => () => {
-    if (!value) return
-    setExpressionValues((state) => ({ ...state, rawData: `${state.rawData} ${value}` }))
-  }
+    if (!textareaRef.current || !value) return
 
+    const startPosition = textareaRef.current.selectionStart
+    const endPosition = textareaRef.current.selectionEnd
+
+    const value1 = textareaRef.current.value
+
+    setExpressionValues((state) => ({
+      ...state,
+      rawData: `${value1.substring(0, startPosition)}${value}${value1.substring(endPosition, value1.length)}`,
+    }))
+
+    setSelection({ start: startPosition + value.length, end: startPosition + value.length })
+  }
   return (
     <>
       <div className='flex flex-col gap-10 lg:hidden'>
         {tools.constants.length ? (
           <div className='flex flex-col gap-4'>
             <div className='flex items-start gap-4'>
-              <p className='text-[12px] leading-[18px] font-normal'>Contract Consts</p>
+              <p className='text-[12px] font-normal leading-[18px]'>Contract Consts</p>
               <div>
                 <Info className='h-4 w-4 text-primary' />
               </div>
@@ -88,7 +111,7 @@ export const BaseExpressionHelperTable = ({
         {tools.functions.length ? (
           <div className='flex flex-col gap-4'>
             <div className='flex items-start gap-4'>
-              <p className='text-[12px] leading-[18px] font-normal'>Contract Functions</p>
+              <p className='text-[12px] font-normal leading-[18px]'>Contract Functions</p>
               <div>
                 <Info className='h-4 w-4 text-primary' />
               </div>
@@ -115,7 +138,7 @@ export const BaseExpressionHelperTable = ({
         {event.params.length ? (
           <div className='flex flex-col gap-4'>
             <div className='flex items-start gap-4'>
-              <p className='text-[12px] leading-[18px] font-normal'>Event Params</p>
+              <p className='text-[12px] font-normal leading-[18px]'>Event Params</p>
               <div>
                 <Info className='h-4 w-4 text-primary' />
               </div>

@@ -49,7 +49,7 @@ const Layout = ({ children, params }: { children: React.ReactNode; params: { id:
 
   return (
     <ProjectProvider>
-      <section className='container grid items-center pt-10 md:pt-[84px]'>
+      <section className='container mb-10 grid items-center pt-10 md:pt-[84px]'>
         <div className='flex flex-col gap-10'>
           <ProjectInfoCard id={params.id} />
           <Tabs value={tabValue}>

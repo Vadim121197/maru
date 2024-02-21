@@ -1,20 +1,26 @@
-import { useMemo, type Dispatch, type SetStateAction } from 'react'
-import type { BaseExpressionValues, ExpressionAggregateFunctions, ExpressionValues } from '~/types/expressions'
+import { useMemo, type Dispatch, type SetStateAction, type RefObject } from 'react'
 import { cn } from '~/lib/utils'
+import type { BaseExpressionValues, ExpressionAggregateFunctions, ExpressionValues } from '~/types/expressions'
+import { SelectComponent } from './form-components'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
-import { SelectComponent } from './form-components'
 
-interface ExpressionFieldProps {
+interface FinalExpressionFieldProps {
   aggregateFunctions?: ExpressionAggregateFunctions[]
   expressionValues: ExpressionValues
   setExpressionValues: Dispatch<SetStateAction<ExpressionValues>>
+  className?: string
+  textAreaClassName?: string
+  textareaRef: RefObject<HTMLTextAreaElement>
 }
-export const ExpressionField = ({
+export const FinalExpressionField = ({
   aggregateFunctions,
   expressionValues,
+  className,
+  textareaRef,
+  textAreaClassName,
   setExpressionValues,
-}: ExpressionFieldProps) => {
+}: FinalExpressionFieldProps) => {
   const selectOptions = useMemo(() => {
     if (!aggregateFunctions?.length) return []
     return aggregateFunctions.map((aggr) => {
@@ -26,7 +32,10 @@ export const ExpressionField = ({
 
   return (
     <div
-      className='flex w-full flex-col gap-2 border-2 border-border bg-background p-3 text-base font-medium lg:p-4'
+      className={cn(
+        'flex w-full flex-col gap-2 border-2 border-border bg-background p-3 text-base font-medium lg:p-4',
+        className,
+      )}
       onClick={(e) => {
         e.stopPropagation()
       }}
@@ -50,7 +59,7 @@ export const ExpressionField = ({
                 setExpressionValues((state) => ({ ...state, aggregate }))
               }}
               options={selectOptions}
-              triggerClassName='h-7 min-h-7 w-[105px] text-sm font-normal uppercase'
+              triggerClassName='h-7 min-h-7 w-[105px] text-[12px] font-normal uppercase lg:text-sm'
               selectItemClassName='uppercase'
               selectContentClassName='w-[105px] min-w-[105px]'
             />
@@ -60,12 +69,16 @@ export const ExpressionField = ({
         )}
       </div>
       <Textarea
-        className='border-0 p-0 text-sm font-medium text-muted-foreground placeholder:text-[12px]  lg:text-base'
+        className={cn(
+          'border-0 p-0 text-sm font-medium text-muted-foreground placeholder:text-[12px]  lg:text-base',
+          textAreaClassName,
+        )}
         placeholder='Enter expression'
         value={expressionValues.rawData}
         onChange={(e) => {
           setExpressionValues((state) => ({ ...state, rawData: e.target.value }))
         }}
+        ref={textareaRef}
       />
     </div>
   )
@@ -77,6 +90,7 @@ interface BaseExpressionFieldProps {
   setExpressionValues: Dispatch<SetStateAction<BaseExpressionValues>>
   className?: string
   textAreaClassName?: string
+  textareaRef: RefObject<HTMLTextAreaElement>
 }
 
 export const BaseExpressionField = ({
@@ -85,6 +99,7 @@ export const BaseExpressionField = ({
   className,
   textAreaClassName,
   setExpressionValues,
+  textareaRef,
 }: BaseExpressionFieldProps) => {
   const selectOptions = useMemo(() => {
     if (!aggregateFunctions?.length) return []
@@ -127,12 +142,13 @@ export const BaseExpressionField = ({
         onChange={(e) => {
           setExpressionValues((state) => ({ ...state, rawData: e.target.value }))
         }}
+        ref={textareaRef}
       />
       <div className='flex items-center justify-between'>
         <p className='text-[12px] font-normal lg:text-sm'>).filter(|result| ={'>'}</p>
-        <div className='flex items-center w-[100px] md:w-[50%] lg:w-[40%]'>
+        <div className='flex w-[100px] items-center md:w-[50%] lg:w-[40%]'>
           <Input
-            className='h-7 text-[12px] font-normal lg:text-sm placeholder:text-[12px]'
+            className='h-7 text-[12px] font-normal placeholder:text-[12px] lg:text-sm'
             placeholder='Enter filter'
             value={expressionValues.filter}
             onChange={(e) => {

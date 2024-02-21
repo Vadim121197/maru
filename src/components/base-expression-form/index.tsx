@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ADDRESS, ApiRoutes } from '~/lib/axios-instance'
 import type { PrecalculateResult } from '~/types/calculations'
@@ -24,6 +24,7 @@ interface BaseExpressionFormProps {
 export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormProps) => {
   const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
+  const textarea = useRef<HTMLTextAreaElement>(null)
 
   const [contractAddress, setContractAddress] = useState('')
   const [selectedEvent, setSelectedEvent] = useState<ExpressionEvent | undefined>()
@@ -132,8 +133,8 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
 
   return (
     <>
-      <div className='flex w-full flex-col mt-6'>
-        <div className='grid lg:grid-cols-2 gap-6 lg:gap-4'>
+      <div className='mt-6 flex w-full flex-col'>
+        <div className='grid gap-6 lg:grid-cols-2 lg:gap-4'>
           <InputBlock
             label='Contact address'
             className='w-full'
@@ -172,12 +173,13 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
         {selectedEvent && tools && (
           <div className='mt-10 flex flex-col'>
             <div className='flex flex-col'>
-              <div className='flex w-full flex-col gap-2 mb-10 lg:mb-6'>
+              <div className='mb-10 flex w-full flex-col gap-2 lg:mb-6'>
                 <TextLabel label='Expression' />
                 <BaseExpressionField
                   aggregateFunctions={tools.aggregate_operations}
                   expressionValues={expressionValues}
                   setExpressionValues={setExpressionValues}
+                  textareaRef={textarea}
                 />
               </div>
               <div className='border-b pb-6 lg:pb-10'>
@@ -185,6 +187,7 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
                   tools={tools}
                   event={selectedEvent}
                   setExpressionValues={setExpressionValues}
+                  textareaRef={textarea}
                 />
               </div>
             </div>
@@ -194,7 +197,7 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
                 setProject(newProject)
               }}
             />
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-[30px]'>
+            <div className='grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-[30px]'>
               <Button
                 variant='outline'
                 className='w-full'

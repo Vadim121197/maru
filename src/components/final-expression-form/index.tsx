@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react'
+import type { AxiosError } from 'axios'
+import { useEffect, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
+import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
-import type { Expression, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
-import { useProject } from '~/app/projects/[id]/ProjectProvider'
-import type { AxiosError } from 'axios'
-import { toast } from 'react-toastify'
 import type { PrecalculateResult } from '~/types/calculations'
-import { ExpressionField } from '../expression-field'
+import type { Expression, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
+import { FinalExpressionField } from '../expression-field'
 import { TextLabel } from '../form-components'
-import { PrecalcValues } from '../precalc-values'
-import { FinalExpressionHelperTable } from './final-expression-helper-table'
 import { PrecalcSettings } from '../precalc-settings'
+import { PrecalcValues } from '../precalc-values'
 import { Button } from '../ui/button'
+import { FinalExpressionHelperTable } from './final-expression-helper-table'
 
 export const FinalExpressionForm = ({
   updateExpressionList,
@@ -20,6 +20,7 @@ export const FinalExpressionForm = ({
 }) => {
   const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
+  const textarea = useRef<HTMLTextAreaElement>(null)
 
   const [expressionValues, setExpressionValues] = useState<ExpressionValues>({
     name: '',
@@ -27,7 +28,6 @@ export const FinalExpressionForm = ({
   })
 
   const [precalculationResult, setPrecalculationResult] = useState<PrecalculateResult[]>([])
-  // const [createdExpression, setCreatedExpression] = useState<ExpressionCreateResponse | undefined>()
 
   const [tools, setTools] = useState<FinalExpressionTools | undefined>()
 
@@ -76,15 +76,23 @@ export const FinalExpressionForm = ({
   }
 
   return (
-    <div className='flex w-full flex-col gap-6 bg-card p-4 lg:p-6'>
+    <div className='mt-6 flex w-full flex-col gap-6'>
       {tools && (
         <div className='flex flex-col'>
           <div className='flex flex-col gap-[38px] border-b pb-4'>
             <div className='flex w-full flex-col gap-2'>
               <TextLabel label='Expression' />
-              <ExpressionField expressionValues={expressionValues} setExpressionValues={setExpressionValues} />
+              <FinalExpressionField
+                expressionValues={expressionValues}
+                setExpressionValues={setExpressionValues}
+                textareaRef={textarea}
+              />
             </div>
-            <FinalExpressionHelperTable tools={tools} setExpressionValues={setExpressionValues} />
+            <FinalExpressionHelperTable
+              tools={tools}
+              setExpressionValues={setExpressionValues}
+              textareaRef={textarea}
+            />
           </div>
           <PrecalcSettings
             project={project}
@@ -92,7 +100,7 @@ export const FinalExpressionForm = ({
               setProject(newProject)
             }}
           />
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-[30px]'>
             <Button
               variant='outline'
               className='w-full'

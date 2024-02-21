@@ -44,7 +44,7 @@ export const OneTimeCalculation = ({ expressionId }: { expressionId: number }) =
 
   return (
     <>
-      <div className='grid grid-cols-2 gap-10'>
+      <div className='grid gap-4 lg:grid-cols-2 lg:gap-5'>
         <InputBlock
           className='w-full'
           type='number'
@@ -64,7 +64,7 @@ export const OneTimeCalculation = ({ expressionId }: { expressionId: number }) =
                 <p>
                   Input should exceed{' '}
                   <span
-                    className='underline cursor-pointer'
+                    className='cursor-pointer underline'
                     onClick={() => {
                       setPeriod({
                         from: MIN_BLOCK_HEIGHT.toString(),
@@ -100,7 +100,7 @@ export const OneTimeCalculation = ({ expressionId }: { expressionId: number }) =
         />
       </div>
       <Button
-        className='w-[274px] self-center'
+        className='w-full self-center lg:w-[274px]'
         disabled={addressValidationErrors || !period.from || !period.to || minBlockHeightError}
         onClick={() => {
           void (async () => {
