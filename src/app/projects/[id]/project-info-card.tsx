@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
@@ -8,8 +9,9 @@ import type { Project } from '~/types/project'
 
 export const ProjectInfoCard = ({ id }: { id: string }) => {
   const axiosAuth = useAxiosAuth()
+  const { data: session } = useSession()
 
-  const { project, setProject } = useProject()((state) => state)
+  const { project, setProject, setProjectOwnership } = useProject()((state) => state)
 
   useEffect(() => {
     if (!id) return
@@ -18,10 +20,11 @@ export const ProjectInfoCard = ({ id }: { id: string }) => {
       try {
         const { data: project } = await axiosAuth.get<Project>(ApiRoutes.PROJECTS_PROJECT_ID.replace(PROJECT_ID, id))
 
+        setProjectOwnership(session?.user.id === project.user.id)
         setProject(project)
       } catch (error) {}
     })()
-  }, [id, axiosAuth, setProject])
+  }, [id, axiosAuth, setProject, session, setProjectOwnership])
 
   if (!project) return
 

@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
-import { Trash } from 'lucide-react'
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
+import { Trash, X } from 'lucide-react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import type { PrecalculateResult } from '~/types/calculations'
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
 import type { BaseExpressionValues, Expression, ExpressionEvent, ExpressionTools } from '~/types/expressions'
+import { cn } from '~/lib/utils'
 import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import { InputComponent } from '../form-components'
@@ -19,7 +20,8 @@ interface EditBaseExpressionFormProps {
   expression: Expression
   selectedExpression: string
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
-  deleteExpression: (id: number, type: 'base_expressions' | 'final_expressions') => Promise<void>
+  deleteExpression?: (id: number, type: 'base_expressions' | 'final_expressions') => Promise<void>
+  setSelectedExpression: Dispatch<SetStateAction<string>>
 }
 
 export const EditBaseExpressionForm = ({
@@ -27,8 +29,9 @@ export const EditBaseExpressionForm = ({
   selectedExpression,
   updateExpressionList,
   deleteExpression,
+  setSelectedExpression,
 }: EditBaseExpressionFormProps) => {
-  const { project, setProject } = useProject()((state) => state)
+  const { project, isUserProject, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
   const textarea = useRef<HTMLTextAreaElement>(null)
 
@@ -100,33 +103,52 @@ export const EditBaseExpressionForm = ({
   return (
     <AccordionItem value={expression.id.toString()} key={expression.id}>
       <AccordionTrigger
-        className='flex w-full flex-col border-2 p-3 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5'
+        className={cn(
+          'flex w-full flex-col border-2 p-3 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5 select-text',
+          !isUserProject || (selectedExpression === expression.id.toString() && 'cursor-default'),
+        )}
         onKeyUp={(e) => {
           e.preventDefault()
         }}
+        onClick={(e) => {
+          if (selectedExpression === expression.id.toString()) {
+            e.preventDefault()
+          }
+        }}
       >
         {selectedExpression === expression.id.toString() ? (
-          <BaseExpressionField
-            aggregateFunctions={tools?.aggregate_operations ?? []}
-            expressionValues={expressionValues}
-            setExpressionValues={setExpressionValues}
-            className='bg-card'
-            textAreaClassName='border-2 border-border'
-            textareaRef={textarea}
-          />
+          <div className='flex w-full flex-col gap-4'>
+            <div className='self-end'>
+              <X
+                strokeWidth={1}
+                className='h-5 w-5 cursor-pointer lg:h-6 lg:w-6'
+                onClick={() => {
+                  setSelectedExpression('')
+                }}
+              />
+            </div>
+            <BaseExpressionField
+              aggregateFunctions={tools?.aggregate_operations ?? []}
+              expressionValues={expressionValues}
+              setExpressionValues={setExpressionValues}
+              className='bg-card'
+              textAreaClassName='border-2 border-border'
+              textareaRef={textarea}
+            />
+          </div>
         ) : (
-          <div className='flex w-full flex-col gap-10'>
-            <p className='text-left text-[12px] font-normal leading-[18px] lg:text-sm'>
-              {expression.name}=map({expression.raw_data})
-              {expression.filter_data && `.filter(|result| => ${expression.filter_data})`}
+          <div className='flex w-full justify-between'>
+            <p
+              className='cursor-text px-1 text-left text-[12px] font-normal leading-[18px] lg:text-sm'
+              onClick={(e) => {
+                e.preventDefault()
+              }}
+            >
+              <span className='font-bold'>{expression.name}</span> = map({expression.raw_data})
+              {expression.filter_data && `.filter(|result| ${expression.filter_data})`}
+              <span>.{expression.aggregate_operation}</span>
             </p>
-            <div className='flex items-end justify-between'>
-              <div className='flex items-center gap-4'>
-                <p className='text-[12px] leading-[18px] lg:text-sm'>Aggregate</p>
-                <div className='border-2 px-3 py-1 text-[12px] leading-[18px] lg:px-8 lg:text-sm '>
-                  {expression.aggregate_operation}
-                </div>
-              </div>
+            {deleteExpression && (
               <div>
                 <Trash
                   strokeWidth={1}
@@ -137,7 +159,7 @@ export const EditBaseExpressionForm = ({
                   }}
                 />
               </div>
-            </div>
+            )}
           </div>
         )}
       </AccordionTrigger>

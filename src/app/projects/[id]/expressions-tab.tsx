@@ -1,7 +1,6 @@
 'use client'
 
-import { Plus } from 'lucide-react'
-import { useSession } from 'next-auth/react'
+import { Plus, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
@@ -19,8 +18,7 @@ import { Accordion } from '../../../components/ui/accordion'
 import { Button } from '../../../components/ui/button'
 
 export const ExpressionsTab = () => {
-  const { project, expressions, setExpressions } = useProject()((state) => state)
-  const { data: session } = useSession()
+  const { project, expressions, isUserProject, setExpressions } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
 
   const ref = useRef<HTMLInputElement>(null)
@@ -50,6 +48,9 @@ export const ExpressionsTab = () => {
   }, [project?.id, axiosAuth, setExpressions])
 
   const updateExpressionList = (expression: Expression, type: 'create' | 'update') => {
+    // if other person's project do nothing
+    if (!isUserProject) return
+
     let index: number
     if (type === 'update') {
       index = expressions.base_expressions.findIndex((exp) => exp.id === expression.id)
@@ -72,6 +73,9 @@ export const ExpressionsTab = () => {
   }
 
   const updateFinaleExpressionList = (expression: Expression, type: 'create' | 'update') => {
+    // if other person's project do nothing
+    if (!isUserProject) return
+
     let index: number
     if (type === 'update') {
       index = expressions.final_expressions.findIndex((exp) => exp.id === expression.id)
@@ -96,6 +100,9 @@ export const ExpressionsTab = () => {
   if (!project) return <></>
 
   const deleteExpression = async (id: number, type: 'base_expressions' | 'final_expressions') => {
+    // if other person's project do nothing
+    if (!isUserProject) return
+
     try {
       await axiosAuth.delete<Expression>(ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, id.toString()))
 
@@ -112,7 +119,7 @@ export const ExpressionsTab = () => {
 
   if (loading === undefined && !expressions.base_expressions.length) return <></>
 
-  if (!loading && !expressions.base_expressions.length && session?.user.id === project.user.id && !addNew)
+  if (!loading && !expressions.base_expressions.length && isUserProject && !addNew)
     return (
       <div className='mt-[160px] flex flex-col items-center gap-2'>
         <p className='text-lg font-medium'>You don’t have any expression yet</p>
@@ -139,7 +146,7 @@ export const ExpressionsTab = () => {
       <div className='flex flex-col gap-6'>
         <div className='flex w-full items-center justify-between'>
           <p className='text-sm font-medium lg:text-lg'>Expression</p>
-          {expressions.base_expressions.length ? (
+          {expressions.base_expressions.length && isUserProject ? (
             <Button
               variant='outline'
               className='flex w-[152px] items-center gap-[10px] lg:w-[274px]'
@@ -164,6 +171,9 @@ export const ExpressionsTab = () => {
           type='single'
           value={selectedBaseExpression}
           onValueChange={(value) => {
+            // if other person's project do nothing
+            if (!isUserProject) return
+
             setSelectedBaseExpression(value)
             setSelectedFinaleExpression('')
             setAddNew(false)
@@ -177,17 +187,28 @@ export const ExpressionsTab = () => {
               updateExpressionList={updateExpressionList}
               key={exp.id}
               selectedExpression={selectedBaseExpression}
-              deleteExpression={deleteExpression}
+              deleteExpression={isUserProject ? deleteExpression : undefined}
+              setSelectedExpression={setSelectedBaseExpression}
             />
           ))}
         </Accordion>
       </div>
       <div ref={ref} className={!addNew ? 'h-0' : ''}>
-        {addNew && (
+        {addNew && isUserProject && (
           <div className='mt-6 flex w-full flex-col bg-card px-4 pb-[60px] pt-4 lg:w-[calc(50%-11px)] lg:px-5'>
-            <p className='mb-6 text-center text-xl font-medium text-muted-foreground lg:text-2xl lg:font-bold'>
-              Editor
-            </p>
+            <div className='mb-6 grid grid-cols-3'>
+              <div />
+              <p className='text-center text-xl font-medium text-muted-foreground lg:text-2xl lg:font-bold'>Editor</p>
+              <div className='flex items-center justify-end'>
+                <X
+                  strokeWidth={1}
+                  className='h-5 w-5 cursor-pointer lg:h-6 lg:w-6'
+                  onClick={() => {
+                    setAddNew(false)
+                  }}
+                />
+              </div>
+            </div>
             <SelectComponent
               value={selectedSource}
               onValueChange={(e) => {
@@ -212,6 +233,9 @@ export const ExpressionsTab = () => {
             type='single'
             value={selectedFinaleExpression}
             onValueChange={(value) => {
+              // if other person's project do nothing
+              if (!isUserProject) return
+
               setSelectedFinaleExpression(value)
               setSelectedBaseExpression('')
               setAddNew(false)
@@ -225,7 +249,8 @@ export const ExpressionsTab = () => {
                 updateExpressionList={updateFinaleExpressionList}
                 key={exp.id}
                 selectedExpression={selectedFinaleExpression}
-                deleteExpression={deleteExpression}
+                deleteExpression={isUserProject ? deleteExpression : undefined}
+                setSelectedExpression={setSelectedFinaleExpression}
               />
             ))}
           </Accordion>

@@ -55,7 +55,7 @@ export const authOptions: AuthOptions = {
           session.user = data
           return session
         } catch (error) {
-          return session
+          return
         }
       }
     },

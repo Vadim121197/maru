@@ -36,9 +36,6 @@ export const FinalExpressionField = ({
         'flex w-full flex-col gap-2 border-2 border-border bg-background p-3 text-base font-medium lg:p-4',
         className,
       )}
-      onClick={(e) => {
-        e.stopPropagation()
-      }}
     >
       <div className='flex flex-col justify-between gap-3 lg:flex-row lg:gap-5'>
         <Input
@@ -116,9 +113,6 @@ export const BaseExpressionField = ({
         'flex w-full flex-col gap-2 border-2 border-border bg-background p-3 text-base font-medium lg:p-4',
         className,
       )}
-      onClick={(e) => {
-        e.stopPropagation()
-      }}
     >
       <div className='flex items-center gap-4'>
         <Input
@@ -144,9 +138,9 @@ export const BaseExpressionField = ({
         }}
         ref={textareaRef}
       />
-      <div className='flex items-center justify-between'>
-        <p className='text-[12px] font-normal lg:text-sm'>).filter(|result| ={'>'}</p>
-        <div className='flex w-[100px] items-center md:w-[50%] lg:w-[40%]'>
+      <div className='flex items-center justify-between gap-2'>
+        <p className='text-[12px] font-normal lg:text-sm'>).filter(|result|</p>
+        <div className='flex w-[100px] flex-1 items-center md:w-[50%] lg:w-[40%]'>
           <Input
             className='h-7 text-[12px] font-normal placeholder:text-[12px] lg:text-sm'
             placeholder='Enter filter'

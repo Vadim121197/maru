@@ -9,11 +9,13 @@ import type { Proof } from '~/types/proof'
 import type { Task } from '~/types/task'
 
 interface ProjectSlice {
+  isUserProject: boolean
   project: Project | null
   proofs: Proof[]
   tasks: Task[]
   expressions: ExpressionsResponse
   deployments: Deployment[]
+  setProjectOwnership: (isUserProject: boolean) => void
   setProject: (project: Project) => void
   setProofs: (proofs: Proof[]) => void
   setTask: (tasks: Task[]) => void
@@ -24,6 +26,7 @@ interface ProjectSlice {
 const createStore = () => {
   return create<ProjectSlice>((set) => {
     return {
+      isUserProject: false,
       project: null,
       proofs: [],
       tasks: [],
@@ -32,6 +35,11 @@ const createStore = () => {
         final_expressions: [],
       },
       deployments: [],
+      setProjectOwnership(isUserProject) {
+        set({
+          isUserProject,
+        })
+      },
       setProject(project) {
         set({ project })
       },

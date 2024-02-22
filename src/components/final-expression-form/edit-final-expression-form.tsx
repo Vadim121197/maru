@@ -1,9 +1,10 @@
 import type { AxiosError } from 'axios'
-import { Trash } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { Trash, X } from 'lucide-react'
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { toast } from 'react-toastify'
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
+import { cn } from '~/lib/utils'
 import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import type { PrecalculateResult } from '~/types/calculations'
 import type { Expression, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
@@ -19,7 +20,8 @@ interface EditFinalExpressionFormProps {
   expression: Expression
   selectedExpression: string
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
-  deleteExpression: (id: number, type: 'base_expressions' | 'final_expressions') => Promise<void>
+  deleteExpression?: (id: number, type: 'base_expressions' | 'final_expressions') => Promise<void>
+  setSelectedExpression: Dispatch<SetStateAction<string>>
 }
 
 export const EditFinalExpressionForm = ({
@@ -27,8 +29,9 @@ export const EditFinalExpressionForm = ({
   selectedExpression,
   updateExpressionList,
   deleteExpression,
+  setSelectedExpression,
 }: EditFinalExpressionFormProps) => {
-  const { project, setProject } = useProject()((state) => state)
+  const { project, isUserProject, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
   const textarea = useRef<HTMLTextAreaElement>(null)
 
@@ -88,35 +91,68 @@ export const EditFinalExpressionForm = ({
   return (
     <AccordionItem value={expression.id.toString()} key={expression.id}>
       <AccordionTrigger
-        className='flex w-full flex-col gap-2 border-2 p-4 data-[state=open]:border-b-0 data-[state=open]:px-3 data-[state=open]:pb-0 data-[state=open]:pt-3 lg:gap-3 lg:data-[state=open]:px-5'
+        className={cn(
+          'flex w-full flex-col gap-2 border-2 p-4 data-[state=open]:border-b-0 data-[state=open]:px-3 data-[state=open]:pb-0 data-[state=open]:pt-3 lg:gap-3 lg:data-[state=open]:px-5 select-text',
+          !isUserProject || (selectedExpression === expression.id.toString() && 'cursor-default'),
+        )}
         onKeyUp={(e) => {
           e.preventDefault()
         }}
+        onClick={(e) => {
+          if (selectedExpression === expression.id.toString()) {
+            e.preventDefault()
+          }
+        }}
       >
         {selectedExpression === expression.id.toString() ? (
-          <FinalExpressionField
-            expressionValues={expressionValues}
-            setExpressionValues={setExpressionValues}
-            className='bg-card'
-            textAreaClassName='border-2 border-border'
-            textareaRef={textarea}
-          />
+          <div className='flex w-full flex-col gap-4'>
+            <div className='self-end'>
+              <X
+                strokeWidth={1}
+                className='h-5 w-5 cursor-pointer lg:h-6 lg:w-6'
+                onClick={() => {
+                  setSelectedExpression('')
+                }}
+              />
+            </div>
+            <FinalExpressionField
+              expressionValues={expressionValues}
+              setExpressionValues={setExpressionValues}
+              className='bg-card'
+              textAreaClassName='border-2 border-border'
+              textareaRef={textarea}
+            />
+          </div>
         ) : (
           <>
             <div className='flex w-full items-center justify-between'>
-              <p className='text-sm font-medium lg:text-base'>{expression.name}</p>
-              <div>
-                <Trash
-                  strokeWidth={1}
-                  className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5'
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    void deleteExpression(expression.id, 'final_expressions')
-                  }}
-                />
-              </div>
+              <p
+                className='cursor-text px-1 text-sm font-medium lg:text-base'
+                onClick={(e) => {
+                  e.preventDefault()
+                }}
+              >
+                {expression.name}
+              </p>
+              {deleteExpression && (
+                <div>
+                  <Trash
+                    strokeWidth={1}
+                    className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5'
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      void deleteExpression(expression.id, 'final_expressions')
+                    }}
+                  />
+                </div>
+              )}
             </div>
-            <p className='text-[12px] font-normal leading-[18px] text-muted-foreground lg:text-sm'>
+            <p
+              className='cursor-text px-1 text-[12px] font-normal leading-[18px] text-muted-foreground lg:text-sm'
+              onClick={(e) => {
+                e.preventDefault()
+              }}
+            >
               {expression.raw_data}
             </p>
           </>

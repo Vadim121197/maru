@@ -32,7 +32,7 @@ const Status = ({ status }: { status: ProofStatus }) => {
 }
 
 export const ProofsTab = ({ projectId }: { projectId: string }) => {
-  const { proofs, setProofs } = useProject()((state) => state)
+  const { proofs, isUserProject, setProofs } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
   const [loading, setLoading] = useState<boolean | undefined>()
 
@@ -150,9 +150,11 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                     pr.verification ? (
                       <div className='w-[86px] border-b-[1px] border-primary p-1 text-center'>Verified</div>
                     ) : (
-                      <Button variant='outline' className='h-9 w-[86px]' onClick={verify(pr.id)}>
-                        Verify
-                      </Button>
+                      isUserProject && (
+                        <Button variant='outline' className='h-9 w-[86px]' onClick={verify(pr.id)}>
+                          Verify
+                        </Button>
+                      )
                     )
                   ) : (
                     <></>
