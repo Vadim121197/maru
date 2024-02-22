@@ -87,7 +87,12 @@ export const EditFinalExpressionForm = ({
 
   return (
     <AccordionItem value={expression.id.toString()} key={expression.id}>
-      <AccordionTrigger className='flex w-full flex-col gap-2 border-2 p-4 data-[state=open]:border-b-0 data-[state=open]:px-3 data-[state=open]:pb-0 data-[state=open]:pt-3 lg:gap-3 lg:data-[state=open]:px-5'>
+      <AccordionTrigger
+        className='flex w-full flex-col gap-2 border-2 p-4 data-[state=open]:border-b-0 data-[state=open]:px-3 data-[state=open]:pb-0 data-[state=open]:pt-3 lg:gap-3 lg:data-[state=open]:px-5'
+        onKeyUp={(e) => {
+          e.preventDefault()
+        }}
+      >
         {selectedExpression === expression.id.toString() ? (
           <FinalExpressionField
             expressionValues={expressionValues}

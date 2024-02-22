@@ -99,7 +99,12 @@ export const EditBaseExpressionForm = ({
 
   return (
     <AccordionItem value={expression.id.toString()} key={expression.id}>
-      <AccordionTrigger className='flex w-full flex-col border-2 p-3 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5'>
+      <AccordionTrigger
+        className='flex w-full flex-col border-2 p-3 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5'
+        onKeyUp={(e) => {
+          e.preventDefault()
+        }}
+      >
         {selectedExpression === expression.id.toString() ? (
           <BaseExpressionField
             aggregateFunctions={tools?.aggregate_operations ?? []}
