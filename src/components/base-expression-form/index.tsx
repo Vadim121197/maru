@@ -109,7 +109,13 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
         block_range: project.block_range,
       })
       setPrecalcRes(data)
-    } catch (error) {}
+    } catch (error) {
+      const err = error as AxiosError
+
+      const errData = err.response?.data as { detail: string | undefined }
+
+      toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
+    }
   }
 
   const save = async () => {
@@ -127,7 +133,10 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
       updateExpressionList(data, 'create')
     } catch (error) {
       const err = error as AxiosError
-      toast.error(`${err.message} (${err.config?.url}, ${err.config?.method})`)
+
+      const errData = err.response?.data as { detail: string | undefined }
+
+      toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
     }
   }
 
