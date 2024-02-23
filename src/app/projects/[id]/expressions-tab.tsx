@@ -166,7 +166,6 @@ export const ExpressionsTab = () => {
             <></>
           )}
         </div>
-
         <Accordion
           type='single'
           value={selectedBaseExpression}

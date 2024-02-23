@@ -125,28 +125,52 @@ export const EditBaseExpressionForm = ({
             />
           </div>
         ) : (
-          <div className='flex w-full justify-between'>
-            <p className='px-1 text-left text-[12px] font-normal leading-[18px] lg:text-sm'>
-              <span className='font-bold'>{expression.name}</span> = map({expression.raw_data})
-              {expression.filter_data && `.filter(|result| ${expression.filter_data})`}
-              <span>.{expression.aggregate_operation}</span>
-            </p>
-            {deleteExpression && (
-              <div className='flex gap-2 items-center'>
-                <div>
-                  <Trash
-                    strokeWidth={1}
-                    className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5 cursor-pointer'
-                    onClick={() => {
-                      void deleteExpression(expression.id, 'base_expressions')
-                    }}
-                  />
+          <div className='flex flex-col gap-6'>
+            <div className='flex items-center justify-between gap-3 flex-wrap'>
+              <div className='flex items-center gap-4'>
+                <p className='text-sm font-normal'>Contact</p>
+                <div
+                  className='py-1 px-2 border-2 text-sm font-normal  bg-background text-muted-foreground cursor-pointer'
+                  onClick={copyToClipboard(expression.contract_address)}
+                >
+                  {cutAddress(expression.contract_address)}
                 </div>
-                <AccordionTrigger>
-                  <ChevronDown className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5' />
-                </AccordionTrigger>
               </div>
-            )}
+              <div className='flex items-center gap-4'>
+                <p className='text-sm font-normal'>Event</p>
+                <div className='py-1 px-2 border-2 text-sm font-normal  bg-background text-muted-foreground break-all'>
+                  {expression.event.split('(')[0]}
+                </div>
+              </div>
+              <div className='flex items-center gap-4'>
+                <p className='text-sm font-normal'>Aggregate </p>
+                <div className='py-1 px-2 border-2 text-sm font-normal  bg-background text-muted-foreground break-all'>
+                  {expression.aggregate_operation}
+                </div>
+              </div>
+            </div>
+            <div className='flex w-full justify-between gap-2'>
+              <p className='px-1 text-left text-[12px] font-normal leading-[18px] lg:text-sm break-all'>
+                <span className='font-bold'>{expression.name}</span> = map({expression.raw_data})
+                {expression.filter_data && `.filter(|result| ${expression.filter_data})`}
+              </p>
+              {deleteExpression && (
+                <div className='flex gap-2 items-center'>
+                  <div>
+                    <Trash
+                      strokeWidth={1}
+                      className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5 cursor-pointer'
+                      onClick={() => {
+                        void deleteExpression(expression.id, 'base_expressions')
+                      }}
+                    />
+                  </div>
+                  <AccordionTrigger>
+                    <ChevronDown className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5' />
+                  </AccordionTrigger>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -210,7 +234,7 @@ export const EditBaseExpressionForm = ({
                 </div>
               </div>
             </div>
-            {/* <InputComponent value={selectedEvent?.name} label='Signature' className='w-full' readOnly /> */}
+
             <div className='flex flex-col gap-2 w-full'>
               <TextLabel label='Contact address' />
               <div className='py-3 px-4 lg:py-[10px] border-2 text-sm font-medium lg:text-base bg-background flex items-center'>
