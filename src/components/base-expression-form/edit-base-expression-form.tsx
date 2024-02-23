@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
-import { ChevronDown, Copy, Trash, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import type { PrecalculateResult } from '~/types/calculations'
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
@@ -9,13 +9,12 @@ import { copyToClipboard } from '~/lib/copy-to-clipboard'
 import type { BaseExpressionValues, Expression, ExpressionEvent, ExpressionTools } from '~/types/expressions'
 import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
-import { TextLabel } from '../form-components'
 import { BaseExpressionField } from '../expression-field'
 import { BaseExpressionHelperTable } from './base-expression-helper-table'
 import { Button } from '../ui/button'
 import { PrecalcValues } from '../precalc-values'
 import { PrecalcSettings } from '../precalc-settings'
-import { AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
+import { AccordionContent, AccordionItem } from '../ui/accordion'
 import { BaseExpressionDetailCard } from './base-expression-detail-card'
 
 interface EditBaseExpressionFormProps {
@@ -38,27 +37,29 @@ export const EditBaseExpressionForm = ({
   const textarea = useRef<HTMLTextAreaElement>(null)
 
   const [expressionValues, setExpressionValues] = useState<BaseExpressionValues>({
-    name: expression.name,
+    name: expression.name ?? '',
     rawData: expression.raw_data,
-    aggregate: expression.aggregate_operation,
-    filter: expression.filter_data,
+    aggregate: expression.aggregate_operation ?? '',
+    filter: expression.filter_data ?? '',
   })
   const [selectedEvent, setSelectedEvent] = useState<ExpressionEvent | undefined>()
   const [precalcRes, setPrecalcRes] = useState<PrecalculateResult[]>([])
   const [tools, setTools] = useState<ExpressionTools | undefined>()
 
   useEffect(() => {
-    if (selectedExpression !== expression.id.toString()) return
+    if (selectedExpression !== expression.id.toString() || !expression.contract_address) return
 
     void (async () => {
       try {
         const { data: tools } = await axiosAuth.get<ExpressionTools>(
-          ApiRoutes.EXPRESSIONS_ADDRESS_TOOLS.replace(ADDRESS, expression.contract_address),
+          ApiRoutes.EXPRESSIONS_ADDRESS_TOOLS.replace(ADDRESS, expression.contract_address as string),
         )
 
         setTools(tools)
 
-        setSelectedEvent(tools.events.find((ev) => ev.name === expression.event.split('(')[0]))
+        if (!expression.event) return
+
+        setSelectedEvent(tools.events.find((ev) => ev.name === expression.event?.split('(')[0]))
       } catch {}
     })()
   }, [axiosAuth, expression, selectedExpression])
@@ -107,22 +108,26 @@ export const EditBaseExpressionForm = ({
       <div className='flex w-full flex-col border-2 p-3 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5'>
         {selectedExpression === expression.id.toString() ? (
           <div className='flex w-full flex-col gap-4'>
-            <div className='flex justify-between items-center'>
-              <div className='flex items-center gap-4'>
-                <p className='text-sm font-normal'>Contact</p>
-                <div
-                  className='py-1 px-2 border-2 text-sm font-normal  bg-background text-muted-foreground cursor-pointer'
-                  onClick={copyToClipboard(expression.contract_address)}
-                >
-                  {cutAddress(expression.contract_address)}
+            <div className='flex items-center justify-between'>
+              {expression.contract_address && (
+                <div className='flex items-center gap-4'>
+                  <p className='text-sm font-normal'>Contact</p>
+                  <div
+                    className='cursor-pointer border-2 bg-background px-2 py-1  text-sm font-normal text-muted-foreground'
+                    onClick={copyToClipboard(expression.contract_address)}
+                  >
+                    {cutAddress(expression.contract_address)}
+                  </div>
                 </div>
-              </div>
-              <div className='flex items-center gap-4'>
-                <p className='text-sm font-normal'>Event</p>
-                <div className='py-1 px-2 border-2 text-sm font-normal  bg-background text-muted-foreground break-all'>
-                  {expression.event.split('(')[0]}
+              )}
+              {expression.event && (
+                <div className='flex items-center gap-4'>
+                  <p className='text-sm font-normal'>Event</p>
+                  <div className='break-all border-2 bg-background px-2 py-1  text-sm font-normal text-muted-foreground'>
+                    {expression.event.split('(')[0]}
+                  </div>
                 </div>
-              </div>
+              )}
               <div>
                 <X
                   strokeWidth={1}

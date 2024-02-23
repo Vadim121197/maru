@@ -45,7 +45,7 @@ export const ProjectInfoCard = ({ id }: { id: string }) => {
         {project.description && (
           <div className='flex flex-col gap-2'>
             <p className='text-base font-semibold lg:text-lg lg:font-medium'>Description</p>
-            <p className='text-base font-semibold text-muted-foreground lg:text-lg lg:font-medium break-all'>
+            <p className='break-all text-base font-semibold text-muted-foreground lg:text-lg lg:font-medium'>
               {project.description}
             </p>
           </div>

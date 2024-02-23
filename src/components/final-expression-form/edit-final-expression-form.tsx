@@ -30,12 +30,12 @@ export const EditFinalExpressionForm = ({
   deleteExpression,
   setSelectedExpression,
 }: EditFinalExpressionFormProps) => {
-  const { project, isUserProject, setProject } = useProject()((state) => state)
+  const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
   const textarea = useRef<HTMLTextAreaElement>(null)
 
   const [expressionValues, setExpressionValues] = useState<ExpressionValues>({
-    name: expression.name,
+    name: expression.name ?? '',
     rawData: expression.raw_data,
   })
   const [precalculationResult, setPrecalculationResult] = useState<PrecalculateResult[]>([])
@@ -68,7 +68,7 @@ export const EditFinalExpressionForm = ({
   }
 
   const save = async () => {
-    if (!expressionValues.rawData  || !expression.id) return
+    if (!expressionValues.rawData || !expression.id) return
     try {
       const { data } = await axiosAuth.put<Expression>(
         ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, expression.id.toString()),
@@ -114,11 +114,11 @@ export const EditFinalExpressionForm = ({
             <div className='flex w-full items-center justify-between'>
               <p className='px-1 text-sm font-medium lg:text-base'>{expression.name}</p>
               {deleteExpression && (
-                <div className='flex gap-2 items-center'>
+                <div className='flex items-center gap-2'>
                   <div>
                     <Trash
                       strokeWidth={1}
-                      className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5 cursor-pointer'
+                      className='h-4 w-4 cursor-pointer text-muted-foreground lg:h-5 lg:w-5'
                       onClick={() => {
                         void deleteExpression(expression.id, 'base_expressions')
                       }}
