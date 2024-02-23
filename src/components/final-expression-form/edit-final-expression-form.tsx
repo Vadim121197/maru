@@ -1,10 +1,9 @@
 import type { AxiosError } from 'axios'
-import { Trash, X } from 'lucide-react'
+import { ChevronDown, Trash, X } from 'lucide-react'
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { toast } from 'react-toastify'
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
-import { cn } from '~/lib/utils'
 import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import type { PrecalculateResult } from '~/types/calculations'
 import type { Expression, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
@@ -69,7 +68,7 @@ export const EditFinalExpressionForm = ({
   }
 
   const save = async () => {
-    if (!expressionValues.rawData || !expressionValues.name || !expression.id) return
+    if (!expressionValues.rawData  || !expression.id) return
     try {
       const { data } = await axiosAuth.put<Expression>(
         ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, expression.id.toString()),
@@ -90,20 +89,7 @@ export const EditFinalExpressionForm = ({
 
   return (
     <AccordionItem value={expression.id.toString()} key={expression.id}>
-      <AccordionTrigger
-        className={cn(
-          'flex w-full flex-col gap-2 border-2 p-4 data-[state=open]:border-b-0 data-[state=open]:px-3 data-[state=open]:pb-0 data-[state=open]:pt-3 lg:gap-3 lg:data-[state=open]:px-5 select-text',
-          !isUserProject || (selectedExpression === expression.id.toString() && 'cursor-default'),
-        )}
-        onKeyUp={(e) => {
-          e.preventDefault()
-        }}
-        onClick={(e) => {
-          if (selectedExpression === expression.id.toString()) {
-            e.preventDefault()
-          }
-        }}
-      >
+      <div className='flex w-full flex-col gap-2 border-2 p-4 data-[state=open]:border-b-0 data-[state=open]:px-3 data-[state=open]:pb-0 data-[state=open]:pt-3 lg:gap-3 lg:data-[state=open]:px-5'>
         {selectedExpression === expression.id.toString() ? (
           <div className='flex w-full flex-col gap-4'>
             <div className='self-end'>
@@ -126,38 +112,31 @@ export const EditFinalExpressionForm = ({
         ) : (
           <>
             <div className='flex w-full items-center justify-between'>
-              <p
-                className='cursor-text px-1 text-sm font-medium lg:text-base'
-                onClick={(e) => {
-                  e.preventDefault()
-                }}
-              >
-                {expression.name}
-              </p>
+              <p className='px-1 text-sm font-medium lg:text-base'>{expression.name}</p>
               {deleteExpression && (
-                <div>
-                  <Trash
-                    strokeWidth={1}
-                    className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5'
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      void deleteExpression(expression.id, 'final_expressions')
-                    }}
-                  />
+                <div className='flex gap-2 items-center'>
+                  <div>
+                    <Trash
+                      strokeWidth={1}
+                      className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5 cursor-pointer'
+                      onClick={() => {
+                        void deleteExpression(expression.id, 'base_expressions')
+                      }}
+                    />
+                  </div>
+                  <AccordionTrigger>
+                    <ChevronDown className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5' />
+                  </AccordionTrigger>
                 </div>
               )}
             </div>
-            <p
-              className='cursor-text px-1 text-[12px] font-normal leading-[18px] text-muted-foreground lg:text-sm'
-              onClick={(e) => {
-                e.preventDefault()
-              }}
-            >
+            <p className='px-1 text-[12px] font-normal leading-[18px] text-muted-foreground lg:text-sm'>
               {expression.raw_data}
             </p>
           </>
         )}
-      </AccordionTrigger>
+      </div>
+
       <AccordionContent>
         <div className='flex w-full flex-col border-x-[2px] border-b-[2px] px-3 pb-[62px] pt-6 lg:px-5'>
           <div className='flex flex-col'>

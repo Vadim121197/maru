@@ -1,3 +1,5 @@
+import type { Address } from './deployment'
+
 export interface EventExample {
   description: string
   name: string
@@ -57,7 +59,7 @@ export enum ExpressionType {
 
 export interface Expression {
   aggregate_operation: string
-  contract_address: string
+  contract_address: Address
   created_at: Date
   event: string
   expression_type: ExpressionType
@@ -91,7 +93,7 @@ export interface ExpressionCreateResponse {
   raw_data: string
   name: string
   project_id: number
-  contract_address: string
+  contract_address: Address
   aggregate_operation: string
   event: string
   expression_type: ExpressionType

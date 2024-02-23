@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
-import { Trash, X } from 'lucide-react'
+import { ChevronDown, Copy, Trash, X } from 'lucide-react'
 import useAxiosAuth from '~/hooks/axios-auth'
 import type { PrecalculateResult } from '~/types/calculations'
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
+import { cutAddress } from '~/lib/cut-address'
+import { copyToClipboard } from '~/lib/copy-to-clipboard'
 import type { BaseExpressionValues, Expression, ExpressionEvent, ExpressionTools } from '~/types/expressions'
-import { cn } from '~/lib/utils'
 import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
-import { InputComponent } from '../form-components'
+import { TextLabel } from '../form-components'
 import { BaseExpressionField } from '../expression-field'
 import { BaseExpressionHelperTable } from './base-expression-helper-table'
 import { Button } from '../ui/button'
@@ -31,7 +32,7 @@ export const EditBaseExpressionForm = ({
   deleteExpression,
   setSelectedExpression,
 }: EditBaseExpressionFormProps) => {
-  const { project, isUserProject, setProject } = useProject()((state) => state)
+  const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
   const textarea = useRef<HTMLTextAreaElement>(null)
 
@@ -102,20 +103,7 @@ export const EditBaseExpressionForm = ({
 
   return (
     <AccordionItem value={expression.id.toString()} key={expression.id}>
-      <AccordionTrigger
-        className={cn(
-          'flex w-full flex-col border-2 p-3 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5 select-text',
-          !isUserProject || (selectedExpression === expression.id.toString() && 'cursor-default'),
-        )}
-        onKeyUp={(e) => {
-          e.preventDefault()
-        }}
-        onClick={(e) => {
-          if (selectedExpression === expression.id.toString()) {
-            e.preventDefault()
-          }
-        }}
-      >
+      <div className='flex w-full flex-col border-2 p-3 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5'>
         {selectedExpression === expression.id.toString() ? (
           <div className='flex w-full flex-col gap-4'>
             <div className='self-end'>
@@ -138,31 +126,30 @@ export const EditBaseExpressionForm = ({
           </div>
         ) : (
           <div className='flex w-full justify-between'>
-            <p
-              className='cursor-text px-1 text-left text-[12px] font-normal leading-[18px] lg:text-sm'
-              onClick={(e) => {
-                e.preventDefault()
-              }}
-            >
+            <p className='px-1 text-left text-[12px] font-normal leading-[18px] lg:text-sm'>
               <span className='font-bold'>{expression.name}</span> = map({expression.raw_data})
               {expression.filter_data && `.filter(|result| ${expression.filter_data})`}
               <span>.{expression.aggregate_operation}</span>
             </p>
             {deleteExpression && (
-              <div>
-                <Trash
-                  strokeWidth={1}
-                  className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5'
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    void deleteExpression(expression.id, 'base_expressions')
-                  }}
-                />
+              <div className='flex gap-2 items-center'>
+                <div>
+                  <Trash
+                    strokeWidth={1}
+                    className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5 cursor-pointer'
+                    onClick={() => {
+                      void deleteExpression(expression.id, 'base_expressions')
+                    }}
+                  />
+                </div>
+                <AccordionTrigger>
+                  <ChevronDown className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5' />
+                </AccordionTrigger>
               </div>
             )}
           </div>
         )}
-      </AccordionTrigger>
+      </div>
       <AccordionContent>
         <div className='flex w-full flex-col gap-6 border-x-[2px] border-b-[2px] px-3 pb-[62px] pt-6 lg:px-5'>
           <div className='flex flex-col'>
@@ -208,9 +195,28 @@ export const EditBaseExpressionForm = ({
             </div>
             {precalcRes.length ? <PrecalcValues res={precalcRes} /> : <></>}
           </div>
-          <div className='mt-[40px] grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-4'>
-            <InputComponent value={expression.contract_address} label='Contact address' className='w-full' readOnly />
-            <InputComponent value={selectedEvent?.name} label='Signature' className='w-full' readOnly />
+          <div className='mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-4'>
+            {/* <InputComponent value={expression.contract_address} label='Contact address' className='w-full' readOnly /> */}
+            <div className='flex flex-col gap-2 w-full'>
+              <TextLabel label='Contact address' />
+              <div className='py-3 px-4 lg:py-[10px] border-2 text-sm font-medium lg:text-base bg-background flex justify-between items-center'>
+                {cutAddress(expression.contract_address)}
+                <div>
+                  <Copy
+                    strokeWidth={1}
+                    className='w-4 h-4 cursor-pointer'
+                    onClick={copyToClipboard(expression.contract_address)}
+                  />
+                </div>
+              </div>
+            </div>
+            {/* <InputComponent value={selectedEvent?.name} label='Signature' className='w-full' readOnly /> */}
+            <div className='flex flex-col gap-2 w-full'>
+              <TextLabel label='Contact address' />
+              <div className='py-3 px-4 lg:py-[10px] border-2 text-sm font-medium lg:text-base bg-background flex items-center'>
+                {selectedEvent?.name}
+              </div>
+            </div>
           </div>
         </div>
       </AccordionContent>

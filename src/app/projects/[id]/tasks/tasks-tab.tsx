@@ -57,7 +57,7 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
           </TableHeader>
           <TableBody className='text-muted'>
             {tasks.map((t) => (
-              <TableRow key={t.name} className='h-[56px]'>
+              <TableRow key={t.id} className='h-[56px]'>
                 <TableCell className='border-t-[1px] text-base font-medium'>{t.id}</TableCell>
                 <TableCell className='border-t-[1px] text-center text-base font-medium'>{t.name}</TableCell>
                 <TableCell className='border-t-[1px] text-center text-base font-medium'>{t.block_range}</TableCell>
@@ -71,7 +71,7 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
       </div>
       <div className='flex flex-col gap-6 lg:hidden'>
         {tasks.map((t) => (
-          <div key={t.name} className='flex flex-col bg-card p-4 '>
+          <div key={t.id} className='flex flex-col bg-card p-4 '>
             <div className='flex items-center justify-between border-b-[1px] pb-3'>
               <p className='text-base font-semibold'>Task</p>
               <p className='text-sm font-medium'>{t.id}</p>

@@ -67,8 +67,8 @@ export const DeploymentsTab = ({ projectId }: { projectId: string }) => {
             </TableRow>
           </TableHeader>
           <TableBody className='text-muted'>
-            {deployments.map((d) => (
-              <TableRow key={d.name} className='h-[56px]'>
+            {deployments.map((d, index) => (
+              <TableRow key={index} className='h-[56px]'>
                 <TableCell className='border-t-[1px] text-base font-medium'>{d.network}</TableCell>
                 <TableCell className='border-t-[1px] text-center text-base font-medium'>{d.task_id}</TableCell>
                 <TableCell className='border-t-[1px] text-center text-base font-medium'>{d.name}</TableCell>
@@ -96,8 +96,8 @@ export const DeploymentsTab = ({ projectId }: { projectId: string }) => {
         </Table>
       </div>
       <div className='flex flex-col gap-6 lg:hidden'>
-        {deployments.map((d) => (
-          <div key={d.name} className='flex flex-col bg-card p-4 '>
+        {deployments.map((d, index) => (
+          <div key={index} className='flex flex-col bg-card p-4 '>
             <div className='flex items-center justify-between border-b-[1px] pb-3'>
               <p className='text-base font-semibold'>Network</p>
               <p className='text-sm font-medium'>{d.network}</p>
