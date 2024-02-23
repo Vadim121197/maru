@@ -16,6 +16,7 @@ import { Button } from '../ui/button'
 import { PrecalcValues } from '../precalc-values'
 import { PrecalcSettings } from '../precalc-settings'
 import { AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
+import { BaseExpressionDetailCard } from './base-expression-detail-card'
 
 interface EditBaseExpressionFormProps {
   expression: Expression
@@ -106,27 +107,7 @@ export const EditBaseExpressionForm = ({
       <div className='flex w-full flex-col border-2 p-3 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5'>
         {selectedExpression === expression.id.toString() ? (
           <div className='flex w-full flex-col gap-4'>
-            <div className='self-end'>
-              <X
-                strokeWidth={1}
-                className='h-5 w-5 cursor-pointer lg:h-6 lg:w-6'
-                onClick={() => {
-                  setSelectedExpression('')
-                }}
-              />
-            </div>
-            <BaseExpressionField
-              aggregateFunctions={tools?.aggregate_operations ?? []}
-              expressionValues={expressionValues}
-              setExpressionValues={setExpressionValues}
-              className='bg-card'
-              textAreaClassName='border-2 border-border'
-              textareaRef={textarea}
-            />
-          </div>
-        ) : (
-          <div className='flex flex-col gap-6'>
-            <div className='flex items-center justify-between gap-3 flex-wrap'>
+            <div className='flex justify-between items-center'>
               <div className='flex items-center gap-4'>
                 <p className='text-sm font-normal'>Contact</p>
                 <div
@@ -142,36 +123,27 @@ export const EditBaseExpressionForm = ({
                   {expression.event.split('(')[0]}
                 </div>
               </div>
-              <div className='flex items-center gap-4'>
-                <p className='text-sm font-normal'>Aggregate </p>
-                <div className='py-1 px-2 border-2 text-sm font-normal  bg-background text-muted-foreground break-all'>
-                  {expression.aggregate_operation}
-                </div>
+              <div>
+                <X
+                  strokeWidth={1}
+                  className='h-5 w-5 cursor-pointer lg:h-6 lg:w-6'
+                  onClick={() => {
+                    setSelectedExpression('')
+                  }}
+                />
               </div>
             </div>
-            <div className='flex w-full justify-between gap-2'>
-              <p className='px-1 text-left text-[12px] font-normal leading-[18px] lg:text-sm break-all'>
-                <span className='font-bold'>{expression.name}</span> = map({expression.raw_data})
-                {expression.filter_data && `.filter(|result| ${expression.filter_data})`}
-              </p>
-              {deleteExpression && (
-                <div className='flex gap-2 items-center'>
-                  <div>
-                    <Trash
-                      strokeWidth={1}
-                      className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5 cursor-pointer'
-                      onClick={() => {
-                        void deleteExpression(expression.id, 'base_expressions')
-                      }}
-                    />
-                  </div>
-                  <AccordionTrigger>
-                    <ChevronDown className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5' />
-                  </AccordionTrigger>
-                </div>
-              )}
-            </div>
+            <BaseExpressionField
+              aggregateFunctions={tools?.aggregate_operations ?? []}
+              expressionValues={expressionValues}
+              setExpressionValues={setExpressionValues}
+              className='bg-card'
+              textAreaClassName='border-2 border-border'
+              textareaRef={textarea}
+            />
           </div>
+        ) : (
+          <BaseExpressionDetailCard expression={expression} deleteExpression={deleteExpression} />
         )}
       </div>
       <AccordionContent>
@@ -218,29 +190,6 @@ export const EditBaseExpressionForm = ({
               </Button>
             </div>
             {precalcRes.length ? <PrecalcValues res={precalcRes} /> : <></>}
-          </div>
-          <div className='mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-4'>
-            {/* <InputComponent value={expression.contract_address} label='Contact address' className='w-full' readOnly /> */}
-            <div className='flex flex-col gap-2 w-full'>
-              <TextLabel label='Contact address' />
-              <div className='py-3 px-4 lg:py-[10px] border-2 text-sm font-medium lg:text-base bg-background flex justify-between items-center'>
-                {cutAddress(expression.contract_address)}
-                <div>
-                  <Copy
-                    strokeWidth={1}
-                    className='w-4 h-4 cursor-pointer'
-                    onClick={copyToClipboard(expression.contract_address)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className='flex flex-col gap-2 w-full'>
-              <TextLabel label='Contact address' />
-              <div className='py-3 px-4 lg:py-[10px] border-2 text-sm font-medium lg:text-base bg-background flex items-center'>
-                {selectedEvent?.name}
-              </div>
-            </div>
           </div>
         </div>
       </AccordionContent>

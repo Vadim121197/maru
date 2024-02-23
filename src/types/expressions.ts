@@ -58,20 +58,21 @@ export enum ExpressionType {
 }
 
 export interface Expression {
-  aggregate_operation: string
-  contract_address: Address
-  created_at: Date
-  event: string
-  expression_type: ExpressionType
-  filter_data: string
-  id: number
-  name: string
-  parsed_data: string
-  project_id: number
   raw_data: string
-  rpn_data: null
-  to_prove_data: null
+  name: string | null
+  project_id: number
+  contract_address: Address | null
+  aggregate_operation: string | null
+  event: string | null
+  parsed_data: string
+  rpn_data: string | null
+  expression_type: ExpressionType
+  filter_data: string | null
+  to_prove_data: string | null
+  id: number
+  created_at: Date
   updated_at: Date
+  version: number
 }
 
 export interface ExpressionsResponse {

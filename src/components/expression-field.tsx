@@ -124,7 +124,7 @@ export const BaseExpressionField = ({
           }}
         />
         <p className='text-[12px] font-normal lg:text-sm'>=</p>
-        <p className='text-[12px] font-normal lg:text-sm'>map(</p>
+        <p className='text-[12px] font-normal lg:text-sm'>events.map(|event|</p>
       </div>
       <Textarea
         className={cn(

@@ -9,6 +9,7 @@ export const EXPRESSION_ID = '{expression_id}'
 export const CALCULATION_ID = '{calculation_id}'
 export const CONTRACT_ID = '{contract_id}'
 export const PROOF_ID = '{proof_id}'
+export const TASK_ID = '{task_id}'
 
 export enum ApiRoutes {
   USERS_INSTALLATIONS = '/users/installations',
@@ -46,6 +47,7 @@ export enum ApiRoutes {
   PROOFS_PROOF_ID_VERIFY = '/proofs/{proof_id}/verify',
 
   TASKS = '/tasks',
+  TASKS_TASK_ID_EXPRESSIONS = '/tasks/{task_id}/expressions',
 
   DEPLOYMENTS = '/deployments',
 }

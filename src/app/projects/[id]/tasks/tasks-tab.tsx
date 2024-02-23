@@ -1,19 +1,24 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Bird } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import type { Pagination } from '~/types/pagination'
 import useAxiosAuth from '~/hooks/axios-auth'
-import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
+import { ApiRoutes, PROJECT_ID, TASK_ID } from '~/lib/axios-instance'
 import type { Task } from '~/types/task'
+import type { ExpressionsResponse } from '~/types/expressions'
 import { useProject } from '../ProjectProvider'
+import { BaseExpressionDetailCard } from '~/components/base-expression-form/base-expression-detail-card'
+import { AccordionItem } from '~/components/ui/accordion'
 
 export const TasksTab = ({ projectId }: { projectId: string }) => {
   const axiosAuth = useAxiosAuth()
   const { tasks, setTask } = useProject()((state) => state)
 
   const [loading, setLoading] = useState<boolean | undefined>()
+  const [selectedTask, setSelectedTask] = useState<number | undefined>()
+  const [taskExpressions, setTaskExpressions] = useState<Record<number, ExpressionsResponse>>()
 
   useEffect(() => {
     void (async () => {
@@ -30,6 +35,21 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
       }
     })()
   }, [projectId, axiosAuth, setTask])
+
+  useEffect(() => {
+    if (!selectedTask) return
+
+    void (async () => {
+      const { data } = await axiosAuth.get<ExpressionsResponse>(
+        ApiRoutes.TASKS_TASK_ID_EXPRESSIONS.replace(TASK_ID, selectedTask.toString()),
+      )
+
+      setTaskExpressions((state) => ({
+        ...state,
+        [selectedTask]: data,
+      }))
+    })()
+  }, [axiosAuth, selectedTask])
 
   if (loading === undefined && !tasks.length) return <></>
 
@@ -57,14 +77,55 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
           </TableHeader>
           <TableBody className='text-muted'>
             {tasks.map((t) => (
-              <TableRow key={t.id} className='h-[56px]'>
-                <TableCell className='border-t-[1px] text-base font-medium'>{t.id}</TableCell>
-                <TableCell className='border-t-[1px] text-center text-base font-medium'>{t.name}</TableCell>
-                <TableCell className='border-t-[1px] text-center text-base font-medium'>{t.block_range}</TableCell>
-                <TableCell className='border-t-[1px] text-center text-base font-medium'>
-                  {t.periodical ?? '-'}
-                </TableCell>
-              </TableRow>
+              <Fragment key={t.id}>
+                <TableRow className='h-[56px]'>
+                  <TableCell className='border-t-[1px] text-base font-medium'>{t.id}</TableCell>
+                  <TableCell className='border-t-[1px] text-center text-base font-medium flex justify-center items-center'>
+                    <div
+                      className='cursor-pointer w-fit'
+                      onClick={() => {
+                        setSelectedTask(selectedTask === t.id ? undefined : t.id)
+                      }}
+                    >
+                      {t.name}
+                    </div>
+                  </TableCell>
+                  <TableCell className='border-t-[1px] text-center text-base font-medium'>{t.block_range}</TableCell>
+                  <TableCell className='border-t-[1px] text-center text-base font-medium'>
+                    {t.periodical ?? '-'}
+                  </TableCell>
+                </TableRow>
+                {selectedTask === t.id && taskExpressions && taskExpressions[t.id] && (
+                  <TableRow>
+                    <TableCell colSpan={4}>
+                      <div className='flex flex-col gap-5 w-full'>
+                        <div className='flex flex-col gap-3'>
+                          <p className='text-lg font-medium'>Expressions</p>
+                          <div className='grid grid-cols-2 gap-4'>
+                            {taskExpressions[t.id]?.base_expressions.map((exp) => (
+                              <div key={exp.id} className='flex w-full flex-col border-2 p-3 lg:p-4 bg-background'>
+                                <BaseExpressionDetailCard expression={exp} />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className='flex flex-col gap-3'>
+                          <p className='text-lg font-medium'>Final Expressions</p>
+                          <div className='grid grid-cols-2 gap-4'>
+                            {taskExpressions[t.id]?.final_expressions.map((exp) => (
+                              <div key={exp.id} className='flex w-full  border-2 p-3 lg:p-4 bg-background'>
+                                <span className='font-bold'>{exp.name}</span>
+                                &nbsp;
+                                <span>{`= ${exp.raw_data}`}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </Fragment>
             ))}
           </TableBody>
         </Table>
