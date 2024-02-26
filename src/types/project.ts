@@ -20,6 +20,7 @@ export interface Project {
   id: number
   stars_count: number
   is_demo: boolean
+  is_private: boolean
   user: {
     id: number
     avatar_url: string | null

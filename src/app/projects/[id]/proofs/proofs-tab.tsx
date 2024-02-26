@@ -1,18 +1,18 @@
 'use client'
 
+import type { AxiosError } from 'axios'
 import { Bird, Copy, InfoIcon } from 'lucide-react'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
-import { Button } from '~/components/ui/button'
-import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import { Button } from '~/components/ui/button'
 import useAxiosAuth from '~/hooks/axios-auth'
-import type { Pagination } from '~/types/pagination'
-import { copyToClipboard } from '~/lib/copy-to-clipboard'
 import { ApiRoutes, BASE_URL, PROJECT_ID, PROOF_ID } from '~/lib/axios-instance'
-import { ProofStatus, type Proof } from '~/types/proof'
+import { copyToClipboard } from '~/lib/copy-to-clipboard'
 import { cn } from '~/lib/utils'
+import type { PaginationGeneric } from '~/types/pagination'
+import { ProofStatus, type Proof } from '~/types/proof'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../../components/ui/table'
 
 const statusColor = {
@@ -42,8 +42,8 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
         setLoading(true)
         const {
           data: { data },
-        } = await axiosAuth.get<Pagination<Proof[]>>(
-          ApiRoutes.PROJECTS_PROJECT_ID_PROOFS.replace(PROJECT_ID, projectId),
+        } = await axiosAuth.get<PaginationGeneric<Proof[]>>(
+          ApiRoutes.PROJECTS_PROJECT_ID_PROOFS.replace(PROJECT_ID, projectId) + '?page_size=1000',
         )
 
         setProofs(data)

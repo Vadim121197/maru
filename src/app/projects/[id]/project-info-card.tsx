@@ -11,7 +11,7 @@ export const ProjectInfoCard = ({ id }: { id: string }) => {
   const axiosAuth = useAxiosAuth()
   const { data: session } = useSession()
 
-  const { project, setProject, setProjectOwnership } = useProject()((state) => state)
+  const { project, isUserProject, setProject, setProjectOwnership } = useProject()((state) => state)
 
   useEffect(() => {
     if (!id) return
@@ -30,7 +30,7 @@ export const ProjectInfoCard = ({ id }: { id: string }) => {
 
   return (
     <div className='flex flex-col gap-6'>
-      <BackButton href='/projects' />
+      <BackButton href={isUserProject ? '/projects/profile' : '/projects'} />
       <div className='mt-[14px] flex items-center justify-between lg:mt-[26px]'>
         <p className='text-xl font-medium lg:text-2xl lg:font-bold'>{project.name}</p>
       </div>

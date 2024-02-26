@@ -10,7 +10,7 @@ export const mainNav: NavItem[] = [
   },
   {
     title: 'My Projects',
-    href: '/projects',
+    href: '/projects/profile',
     icon: <AlignLeft strokeWidth={1} className='h-6 w-6' />,
     protected: true,
   },

@@ -14,7 +14,7 @@ const ProjectNewPage = () => {
 
   return (
     <section className='flex w-full flex-col gap-6 px-7 pt-10 lg:container lg:w-[628px] lg:pt-[70px]'>
-      <BackButton href='/projects' />
+      <BackButton href='/projects/profile' />
       <div className='mt-[36px] flex flex-col items-center gap-4 lg:mt-[26px]'>
         <p className='text-xl font-medium lg:text-2xl lg:font-bold'>Create Project</p>
         <p className='text-base font-semibold text-muted-foreground lg:text-lg lg:font-medium'>

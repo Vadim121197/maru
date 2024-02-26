@@ -2,9 +2,10 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useMemo } from 'react'
 import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Nav } from '~/types/nav'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useProject } from './ProjectProvider'
 
-export enum Tab {
+export enum ProjectTabs {
   EXPRESSION = 'expression',
   TASKS = 'tasks',
   PROOFS = 'proofs',
@@ -12,29 +13,35 @@ export enum Tab {
   SETINGS = 'settings',
 }
 
-export const tabs = [
+interface ProjectTab {
+  value: ProjectTabs
+  href: string
+  isPrivate: boolean
+}
+
+export const tabs: ProjectTab[] = [
   {
-    value: Tab.EXPRESSION,
+    value: ProjectTabs.EXPRESSION,
     href: '/',
     isPrivate: false,
   },
   {
-    value: Tab.TASKS,
+    value: ProjectTabs.TASKS,
     href: '/tasks',
     isPrivate: false,
   },
   {
-    value: Tab.PROOFS,
+    value: ProjectTabs.PROOFS,
     href: '/proofs',
     isPrivate: false,
   },
   {
-    value: Tab.DEPLOYMENTS,
+    value: ProjectTabs.DEPLOYMENTS,
     href: '/deployments',
     isPrivate: false,
   },
   {
-    value: Tab.SETINGS,
+    value: ProjectTabs.SETINGS,
     href: '/settings',
     isPrivate: true,
   },
@@ -47,7 +54,7 @@ export const ProjectsTabs = ({ projectId }: { projectId: string }) => {
 
   const tabValue = useMemo(() => {
     const splittedPathname = pathname.split('/')
-    return splittedPathname.length === 3 ? Tab.EXPRESSION : splittedPathname[splittedPathname.length - 1]
+    return splittedPathname.length === 3 ? ProjectTabs.EXPRESSION : splittedPathname[splittedPathname.length - 1]
   }, [pathname])
 
   const filteredTabs = useMemo(() => {
@@ -55,26 +62,49 @@ export const ProjectsTabs = ({ projectId }: { projectId: string }) => {
   }, [isUserProject])
 
   return (
-    <Tabs value={tabValue}>
-      <TabsList className='w-full'>
-        {filteredTabs.map((t) => {
-          return (
-            <TabsTrigger
-              key={t.href}
-              value={t.value}
-              onClick={() => {
-                navigate.push(`${Nav.PROJECTS}/${projectId}${t.href}`)
-              }}
-              className='capitalize'
-              style={{
-                width: 100 / filteredTabs.length + '%',
-              }}
-            >
-              {t.value}
-            </TabsTrigger>
-          )
-        })}
-      </TabsList>
-    </Tabs>
+    <>
+      <Tabs value={tabValue} className='hidden lg:block'>
+        <TabsList className='w-full'>
+          {filteredTabs.map((t) => {
+            return (
+              <TabsTrigger
+                key={t.href}
+                value={t.value}
+                onClick={() => {
+                  navigate.push(`${Nav.PROJECTS}/${projectId}${t.href}`)
+                }}
+                className='capitalize'
+                style={{
+                  width: 100 / filteredTabs.length + '%',
+                }}
+              >
+                {t.value}
+              </TabsTrigger>
+            )
+          })}
+        </TabsList>
+      </Tabs>
+      <div className='flex items-center justify-between border-b-[1px] border-primary py-3 lg:hidden'>
+        <ChevronLeft
+          strokeWidth={1}
+          className='h-6 w-6'
+          onClick={() => {
+            const index = filteredTabs.findIndex((t) => t.value === tabValue)
+            if (index < 1) return
+            navigate.push(`${Nav.PROJECTS}/${projectId}${filteredTabs[index - 1]?.href}`)
+          }}
+        />
+        <p className='text-sm font-bold capitalize'>{tabValue}</p>
+        <ChevronRight
+          strokeWidth={1}
+          className='h-6 w-6'
+          onClick={() => {
+            const index = filteredTabs.findIndex((t) => t.value === tabValue)
+            if (index === filteredTabs.length - 1) return
+            navigate.push(`${Nav.PROJECTS}/${projectId}${filteredTabs[index + 1]?.href}`)
+          }}
+        />
+      </div>
+    </>
   )
 }

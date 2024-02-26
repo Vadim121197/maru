@@ -3,8 +3,8 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Bird } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
+import type { PaginationGeneric } from '~/types/pagination'
 import { BaseExpressionDetailCard } from '~/components/base-expression-form/base-expression-detail-card'
-import type { Pagination } from '~/types/pagination'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID, TASK_ID } from '~/lib/axios-instance'
 import type { Task } from '~/types/task'
@@ -18,6 +18,8 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
   const [loading, setLoading] = useState<boolean | undefined>()
   const [selectedTask, setSelectedTask] = useState<number | undefined>()
   const [taskExpressions, setTaskExpressions] = useState<Record<number, ExpressionsResponse>>()
+  // const [currentPage, setCurrentPage] = useState<number>(1)
+  // const [totalPages, setTotalPages] = useState<number>(1)
 
   useEffect(() => {
     void (async () => {
@@ -25,7 +27,12 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
         setLoading(true)
         const {
           data: { data },
-        } = await axiosAuth.get<Pagination<Task[]>>(ApiRoutes.PROJECTS_PROJECT_ID_TASKS.replace(PROJECT_ID, projectId))
+        } = await axiosAuth.get<PaginationGeneric<Task[]>>(
+          ApiRoutes.PROJECTS_PROJECT_ID_TASKS.replace(PROJECT_ID, projectId) + '?page_size=1000',
+        )
+
+        // setCurrentPage(page_number)
+        // setTotalPages(total_pages)
 
         setTask(data)
         setLoading(false)
@@ -151,6 +158,7 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
           </div>
         ))}
       </div>
+      {/* <CustomPagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} /> */}
     </>
   )
 }

@@ -1,4 +1,4 @@
-export interface Pagination<T> {
+export interface PaginationGeneric<T> {
   page_number: number
   page_size: number
   total_items: number

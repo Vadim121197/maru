@@ -10,7 +10,7 @@ import { siteConfig } from '~/config/site'
 import { ApiRoutes, axiosInstance } from '~/lib/axios-instance'
 import { cn } from '~/lib/utils'
 import { Nav } from '~/types/nav'
-import type { Pagination } from '~/types/pagination'
+import type { PaginationGeneric } from '~/types/pagination'
 import type { Project } from '~/types/project'
 
 const resources = [
@@ -38,7 +38,7 @@ const IndexPage = async () => {
   try {
     const {
       data: { data },
-    } = await axiosInstance.get<Pagination<Project[]>>(ApiRoutes.PROJECTS)
+    } = await axiosInstance.get<PaginationGeneric<Project[]>>(ApiRoutes.PROJECTS + '?page_size=2')
 
     projects = data
   } catch (error) {}
@@ -98,17 +98,14 @@ const IndexPage = async () => {
           )}
           {projects.length ? (
             <div className='order-3 mt-[60px] grid w-full gap-[34px] lg:order-3 lg:mt-0 lg:grid-cols-2 lg:gap-5'>
-              {[projects.at(0), projects.at(1)].map(
-                (pr) =>
-                  pr && (
-                    <ProjectCard
-                      key={pr.id}
-                      href={`${Nav.PROJECTS}/${pr.id}`}
-                      project={pr}
-                      className='gap-[204px] lg:gap-[128px] lg:pt-7'
-                    />
-                  ),
-              )}
+              {projects.map((pr) => (
+                <ProjectCard
+                  key={pr.id}
+                  href={`${Nav.PROJECTS}/${pr.id}`}
+                  project={pr}
+                  className='gap-[204px] lg:gap-[128px] lg:pt-7'
+                />
+              ))}
             </div>
           ) : (
             <></>

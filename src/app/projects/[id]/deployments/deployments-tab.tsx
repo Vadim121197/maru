@@ -3,11 +3,11 @@
 import { Bird } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
-import type { Pagination } from '~/types/pagination'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import { cutAddress } from '~/lib/cut-address'
 import { Network, type Deployment } from '~/types/deployment'
+import type { PaginationGeneric } from '~/types/pagination'
 import { useProject } from '../ProjectProvider'
 
 const explores: Record<Network, string> = {
@@ -30,8 +30,8 @@ export const DeploymentsTab = ({ projectId }: { projectId: string }) => {
         setLoading(true)
         const {
           data: { data },
-        } = await axiosAuth.get<Pagination<Deployment[]>>(
-          ApiRoutes.PROJECTS_PROJECT_ID_DEPLOYMENTS.replace(PROJECT_ID, projectId),
+        } = await axiosAuth.get<PaginationGeneric<Deployment[]>>(
+          ApiRoutes.PROJECTS_PROJECT_ID_DEPLOYMENTS.replace(PROJECT_ID, projectId) + '?page_size=1000',
         )
 
         setDeployments(data)
