@@ -1,7 +1,9 @@
 import type { SelectProps } from '@radix-ui/react-select'
+
 import { cn } from '~/lib/utils'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
+
 import { Input, type InputProps } from './ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 
 export const TextLabel = ({ label }: { label: string }) => <p className='text-sm font-medium lg:text-base'>{label}</p>
 

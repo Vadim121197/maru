@@ -1,5 +1,6 @@
-import { CheckCircle2, UploadCloud } from 'lucide-react'
 import { useDropzone, type DropzoneOptions } from 'react-dropzone'
+
+import { CheckCircle2, UploadCloud } from 'lucide-react'
 
 export const Dropzone = ({ file, onDrop }: { file: File | undefined; onDrop: DropzoneOptions['onDrop'] }) => {
   const { getRootProps, getInputProps, open } = useDropzone({

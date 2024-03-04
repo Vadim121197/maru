@@ -1,13 +1,16 @@
 'use client'
 
-import { Bird } from 'lucide-react'
 import { useEffect, useState } from 'react'
+
+import { Bird } from 'lucide-react'
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import { cutAddress } from '~/lib/cut-address'
 import { Network, type Deployment } from '~/types/deployment'
 import type { PaginationGeneric } from '~/types/pagination'
+
 import { useProject } from '../ProjectProvider'
 
 const explores: Record<Network, string> = {

@@ -1,19 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
+
+import type { AxiosError } from 'axios'
+
+import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ADDRESS, ApiRoutes } from '~/lib/axios-instance'
 import type { PrecalculateResult } from '~/types/calculations'
 import type { BaseExpressionValues, Expression, ExpressionEvent, ExpressionTools } from '~/types/expressions'
-import type { AxiosError } from 'axios'
-import { useProject } from '~/app/projects/[id]/ProjectProvider'
-import { toast } from 'react-toastify'
+
 import { BaseExpressionField } from '../expression-field'
+import { FailedFetchAbiModal } from '../failed-fetch-abi-modal'
 import { SelectComponent, TextLabel } from '../form-components'
+import { InputBlock } from '../input-block'
+import { PrecalcSettings } from '../precalc-settings'
 import { PrecalcValues } from '../precalc-values'
 import { Button } from '../ui/button'
 import { BaseExpressionHelperTable } from './base-expression-helper-table'
-import { PrecalcSettings } from '../precalc-settings'
-import { InputBlock } from '../input-block'
-import { FailedFetchAbiModal } from '../failed-fetch-abi-modal'
 
 // 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7
 

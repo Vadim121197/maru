@@ -1,6 +1,8 @@
 import type { Dispatch, SetStateAction } from 'react'
-import { cn } from '~/lib/utils'
+
 import { DOTS, usePagination } from '~/hooks/pagination'
+import { cn } from '~/lib/utils'
+
 import {
   Pagination,
   PaginationContent,

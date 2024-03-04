@@ -1,7 +1,9 @@
 import { ChevronDown, Trash } from 'lucide-react'
+
 import { copyToClipboard } from '~/lib/copy-to-clipboard'
 import { cutAddress } from '~/lib/cut-address'
 import type { Expression } from '~/types/expressions'
+
 import { AccordionTrigger } from '../ui/accordion'
 
 export const BaseExpressionDetailCard = ({
@@ -12,7 +14,7 @@ export const BaseExpressionDetailCard = ({
   deleteExpression?: (id: number, type: 'base_expressions' | 'final_expressions') => Promise<void>
 }) => {
   return (
-    <div className='flex flex-col gap-6'>
+    <div className='flex h-full flex-col justify-between gap-6'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
         <div className='break-all border-2 bg-background px-2  py-1 text-sm font-bold text-muted-foreground'>
           {expression.name}

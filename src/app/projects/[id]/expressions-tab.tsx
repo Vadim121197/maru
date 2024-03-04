@@ -1,21 +1,23 @@
 'use client'
 
-import { Plus, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
+
+import type { AxiosError } from 'axios'
+import { Plus, X } from 'lucide-react'
+
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import { BaseExpressionForm } from '~/components/base-expression-form'
+import { EditBaseExpressionForm } from '~/components/base-expression-form/edit-base-expression-form'
+import { FinalExpressionForm } from '~/components/final-expression-form'
+import { EditFinalExpressionForm } from '~/components/final-expression-form/edit-final-expression-form'
+import { SelectComponent } from '~/components/form-components'
+import { Accordion } from '~/components/ui/accordion'
+import { Button } from '~/components/ui/button'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import { Expressions, expressionTypes } from '~/lib/expressions'
 import type { Expression, ExpressionsResponse } from '~/types/expressions'
-import { BaseExpressionForm } from '../../../components/base-expression-form'
-import { EditBaseExpressionForm } from '../../../components/base-expression-form/edit-base-expression-form'
-import { FinalExpressionForm } from '../../../components/final-expression-form'
-import { EditFinalExpressionForm } from '../../../components/final-expression-form/edit-final-expression-form'
-import { SelectComponent } from '../../../components/form-components'
-import { Accordion } from '../../../components/ui/accordion'
-import { Button } from '../../../components/ui/button'
 
 export const ExpressionsTab = () => {
   const { project, expressions, isUserProject, setExpressions } = useProject()((state) => state)
@@ -178,7 +180,7 @@ export const ExpressionsTab = () => {
             setAddNew(false)
           }}
           collapsible
-          className='grid w-full grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
+          className='grid w-full grid-flow-col grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
         >
           {expressions.base_expressions.map((exp) => (
             <EditBaseExpressionForm

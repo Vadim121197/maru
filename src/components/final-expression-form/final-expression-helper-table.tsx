@@ -1,6 +1,9 @@
 import { useMemo, type Dispatch, type SetStateAction, type RefObject, useState, useEffect } from 'react'
+
 import { Info } from 'lucide-react'
+
 import type { ExpressionValues, FinalExpressionTools } from '~/types/expressions'
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 
 interface ExpressionHelperTable {

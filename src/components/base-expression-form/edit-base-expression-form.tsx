@@ -1,21 +1,25 @@
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
-import { X } from 'lucide-react'
-import useAxiosAuth from '~/hooks/axios-auth'
-import type { PrecalculateResult } from '~/types/calculations'
-import { useProject } from '~/app/projects/[id]/ProjectProvider'
-import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
-import { cutAddress } from '~/lib/cut-address'
-import { copyToClipboard } from '~/lib/copy-to-clipboard'
-import type { BaseExpressionValues, Expression, ExpressionEvent, ExpressionTools } from '~/types/expressions'
-import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
+
+import type { AxiosError } from 'axios'
+import { X } from 'lucide-react'
+
+import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import useAxiosAuth from '~/hooks/axios-auth'
+import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
+import { copyToClipboard } from '~/lib/copy-to-clipboard'
+import { cutAddress } from '~/lib/cut-address'
+import { cn } from '~/lib/utils'
+import type { PrecalculateResult } from '~/types/calculations'
+import type { BaseExpressionValues, Expression, ExpressionEvent, ExpressionTools } from '~/types/expressions'
+
 import { BaseExpressionField } from '../expression-field'
-import { BaseExpressionHelperTable } from './base-expression-helper-table'
-import { Button } from '../ui/button'
-import { PrecalcValues } from '../precalc-values'
 import { PrecalcSettings } from '../precalc-settings'
+import { PrecalcValues } from '../precalc-values'
 import { AccordionContent, AccordionItem } from '../ui/accordion'
+import { Button } from '../ui/button'
 import { BaseExpressionDetailCard } from './base-expression-detail-card'
+import { BaseExpressionHelperTable } from './base-expression-helper-table'
 
 interface EditBaseExpressionFormProps {
   expression: Expression
@@ -115,7 +119,12 @@ export const EditBaseExpressionForm = ({
 
   return (
     <AccordionItem value={expression.id.toString()} key={expression.id}>
-      <div className='flex w-full flex-col border-2 p-3 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5'>
+      <div
+        className={cn(
+          'flex w-full flex-col border-2 p-3 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5',
+          !selectedExpression && 'h-full',
+        )}
+      >
         {selectedExpression === expression.id.toString() ? (
           <div className='flex w-full flex-col gap-4'>
             <div className='flex items-center justify-between'>

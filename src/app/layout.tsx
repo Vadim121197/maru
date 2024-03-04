@@ -1,7 +1,9 @@
-import type { Metadata } from 'next'
-import { getServerSession } from 'next-auth'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+
+import type { Metadata } from 'next'
+import { getServerSession } from 'next-auth'
+
 import { authOptions } from '~/auth'
 import { SessionProvider } from '~/components/providers/session-provider'
 import { SignInProvider } from '~/components/providers/sign-in-provider'
@@ -11,6 +13,7 @@ import { ThemeProvider } from '~/components/theme-provider'
 import { siteConfig } from '~/config/site'
 import { fontSans } from '~/lib/fonts'
 import { cn } from '~/lib/utils'
+
 import '../styles/globals.css'
 
 export const metadata: Metadata = {

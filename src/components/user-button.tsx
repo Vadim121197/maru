@@ -2,11 +2,13 @@
 
 import { UserRound } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
-import { siteConfig } from '~/config/site'
 import Link from 'next/link'
+
+import { siteConfig } from '~/config/site'
+
+import { SigninButton } from './signin-button'
 import { Button } from './ui/button'
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet'
-import { SigninButton } from './signin-button'
 
 export const UserButton = () => {
   const { data: session } = useSession()

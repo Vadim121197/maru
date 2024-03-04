@@ -1,6 +1,7 @@
 import { Link2, TrendingUp } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import Link from 'next/link'
+
 import { authOptions } from '~/auth'
 import { AuthSidebar } from '~/components/auth-sidebar'
 import { ChartIcon } from '~/components/chart-icon'

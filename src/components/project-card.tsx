@@ -1,9 +1,10 @@
 import { StarIcon } from 'lucide-react'
-import Link from 'next/link'
 import moment from 'moment'
+import Image from 'next/image'
+import Link from 'next/link'
+
 import { cn } from '~/lib/utils'
 import type { Project } from '~/types/project'
-import Image from 'next/image'
 
 export const ProjectCard = ({ href, project, className }: { href: string; project: Project; className?: string }) => (
   <Link href={href} className={cn('flex flex-col bg-card p-4 lg:p-6 gap-11 lg:gap-5', className)}>

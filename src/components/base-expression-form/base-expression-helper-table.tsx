@@ -1,4 +1,7 @@
 import { useMemo, type Dispatch, type SetStateAction, type RefObject, useState, useEffect } from 'react'
+
+import { Info } from 'lucide-react'
+
 import type {
   BaseExpressionValues,
   ExpressionConstants,
@@ -7,8 +10,9 @@ import type {
   ExpressionFunction,
   ExpressionTools,
 } from '~/types/expressions'
-import { Info } from 'lucide-react'
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
+
 export interface ExpressionHelperTable {
   key: number
   constant: ExpressionConstants | undefined

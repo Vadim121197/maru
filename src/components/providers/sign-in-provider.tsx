@@ -1,8 +1,9 @@
 'use client'
 
+import { useEffect, type ReactNode } from 'react'
+
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useEffect, type ReactNode } from 'react'
 
 export const SignInProvider = ({ children }: { children: ReactNode }) => {
   const searchParams = useSearchParams()

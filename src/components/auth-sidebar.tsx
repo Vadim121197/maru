@@ -1,9 +1,11 @@
-import Link from 'next/link'
 import { PlusIcon } from 'lucide-react'
+import Link from 'next/link'
+
 import { cn } from '~/lib/utils'
 import { Nav, type NavItem } from '~/types/nav'
-import { UserCard } from './user-card'
+
 import { buttonVariants } from './ui/button'
+import { UserCard } from './user-card'
 
 export const AuthSidebar = ({ nav }: { nav: NavItem[] }) => (
   <div className='flex w-full flex-col gap-4'>

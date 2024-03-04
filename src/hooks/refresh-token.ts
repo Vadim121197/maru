@@ -1,6 +1,7 @@
 'use client'
 
 import { signOut, useSession } from 'next-auth/react'
+
 import { ApiRoutes, axiosInstance } from '~/lib/axios-instance'
 import type { Auth } from '~/types/auth'
 

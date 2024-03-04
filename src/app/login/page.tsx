@@ -1,8 +1,9 @@
 'use client'
 
+import { useEffect } from 'react'
+
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
 
 const LoginPage = () => {
   const searchParams = useSearchParams()

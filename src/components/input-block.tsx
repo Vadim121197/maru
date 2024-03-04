@@ -1,7 +1,9 @@
 import type { ReactElement } from 'react'
+
 import { cn } from '~/lib/utils'
-import { Input, type InputProps } from './ui/input'
+
 import { TextLabel } from './form-components'
+import { Input, type InputProps } from './ui/input'
 
 export interface Validation {
   checkFn: (txt: string) => boolean

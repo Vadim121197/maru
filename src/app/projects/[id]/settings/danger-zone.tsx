@@ -1,12 +1,15 @@
 'use client'
 
-import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
+
+import type { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
-import useAxiosAuth from '~/hooks/axios-auth'
+
 import { Button } from '~/components/ui/button'
+import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import type { Project } from '~/types/project'
+
 import { useProject } from '../ProjectProvider'
 
 export const DangerZone = () => {

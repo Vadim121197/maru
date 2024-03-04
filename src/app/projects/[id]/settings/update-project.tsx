@@ -1,11 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+
 import { InputBlock } from '~/components/input-block'
 import { Button } from '~/components/ui/button'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import type { Project } from '~/types/project'
+
 import { useProject } from '../ProjectProvider'
 
 export const UpdateProject = () => {

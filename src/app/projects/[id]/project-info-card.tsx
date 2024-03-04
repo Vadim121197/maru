@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
+
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { useEffect } from 'react'
+
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import { BackButton } from '~/components/back-button'
 import useAxiosAuth from '~/hooks/axios-auth'

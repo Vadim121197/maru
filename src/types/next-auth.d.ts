@@ -1,5 +1,6 @@
 import 'next-auth'
 import 'next-auth/jwt'
+
 import type { Auth, User as CustomUser } from '~/types/auth'
 
 declare module 'next-auth' {

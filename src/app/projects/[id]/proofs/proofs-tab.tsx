@@ -1,10 +1,12 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+
 import type { AxiosError } from 'axios'
 import { Bird, Copy, InfoIcon } from 'lucide-react'
 import moment from 'moment'
-import { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
+
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import { Button } from '~/components/ui/button'
 import useAxiosAuth from '~/hooks/axios-auth'
@@ -13,6 +15,7 @@ import { copyToClipboard } from '~/lib/copy-to-clipboard'
 import { cn } from '~/lib/utils'
 import type { PaginationGeneric } from '~/types/pagination'
 import { ProofStatus, type Proof } from '~/types/proof'
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../../components/ui/table'
 
 const statusColor = {

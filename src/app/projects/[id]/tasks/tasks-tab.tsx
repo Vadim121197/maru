@@ -1,14 +1,17 @@
 'use client'
 
 import { Fragment, useEffect, useState } from 'react'
+
 import { Bird } from 'lucide-react'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
-import type { PaginationGeneric } from '~/types/pagination'
+
 import { BaseExpressionDetailCard } from '~/components/base-expression-form/base-expression-detail-card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID, TASK_ID } from '~/lib/axios-instance'
-import type { Task } from '~/types/task'
 import type { ExpressionsResponse } from '~/types/expressions'
+import type { PaginationGeneric } from '~/types/pagination'
+import type { Task } from '~/types/task'
+
 import { useProject } from '../ProjectProvider'
 
 export const TasksTab = ({ projectId }: { projectId: string }) => {

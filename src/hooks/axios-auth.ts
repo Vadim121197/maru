@@ -1,9 +1,12 @@
 'use client'
 
+import { useEffect } from 'react'
+
 import { type AxiosError, type AxiosRequestHeaders } from 'axios'
 import { useSession } from 'next-auth/react'
-import { useEffect } from 'react'
+
 import { axiosInstance } from '~/lib/axios-instance'
+
 import { useRefreshToken } from './refresh-token'
 
 const useAxiosAuth = () => {

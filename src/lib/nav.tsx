@@ -1,10 +1,11 @@
 import { AlignLeft, LayoutGrid, SlidersHorizontal, UserRound } from 'lucide-react'
+
 import type { NavItem } from '~/types/nav'
 
 export const mainNav: NavItem[] = [
   {
     title: 'Discover',
-    href: '/',
+    href: '/projects',
     icon: <LayoutGrid strokeWidth={1} className='h-6 w-6' />,
     protected: false,
   },

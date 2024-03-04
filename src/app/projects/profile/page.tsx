@@ -1,9 +1,11 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import { PlusIcon } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+
 import { NotAuth } from '~/components/not-auth'
 import { ProjectCard } from '~/components/project-card'
 import { buttonVariants } from '~/components/ui/button'

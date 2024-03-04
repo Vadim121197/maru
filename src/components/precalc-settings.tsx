@@ -1,13 +1,16 @@
 import { useMemo, useState } from 'react'
-import { Info } from 'lucide-react'
-import useAxiosAuth from '~/hooks/axios-auth'
-import type { Project } from '~/types/project'
-import type { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
+
+import type { AxiosError } from 'axios'
+import { Info } from 'lucide-react'
+
+import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes } from '~/lib/axios-instance'
+import type { Project } from '~/types/project'
+
 import { InputBlock } from './input-block'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
 import { Button } from './ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
 
 export const PrecalcSettings = ({
   project,

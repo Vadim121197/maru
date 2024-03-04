@@ -1,7 +1,9 @@
-import Link from 'next/link'
-import { siteConfig } from '~/config/site'
 import { getServerSession } from 'next-auth'
+import Link from 'next/link'
+
 import { authOptions } from '~/auth'
+import { siteConfig } from '~/config/site'
+
 import { MainNav } from './main-nav'
 import { UserButton } from './user-button'
 

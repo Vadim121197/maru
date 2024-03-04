@@ -1,8 +1,11 @@
-import { usePathname, useRouter } from 'next/navigation'
 import { useMemo } from 'react'
+
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+
 import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Nav } from '~/types/nav'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+
 import { useProject } from './ProjectProvider'
 
 export enum ProjectTabs {
