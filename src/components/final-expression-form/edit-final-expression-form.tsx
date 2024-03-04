@@ -123,7 +123,7 @@ export const EditFinalExpressionForm = ({
                       strokeWidth={1}
                       className='h-4 w-4 cursor-pointer text-muted-foreground lg:h-5 lg:w-5'
                       onClick={() => {
-                        void deleteExpression(expression.id, 'base_expressions')
+                        void deleteExpression(expression.id, 'final_expressions')
                       }}
                     />
                   </div>

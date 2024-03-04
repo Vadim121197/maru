@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import type { AxiosError } from 'axios'
@@ -8,15 +7,15 @@ import { Bird, Copy, InfoIcon } from 'lucide-react'
 import moment from 'moment'
 
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import { CustomPagination } from '~/components/custom-pagination'
 import { Button } from '~/components/ui/button'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import useAxiosAuth from '~/hooks/axios-auth'
+import { usePaginationRequest } from '~/hooks/pagination-request'
 import { ApiRoutes, BASE_URL, PROJECT_ID, PROOF_ID } from '~/lib/axios-instance'
 import { copyToClipboard } from '~/lib/copy-to-clipboard'
 import { cn } from '~/lib/utils'
-import type { PaginationGeneric } from '~/types/pagination'
 import { ProofStatus, type Proof } from '~/types/proof'
-
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../../components/ui/table'
 
 const statusColor = {
   [ProofStatus.SUCCESS]: 'bg-[#83FF73]',
@@ -37,25 +36,11 @@ const Status = ({ status }: { status: ProofStatus }) => {
 export const ProofsTab = ({ projectId }: { projectId: string }) => {
   const { proofs, isUserProject, setProofs } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
-  const [loading, setLoading] = useState<boolean | undefined>()
 
-  useEffect(() => {
-    void (async () => {
-      try {
-        setLoading(true)
-        const {
-          data: { data },
-        } = await axiosAuth.get<PaginationGeneric<Proof[]>>(
-          ApiRoutes.PROJECTS_PROJECT_ID_PROOFS.replace(PROJECT_ID, projectId) + '?page_size=1000',
-        )
-
-        setProofs(data)
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-      }
-    })()
-  }, [projectId, axiosAuth, setProofs])
+  const { loading, currentPage, totalPages, setCurrentPage } = usePaginationRequest(
+    ApiRoutes.PROJECTS_PROJECT_ID_PROOFS.replace(PROJECT_ID, projectId),
+    setProofs,
+  )
 
   if (loading === undefined && !proofs.length) return <></>
 
@@ -240,6 +225,7 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
           </div>
         ))}
       </div>
+      <CustomPagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
     </>
   )
 }

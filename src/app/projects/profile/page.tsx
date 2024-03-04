@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 
-import { PlusIcon } from 'lucide-react'
+import axios from 'axios'
+import { Bird, PlusIcon } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 
+import { CustomPagination } from '~/components/custom-pagination'
 import { NotAuth } from '~/components/not-auth'
 import { ProjectCard } from '~/components/project-card'
 import { buttonVariants } from '~/components/ui/button'
@@ -19,26 +21,61 @@ import type { Project } from '~/types/project'
 const ProjectsPage = () => {
   const axiosAuth = useAxiosAuth()
   const { data: session } = useSession()
+
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [totalPages, setTotalPages] = useState<number>(1)
   const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState<boolean | undefined>()
 
   useEffect(() => {
     if (!session) return
 
+    const source = axios.CancelToken.source()
+
+    setLoading(true)
     void (async () => {
       try {
         const {
-          data: { data },
-        } = await axiosAuth.get<PaginationGeneric<Project[]>>(ApiRoutes.USERS_ME_PROJECTS + '?page_size=1000')
+          data: { data, page_number, total_pages },
+        } = await axiosAuth.get<PaginationGeneric<Project[]>>(
+          ApiRoutes.USERS_ME_PROJECTS + `?page_size=10&page_number=${currentPage}`,
+          {
+            cancelToken: source.token,
+          },
+        )
+
+        setCurrentPage(page_number)
+        setTotalPages(total_pages)
 
         setProjects(data)
-      } catch {}
+        setLoading(false)
+      } catch {
+        setLoading(false)
+      }
     })()
-  }, [axiosAuth, session])
+
+    return () => {
+      // Cancel the request when the component unmounts
+      source.cancel()
+    }
+  }, [axiosAuth, session, currentPage])
 
   if (!session) return <NotAuth />
 
+  if (loading === undefined && !projects.length) return <></>
+
+  if (!loading && !projects.length)
+    return (
+      <section className='mt-[100px] flex flex-col items-center justify-center px-7 lg:container lg:mt-[150px]'>
+        <Bird className='h-20 w-20' strokeWidth={1} />
+        <p className='text-xl font-semibold'>No projects</p>
+      </section>
+    )
+
+  if (loading && !projects.length) return <></>
+
   return (
-    <section className='container grid items-center pt-10 lg:pt-[84px]'>
+    <section className='container grid items-center pt-10 lg:pt-[84px] pb-10'>
       <div className='flex flex-col gap-[60px] lg:gap-10'>
         <div className='flex items-center justify-between'>
           <p className='text-xl font-medium lg:text-2xl lg:font-bold'>My Projects</p>
@@ -52,6 +89,7 @@ const ProjectsPage = () => {
             <ProjectCard key={pr.id} href={`${Nav.PROJECTS}/${pr.id}`} project={pr} />
           ))}
         </div>
+        <CustomPagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
       </div>
     </section>
   )

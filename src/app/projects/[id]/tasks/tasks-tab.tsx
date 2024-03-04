@@ -5,45 +5,25 @@ import { Fragment, useEffect, useState } from 'react'
 import { Bird } from 'lucide-react'
 
 import { BaseExpressionDetailCard } from '~/components/base-expression-form/base-expression-detail-card'
+import { CustomPagination } from '~/components/custom-pagination'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import useAxiosAuth from '~/hooks/axios-auth'
+import { usePaginationRequest } from '~/hooks/pagination-request'
 import { ApiRoutes, PROJECT_ID, TASK_ID } from '~/lib/axios-instance'
 import type { ExpressionsResponse } from '~/types/expressions'
-import type { PaginationGeneric } from '~/types/pagination'
-import type { Task } from '~/types/task'
 
 import { useProject } from '../ProjectProvider'
 
 export const TasksTab = ({ projectId }: { projectId: string }) => {
   const axiosAuth = useAxiosAuth()
   const { tasks, setTask } = useProject()((state) => state)
+  const { loading, currentPage, totalPages, setCurrentPage } = usePaginationRequest(
+    ApiRoutes.PROJECTS_PROJECT_ID_TASKS.replace(PROJECT_ID, projectId),
+    setTask,
+  )
 
-  const [loading, setLoading] = useState<boolean | undefined>()
   const [selectedTask, setSelectedTask] = useState<number | undefined>()
   const [taskExpressions, setTaskExpressions] = useState<Record<number, ExpressionsResponse>>()
-  // const [currentPage, setCurrentPage] = useState<number>(1)
-  // const [totalPages, setTotalPages] = useState<number>(1)
-
-  useEffect(() => {
-    void (async () => {
-      try {
-        setLoading(true)
-        const {
-          data: { data },
-        } = await axiosAuth.get<PaginationGeneric<Task[]>>(
-          ApiRoutes.PROJECTS_PROJECT_ID_TASKS.replace(PROJECT_ID, projectId) + '?page_size=1000',
-        )
-
-        // setCurrentPage(page_number)
-        // setTotalPages(total_pages)
-
-        setTask(data)
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-      }
-    })()
-  }, [projectId, axiosAuth, setTask])
 
   useEffect(() => {
     if (!selectedTask) return
@@ -161,7 +141,7 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
           </div>
         ))}
       </div>
-      {/* <CustomPagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} /> */}
+      <CustomPagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
     </>
   )
 }
