@@ -1,10 +1,9 @@
-import { Link2, TrendingUp } from 'lucide-react'
+import { Link2 } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 
 import { authOptions } from '~/auth'
 import { AuthSidebar } from '~/components/auth-sidebar'
-import { ChartIcon } from '~/components/chart-icon'
 import { ProjectCard } from '~/components/project-card'
 import { buttonVariants } from '~/components/ui/button'
 import { siteConfig } from '~/config/site'
@@ -13,6 +12,8 @@ import { cn } from '~/lib/utils'
 import { Nav } from '~/types/nav'
 import type { PaginationGeneric } from '~/types/pagination'
 import type { Project } from '~/types/project'
+
+import { Statistics } from './statistics'
 
 const resources = [
   {
@@ -112,25 +113,7 @@ const IndexPage = async () => {
             <></>
           )}
         </div>
-        <div className='order-3 flex flex-col gap-5 lg:w-[20%]'>
-          <div className='flex items-center gap-3'>
-            <div>
-              <TrendingUp strokeWidth={1} className='h-6 w-6 text-primary' />
-            </div>
-            <p className='text-base font-semibold lg:text-lg lg:font-medium'>Statistics</p>
-          </div>
-          <div className='flex w-full flex-col border-2 border-border p-4 lg:py-5 lg:pl-5 lg:pr-[30px]'>
-            <p className='mb-6 text-base font-semibold text-muted-foreground lg:mb-5 lg:text-lg lg:font-medium'>
-              Proofs Generated
-            </p>
-            <div className='w-full'>
-              <ChartIcon />
-            </div>
-            <p className='mt-[11px] text-base font-semibold lg:mt-[6px] lg:text-lg lg:font-medium'>
-              Total count: 12374893
-            </p>
-          </div>
-        </div>
+        <Statistics />
       </div>
     </section>
   )

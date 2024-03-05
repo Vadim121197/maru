@@ -50,6 +50,8 @@ export enum ApiRoutes {
   TASKS_TASK_ID_EXPRESSIONS = '/tasks/{task_id}/expressions',
 
   DEPLOYMENTS = '/deployments',
+
+  DASHBOARD = '/dashboard',
 }
 
 export const axiosInstance = axios.create({
