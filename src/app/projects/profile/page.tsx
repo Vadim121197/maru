@@ -75,7 +75,7 @@ const ProjectsPage = () => {
   if (loading && !projects.length) return <></>
 
   return (
-    <section className='container grid items-center pt-10 lg:pt-[84px] pb-10'>
+    <section className='container grid items-center py-10 lg:pt-[84px]'>
       <div className='flex flex-col gap-[60px] lg:gap-10'>
         <div className='flex items-center justify-between'>
           <p className='text-xl font-medium lg:text-2xl lg:font-bold'>My Projects</p>

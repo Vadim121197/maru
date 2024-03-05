@@ -4,10 +4,10 @@ import { Info } from 'lucide-react'
 
 import type {
   BaseExpressionValues,
+  ChainlinkPrice,
   ExpressionConstants,
   ExpressionEvent,
   ExpressionEventParam,
-  ExpressionFunction,
   ExpressionTools,
 } from '~/types/expressions'
 
@@ -16,7 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 export interface ExpressionHelperTable {
   key: number
   constant: ExpressionConstants | undefined
-  function: ExpressionFunction | undefined
+  chainlinkPrice: ChainlinkPrice | undefined
   param: ExpressionEventParam | undefined
   // global_constants: ExpressionConstants | undefined
 }
@@ -46,7 +46,7 @@ export const BaseExpressionHelperTable = ({
   const data = useMemo(() => {
     const maxLength = Math.max(
       tools.constants.length,
-      tools.functions.length,
+      tools.chainlink_prices.length,
       // tools.global_constants.length,
       event.params.length,
     )
@@ -57,7 +57,7 @@ export const BaseExpressionHelperTable = ({
       const obj: ExpressionHelperTable = {
         key: i,
         constant: tools.constants[i],
-        function: tools.functions[i],
+        chainlinkPrice: tools.chainlink_prices[i],
         param: event.params[i],
         // global_constants: tools.global_constants[i],
       }
@@ -112,23 +112,22 @@ export const BaseExpressionHelperTable = ({
         ) : (
           <></>
         )}
-        {tools.functions.length ? (
+        {tools.chainlink_prices.length ? (
           <div className='flex flex-col gap-4'>
             <div className='flex items-start gap-4'>
-              <p className='text-[12px] font-normal leading-[18px]'>Contract Functions</p>
+              <p className='text-[12px] font-normal leading-[18px]'>ChainLink Prices</p>
               <div>
                 <Info className='h-4 w-4 text-primary' />
               </div>
             </div>
             <div className='grid grid-cols-3 gap-6'>
-              {tools.functions.map((i) => (
+              {tools.chainlink_prices.map((i) => (
                 <div className='flex flex-col items-start gap-1' key={i.name}>
                   <p className='text-[10px] font-semibold leading-3 text-primary'>{i.arg_type}</p>
                   <button
                     onClick={helperClick(i.name)}
                     type='button'
                     className='break-all text-left text-[12px] font-normal text-muted-foreground'
-                    disabled={!i.is_active}
                   >
                     {i.name}
                   </button>
@@ -180,7 +179,7 @@ export const BaseExpressionHelperTable = ({
             </TableHead>
             <TableHead className='text-center'>
               <div className='flex items-start justify-center gap-4'>
-                <p className='text-sm font-normal'>Contract Functions</p>
+                <p className='text-sm font-normal'>ChainLink Prices</p>
                 <div>
                   <Info className='h-4 w-4 text-primary' />
                 </div>
@@ -206,9 +205,9 @@ export const BaseExpressionHelperTable = ({
                 </button>
               </TableCell>
               <TableCell className='text-center'>
-                <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{i.function?.arg_type}</p>
-                <button disabled={!i.function?.is_active} onClick={helperClick(i.function?.name)} type='button'>
-                  {i.function?.name}
+                <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{i.chainlinkPrice?.arg_type}</p>
+                <button onClick={helperClick(i.chainlinkPrice?.name)} type='button'>
+                  {i.chainlinkPrice?.name}
                 </button>
               </TableCell>
               <TableCell className='text-center'>

@@ -39,7 +39,7 @@ const IndexPage = async () => {
   try {
     const {
       data: { data },
-    } = await axiosInstance.get<PaginationGeneric<Project[]>>(ApiRoutes.PROJECTS + '?page_size=2')
+    } = await axiosInstance.get<PaginationGeneric<Project[]>>(ApiRoutes.PROJECTS + '?page_size=4')
 
     projects = data
   } catch (error) {}
@@ -104,7 +104,7 @@ const IndexPage = async () => {
                   key={pr.id}
                   href={`${Nav.PROJECTS}/${pr.id}`}
                   project={pr}
-                  className='gap-[204px] lg:gap-[128px] lg:pt-7'
+                  className='gap-10 lg:gap-10 lg:pt-7'
                 />
               ))}
             </div>

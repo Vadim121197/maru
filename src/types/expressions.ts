@@ -32,6 +32,12 @@ export interface ExpressionConstants {
   arg_type: string
 }
 
+export interface ChainlinkPrice {
+  name: string
+  value: string
+  arg_type: string
+}
+
 export interface ExpressionAggregateFunctions {
   name: string
   value: string
@@ -50,6 +56,7 @@ export interface ExpressionTools {
   global_constants: ExpressionConstants[]
   global_functions: ExpressionFunction[]
   proved_expressions: string[]
+  chainlink_prices: ChainlinkPrice[]
 }
 
 export enum ExpressionType {

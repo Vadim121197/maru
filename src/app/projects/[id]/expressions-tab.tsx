@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import type { AxiosError } from 'axios'
-import { Plus, X } from 'lucide-react'
+import { Bird, Plus, X } from 'lucide-react'
 
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import { BaseExpressionForm } from '~/components/base-expression-form'
@@ -121,24 +121,34 @@ export const ExpressionsTab = () => {
 
   if (loading === undefined && !expressions.base_expressions.length) return <></>
 
-  if (!loading && !expressions.base_expressions.length && isUserProject && !addNew)
+  if (!loading && !expressions.base_expressions.length && !addNew)
     return (
-      <div className='mt-[160px] flex flex-col items-center gap-2'>
-        <p className='text-lg font-medium'>You don’t have any expression yet</p>
-        <p className='mb-4 text-base font-medium'>Start creating expression by clicking on “ + Expression ”</p>
-        <Button
-          variant='outline'
-          className='flex w-[274px] items-center gap-[10px]'
-          onClick={() => {
-            setAddNew(true)
-          }}
-        >
-          <div>
-            <Plus className='h-6 w-4' />
+      <>
+        {' '}
+        {isUserProject ? (
+          <div className='mt-[160px] flex flex-col items-center gap-2'>
+            <p className='text-lg font-medium'>You don’t have any expression yet</p>
+            <p className='mb-4 text-base font-medium'>Start creating expression by clicking on “ + Expression ”</p>
+            <Button
+              variant='outline'
+              className='flex w-[274px] items-center gap-[10px]'
+              onClick={() => {
+                setAddNew(true)
+              }}
+            >
+              <div>
+                <Plus className='h-6 w-4' />
+              </div>
+              <p>Expression</p>
+            </Button>
           </div>
-          <p>Expression</p>
-        </Button>
-      </div>
+        ) : (
+          <section className='mt-[100px] flex flex-col items-center justify-center px-7 lg:container lg:mt-[150px]'>
+            <Bird className='h-20 w-20' strokeWidth={1} />
+            <p className='text-xl font-semibold'>No expressions</p>
+          </section>
+        )}
+      </>
     )
 
   if (loading && !expressions.base_expressions.length) return <></>
@@ -180,9 +190,9 @@ export const ExpressionsTab = () => {
             setAddNew(false)
           }}
           collapsible
-          className='grid w-full grid-flow-col grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
+          className='grid w-full grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
         >
-          {expressions.base_expressions.map((exp) => (
+          {[...expressions.base_expressions, ...expressions.base_expressions].map((exp) => (
             <EditBaseExpressionForm
               expression={exp}
               updateExpressionList={updateExpressionList}

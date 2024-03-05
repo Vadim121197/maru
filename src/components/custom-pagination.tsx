@@ -33,6 +33,7 @@ export const CustomPagination = ({
   const onPrevious = () => {
     setCurrentPage((state) => state - 1)
   }
+  if (totalPages <= 1) return <></>
 
   return (
     <Pagination>
