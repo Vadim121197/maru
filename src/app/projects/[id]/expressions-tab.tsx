@@ -192,7 +192,7 @@ export const ExpressionsTab = () => {
           collapsible
           className='grid w-full grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
         >
-          {[...expressions.base_expressions, ...expressions.base_expressions].map((exp) => (
+          {expressions.base_expressions.map((exp) => (
             <EditBaseExpressionForm
               expression={exp}
               updateExpressionList={updateExpressionList}
