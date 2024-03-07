@@ -33,8 +33,8 @@ const createStore = () => {
       proofs: [],
       tasks: [],
       expressions: {
-        base_expressions: [],
-        final_expressions: [],
+        event_data_expressions: [],
+        compound_expressions: [],
       },
       deployments: [],
       setProjectOwnership(isUserProject) {

@@ -1,4 +1,4 @@
-import { useMemo, type Dispatch, type SetStateAction, type RefObject, useState, useEffect } from 'react'
+import { useEffect, useMemo, useState, type Dispatch, type RefObject, type SetStateAction } from 'react'
 
 import { Info } from 'lucide-react'
 
@@ -14,7 +14,7 @@ interface ExpressionHelperTable {
   expression: string | undefined
 }
 
-export const FinalExpressionHelperTable = ({
+export const CompoundExpressionHelperTable = ({
   tools,
   textareaRef,
   setExpressionValues,

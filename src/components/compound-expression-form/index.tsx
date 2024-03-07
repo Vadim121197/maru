@@ -7,16 +7,16 @@ import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import type { PrecalculateResult } from '~/types/calculations'
-import type { Expression, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
+import { EventDataType, type Expression, type ExpressionValues, type FinalExpressionTools } from '~/types/expressions'
 
 import { FinalExpressionField } from '../expression-field'
 import { TextLabel } from '../form-components'
 import { PrecalcSettings } from '../precalc-settings'
 import { PrecalcValues } from '../precalc-values'
 import { Button } from '../ui/button'
-import { FinalExpressionHelperTable } from './final-expression-helper-table'
+import { CompoundExpressionHelperTable } from './compound-expression-helper-table'
 
-export const FinalExpressionForm = ({
+export const CompoundExpressionForm = ({
   updateExpressionList,
 }: {
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
@@ -42,6 +42,8 @@ export const FinalExpressionForm = ({
           ApiRoutes.PROJECTS_PROJECT_ID_TOOLS.replace(PROJECT_ID, project.id.toString()),
         )
 
+        console.log({ tools: data })
+
         setTools(data)
       } catch {}
     })()
@@ -54,7 +56,7 @@ export const FinalExpressionForm = ({
       const { data } = await axiosAuth.post<PrecalculateResult[]>(ApiRoutes.EXPRESSIONS_DEMO, {
         block_range: project.block_range,
         raw_data: expressionValues.rawData,
-        expression_type: 'final',
+        data_source: EventDataType.EXPRESSIONS,
         project_id: project.id,
       })
       setPrecalculationResult(data)
@@ -68,7 +70,7 @@ export const FinalExpressionForm = ({
         raw_data: expressionValues.rawData,
         name: expressionValues.name,
         project_id: project.id,
-        expression_type: 'final',
+        data_source: EventDataType.EXPRESSIONS,
       })
 
       updateExpressionList(data, 'create')
@@ -91,7 +93,7 @@ export const FinalExpressionForm = ({
                 textareaRef={textarea}
               />
             </div>
-            <FinalExpressionHelperTable
+            <CompoundExpressionHelperTable
               tools={tools}
               setExpressionValues={setExpressionValues}
               textareaRef={textarea}

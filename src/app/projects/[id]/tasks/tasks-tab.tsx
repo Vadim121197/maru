@@ -4,13 +4,13 @@ import { Fragment, useEffect, useState } from 'react'
 
 import { Bird } from 'lucide-react'
 
-import { BaseExpressionDetailCard } from '~/components/base-expression-form/base-expression-detail-card'
 import { CustomPagination } from '~/components/custom-pagination'
+import { EventDataExpressionDetailCard } from '~/components/event-data-expression-form/event-data-expression-detail-card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { usePaginationRequest } from '~/hooks/pagination-request'
 import { ApiRoutes, PROJECT_ID, TASK_ID } from '~/lib/axios-instance'
-import type { ExpressionsResponse } from '~/types/expressions'
+import { ExpressionTypeResponse, type ExpressionsResponse } from '~/types/expressions'
 
 import { useProject } from '../ProjectProvider'
 
@@ -91,9 +91,9 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
                         <div className='flex flex-col gap-3'>
                           <p className='text-lg font-medium'>Expressions</p>
                           <div className='grid grid-cols-2 gap-4'>
-                            {taskExpressions[t.id]?.base_expressions.map((exp) => (
+                            {taskExpressions[t.id]?.[ExpressionTypeResponse.COMPOUND].map((exp) => (
                               <div key={exp.id} className='flex w-full flex-col border-2 bg-background p-3 lg:p-4'>
-                                <BaseExpressionDetailCard expression={exp} />
+                                <EventDataExpressionDetailCard expression={exp} />
                               </div>
                             ))}
                           </div>
@@ -101,7 +101,7 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
                         <div className='flex flex-col gap-3'>
                           <p className='text-lg font-medium'>Compound Expressions</p>
                           <div className='grid grid-cols-2 gap-4'>
-                            {taskExpressions[t.id]?.final_expressions.map((exp) => (
+                            {taskExpressions[t.id]?.[ExpressionTypeResponse.COMPOUND].map((exp) => (
                               <div key={exp.id} className='flex w-full  border-2 bg-background p-3 lg:p-4'>
                                 <span className='font-bold'>{exp.name}</span>
                                 &nbsp;

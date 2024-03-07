@@ -1,4 +1,4 @@
-import { useMemo, type Dispatch, type SetStateAction, type RefObject, useState, useEffect } from 'react'
+import { useEffect, useMemo, useState, type Dispatch, type RefObject, type SetStateAction } from 'react'
 
 import { Info } from 'lucide-react'
 
@@ -21,7 +21,7 @@ export interface ExpressionHelperTable {
   // global_constants: ExpressionConstants | undefined
 }
 
-export const BaseExpressionHelperTable = ({
+export const EventDataExpressionHelperTable = ({
   textareaRef,
   tools,
   event,

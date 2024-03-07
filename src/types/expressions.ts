@@ -59,11 +59,6 @@ export interface ExpressionTools {
   chainlink_prices: ChainlinkPrice[]
 }
 
-export enum ExpressionType {
-  BASE = 'base',
-  FINAL = 'final',
-}
-
 export interface Expression {
   raw_data: string
   name: string | null
@@ -73,7 +68,7 @@ export interface Expression {
   event: string | null
   parsed_data: string
   rpn_data: string | null
-  expression_type: ExpressionType
+  data_source: EventDataType
   filter_data: string | null
   to_prove_data: string | null
   id: number
@@ -82,9 +77,19 @@ export interface Expression {
   version: number
 }
 
+export enum ExpressionTypeResponse {
+  EVENT_DATA = 'event_data_expressions',
+  COMPOUND = 'compound_expressions',
+}
+
+export enum EventDataType {
+  EVENT_DATA = 'event_data',
+  EXPRESSIONS = 'expressions',
+}
+
 export interface ExpressionsResponse {
-  final_expressions: Expression[]
-  base_expressions: Expression[]
+  [ExpressionTypeResponse.EVENT_DATA]: Expression[]
+  [ExpressionTypeResponse.COMPOUND]: Expression[]
 }
 
 export interface ExpressionValues {
@@ -104,7 +109,7 @@ export interface ExpressionCreateResponse {
   contract_address: Address
   aggregate_operation: string
   event: string
-  expression_type: ExpressionType
+  data_source: EventDataType
   id: number
   created_at: Date
   updated_at: Date

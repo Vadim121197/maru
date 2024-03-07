@@ -7,7 +7,13 @@ import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ADDRESS, ApiRoutes } from '~/lib/axios-instance'
 import type { PrecalculateResult } from '~/types/calculations'
-import type { BaseExpressionValues, Expression, ExpressionEvent, ExpressionTools } from '~/types/expressions'
+import {
+  EventDataType,
+  type BaseExpressionValues,
+  type Expression,
+  type ExpressionEvent,
+  type ExpressionTools,
+} from '~/types/expressions'
 
 import { BaseExpressionField } from '../expression-field'
 import { FailedFetchAbiModal } from '../failed-fetch-abi-modal'
@@ -16,15 +22,15 @@ import { InputBlock } from '../input-block'
 import { PrecalcSettings } from '../precalc-settings'
 import { PrecalcValues } from '../precalc-values'
 import { Button } from '../ui/button'
-import { BaseExpressionHelperTable } from './base-expression-helper-table'
+import { EventDataExpressionHelperTable } from './event-data-expression-helper-table'
 
 // 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7
 
-interface BaseExpressionFormProps {
+interface EventDataExpressionFormProps {
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
 }
 
-export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormProps) => {
+export const EventDataExpressionForm = ({ updateExpressionList }: EventDataExpressionFormProps) => {
   const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
   const textarea = useRef<HTMLTextAreaElement>(null)
@@ -107,7 +113,7 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
         contract_address: contractAddress,
         aggregate_operation: expressionValues.aggregate,
         event: `${selectedEvent?.name}(${selectedEvent?.params.map((i) => i.arg_type).join(',')})`,
-        expression_type: 'base',
+        data_source: EventDataType.EVENT_DATA,
         filter_data: expressionValues.filter,
         block_range: project.block_range,
       })
@@ -130,7 +136,7 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
         contract_address: contractAddress,
         aggregate_operation: expressionValues.aggregate,
         event: `${selectedEvent?.name}(${selectedEvent?.params.map((i) => i.arg_type).join(',')})`,
-        expression_type: 'base',
+        data_source: EventDataType.EVENT_DATA,
         filter_data: expressionValues.filter,
       })
       updateExpressionList(data, 'create')
@@ -195,7 +201,7 @@ export const BaseExpressionForm = ({ updateExpressionList }: BaseExpressionFormP
                 />
               </div>
               <div className='border-b pb-6 lg:pb-10'>
-                <BaseExpressionHelperTable
+                <EventDataExpressionHelperTable
                   tools={tools}
                   event={selectedEvent}
                   setExpressionValues={setExpressionValues}

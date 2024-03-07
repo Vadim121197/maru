@@ -2,16 +2,16 @@ import { ChevronDown, Trash } from 'lucide-react'
 
 import { copyToClipboard } from '~/lib/copy-to-clipboard'
 import { cutAddress } from '~/lib/cut-address'
-import type { Expression } from '~/types/expressions'
+import { ExpressionTypeResponse, type Expression } from '~/types/expressions'
 
 import { AccordionTrigger } from '../ui/accordion'
 
-export const BaseExpressionDetailCard = ({
+export const EventDataExpressionDetailCard = ({
   expression,
   deleteExpression,
 }: {
   expression: Expression
-  deleteExpression?: (id: number, type: 'base_expressions' | 'final_expressions') => Promise<void>
+  deleteExpression?: (id: number, type: ExpressionTypeResponse) => Promise<void>
 }) => {
   return (
     <div className='flex h-full flex-col justify-between gap-6'>
@@ -66,7 +66,7 @@ export const BaseExpressionDetailCard = ({
                 strokeWidth={1}
                 className='h-4 w-4 cursor-pointer text-muted-foreground lg:h-5 lg:w-5'
                 onClick={() => {
-                  void deleteExpression(expression.id, 'base_expressions')
+                  void deleteExpression(expression.id, ExpressionTypeResponse.EVENT_DATA)
                 }}
               />
             </div>

@@ -8,7 +8,13 @@ import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import type { PrecalculateResult } from '~/types/calculations'
-import type { Expression, ExpressionValues, FinalExpressionTools } from '~/types/expressions'
+import {
+  EventDataType,
+  ExpressionTypeResponse,
+  type Expression,
+  type ExpressionValues,
+  type FinalExpressionTools,
+} from '~/types/expressions'
 
 import { FinalExpressionField } from '../expression-field'
 import { PrecalcSettings } from '../precalc-settings'
@@ -16,23 +22,23 @@ import { PrecalcValues } from '../precalc-values'
 import { AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
 import { Button } from '../ui/button'
 import { CalculationsTabs } from './calculations-tabs'
-import { FinalExpressionHelperTable } from './final-expression-helper-table'
+import { CompoundExpressionHelperTable } from './compound-expression-helper-table'
 
-interface EditFinalExpressionFormProps {
+interface EditCompoundExpressionFormProps {
   expression: Expression
   selectedExpression: string
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
-  deleteExpression?: (id: number, type: 'base_expressions' | 'final_expressions') => Promise<void>
+  deleteExpression?: (id: number, type: ExpressionTypeResponse) => Promise<void>
   setSelectedExpression: Dispatch<SetStateAction<string>>
 }
 
-export const EditFinalExpressionForm = ({
+export const EditCompoundExpressionForm = ({
   expression,
   selectedExpression,
   updateExpressionList,
   deleteExpression,
   setSelectedExpression,
-}: EditFinalExpressionFormProps) => {
+}: EditCompoundExpressionFormProps) => {
   const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
   const textarea = useRef<HTMLTextAreaElement>(null)
@@ -63,7 +69,7 @@ export const EditFinalExpressionForm = ({
       const { data } = await axiosAuth.post<PrecalculateResult[]>(ApiRoutes.EXPRESSIONS_DEMO, {
         block_range: project?.block_range,
         raw_data: expressionValues.rawData,
-        expression_type: 'final',
+        data_source: EventDataType.EXPRESSIONS,
         project_id: project?.id,
       })
       setPrecalculationResult(data)
@@ -123,7 +129,7 @@ export const EditFinalExpressionForm = ({
                       strokeWidth={1}
                       className='h-4 w-4 cursor-pointer text-muted-foreground lg:h-5 lg:w-5'
                       onClick={() => {
-                        void deleteExpression(expression.id, 'final_expressions')
+                        void deleteExpression(expression.id, ExpressionTypeResponse.COMPOUND)
                       }}
                     />
                   </div>
@@ -145,7 +151,7 @@ export const EditFinalExpressionForm = ({
           <div className='flex flex-col'>
             <div className='flex flex-col gap-[38px] border-b pb-4'>
               {tools && (
-                <FinalExpressionHelperTable
+                <CompoundExpressionHelperTable
                   tools={tools}
                   setExpressionValues={setExpressionValues}
                   textareaRef={textarea}

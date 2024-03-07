@@ -11,31 +11,38 @@ import { copyToClipboard } from '~/lib/copy-to-clipboard'
 import { cutAddress } from '~/lib/cut-address'
 import { cn } from '~/lib/utils'
 import type { PrecalculateResult } from '~/types/calculations'
-import type { BaseExpressionValues, Expression, ExpressionEvent, ExpressionTools } from '~/types/expressions'
+import {
+  EventDataType,
+  type BaseExpressionValues,
+  type Expression,
+  type ExpressionEvent,
+  type ExpressionTools,
+  type ExpressionTypeResponse,
+} from '~/types/expressions'
 
 import { BaseExpressionField } from '../expression-field'
 import { PrecalcSettings } from '../precalc-settings'
 import { PrecalcValues } from '../precalc-values'
 import { AccordionContent, AccordionItem } from '../ui/accordion'
 import { Button } from '../ui/button'
-import { BaseExpressionDetailCard } from './base-expression-detail-card'
-import { BaseExpressionHelperTable } from './base-expression-helper-table'
+import { EventDataExpressionDetailCard } from './event-data-expression-detail-card'
+import { EventDataExpressionHelperTable } from './event-data-expression-helper-table'
 
-interface EditBaseExpressionFormProps {
+interface EditEventDataExpressionFormProps {
   expression: Expression
   selectedExpression: string
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
-  deleteExpression?: (id: number, type: 'base_expressions' | 'final_expressions') => Promise<void>
+  deleteExpression?: (id: number, type: ExpressionTypeResponse) => Promise<void>
   setSelectedExpression: Dispatch<SetStateAction<string>>
 }
 
-export const EditBaseExpressionForm = ({
+export const EditEventDataExpressionForm = ({
   expression,
   selectedExpression,
   updateExpressionList,
   deleteExpression,
   setSelectedExpression,
-}: EditBaseExpressionFormProps) => {
+}: EditEventDataExpressionFormProps) => {
   const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
   const textarea = useRef<HTMLTextAreaElement>(null)
@@ -72,14 +79,14 @@ export const EditBaseExpressionForm = ({
     try {
       const { data } = await axiosAuth.post<PrecalculateResult[]>(ApiRoutes.EXPRESSIONS_DEMO, {
         raw_data: expressionValues.rawData,
+        name: expressionValues.name,
         projects_id: expression.project_id,
         contract_address: expression.contract_address,
         aggregate_operation: expressionValues.aggregate,
         event: expression.event,
-        expression_type: 'base',
+        data_source: EventDataType.EVENT_DATA,
         filter_data: expressionValues.filter,
         block_range: project?.block_range,
-        name: expressionValues.name,
       })
 
       setPrecalcRes(data)
@@ -167,7 +174,7 @@ export const EditBaseExpressionForm = ({
             />
           </div>
         ) : (
-          <BaseExpressionDetailCard expression={expression} deleteExpression={deleteExpression} />
+          <EventDataExpressionDetailCard expression={expression} deleteExpression={deleteExpression} />
         )}
       </div>
       <AccordionContent>
@@ -175,7 +182,7 @@ export const EditBaseExpressionForm = ({
           <div className='flex flex-col'>
             <div className='border-b pb-6 lg:pb-10'>
               {tools && selectedEvent && (
-                <BaseExpressionHelperTable
+                <EventDataExpressionHelperTable
                   tools={tools}
                   event={selectedEvent}
                   setExpressionValues={setExpressionValues}

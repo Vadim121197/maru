@@ -7,17 +7,17 @@ import type { AxiosError } from 'axios'
 import { Bird, Plus, X } from 'lucide-react'
 
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
-import { BaseExpressionForm } from '~/components/base-expression-form'
-import { EditBaseExpressionForm } from '~/components/base-expression-form/edit-base-expression-form'
-import { FinalExpressionForm } from '~/components/final-expression-form'
-import { EditFinalExpressionForm } from '~/components/final-expression-form/edit-final-expression-form'
+import { CompoundExpressionForm } from '~/components/compound-expression-form'
+import { EditCompoundExpressionForm } from '~/components/compound-expression-form/edit-compound-expression-form'
+import { EventDataExpressionForm } from '~/components/event-data-expression-form'
+import { EditEventDataExpressionForm } from '~/components/event-data-expression-form/edit-event-data-expression-form'
 import { SelectComponent } from '~/components/form-components'
 import { Accordion } from '~/components/ui/accordion'
 import { Button } from '~/components/ui/button'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import { Expressions, expressionTypes } from '~/lib/expressions'
-import type { Expression, ExpressionsResponse } from '~/types/expressions'
+import type { Expression, ExpressionTypeResponse, ExpressionsResponse } from '~/types/expressions'
 
 export const ExpressionsTab = () => {
   const { project, expressions, isUserProject, setExpressions } = useProject()((state) => state)
@@ -55,18 +55,18 @@ export const ExpressionsTab = () => {
 
     let index: number
     if (type === 'update') {
-      index = expressions.base_expressions.findIndex((exp) => exp.id === expression.id)
+      index = expressions.event_data_expressions.findIndex((exp) => exp.id === expression.id)
     } else {
-      index = expressions.base_expressions.length
+      index = expressions.event_data_expressions.length
     }
 
-    const newList = expressions.base_expressions
+    const newList = expressions.event_data_expressions
 
     newList[index] = expression
 
     setExpressions({
-      final_expressions: expressions.final_expressions,
-      base_expressions: newList,
+      compound_expressions: expressions.compound_expressions,
+      event_data_expressions: newList,
     })
 
     setSelectedBaseExpression('')
@@ -80,18 +80,18 @@ export const ExpressionsTab = () => {
 
     let index: number
     if (type === 'update') {
-      index = expressions.final_expressions.findIndex((exp) => exp.id === expression.id)
+      index = expressions.compound_expressions.findIndex((exp) => exp.id === expression.id)
     } else {
-      index = expressions.final_expressions.length
+      index = expressions.compound_expressions.length
     }
 
-    const newList = expressions.final_expressions
+    const newList = expressions.compound_expressions
 
     newList[index] = expression
 
     setExpressions({
-      base_expressions: expressions.base_expressions,
-      final_expressions: newList,
+      event_data_expressions: expressions.event_data_expressions,
+      compound_expressions: newList,
     })
 
     setSelectedFinaleExpression('')
@@ -101,7 +101,7 @@ export const ExpressionsTab = () => {
 
   if (!project) return <></>
 
-  const deleteExpression = async (id: number, type: 'base_expressions' | 'final_expressions') => {
+  const deleteExpression = async (id: number, type: ExpressionTypeResponse) => {
     // if other person's project do nothing
     if (!isUserProject) return
 
@@ -119,9 +119,9 @@ export const ExpressionsTab = () => {
     }
   }
 
-  if (loading === undefined && !expressions.base_expressions.length) return <></>
+  if (loading === undefined && !expressions.event_data_expressions.length) return <></>
 
-  if (!loading && !expressions.base_expressions.length && !addNew)
+  if (!loading && !expressions.event_data_expressions.length && !addNew)
     return (
       <>
         {isUserProject ? (
@@ -150,14 +150,14 @@ export const ExpressionsTab = () => {
       </>
     )
 
-  if (loading && !expressions.base_expressions.length) return <></>
+  if (loading && !expressions.event_data_expressions.length) return <></>
 
   return (
     <div className='flex flex-col'>
       <div className='flex flex-col gap-6'>
         <div className='flex w-full items-center justify-between'>
           <p className='text-sm font-medium lg:text-lg'>Expression</p>
-          {expressions.base_expressions.length && isUserProject ? (
+          {expressions.event_data_expressions.length && isUserProject ? (
             <Button
               variant='outline'
               className='flex w-[152px] items-center gap-[10px] lg:w-[274px]'
@@ -191,8 +191,8 @@ export const ExpressionsTab = () => {
           collapsible
           className='grid w-full grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
         >
-          {expressions.base_expressions.map((exp) => (
-            <EditBaseExpressionForm
+          {expressions.event_data_expressions.map((exp) => (
+            <EditEventDataExpressionForm
               expression={exp}
               updateExpressionList={updateExpressionList}
               key={exp.id}
@@ -228,15 +228,15 @@ export const ExpressionsTab = () => {
               label='Data source'
             />
             {selectedSource === Expressions.EVENT_DATA && (
-              <BaseExpressionForm updateExpressionList={updateExpressionList} />
+              <EventDataExpressionForm updateExpressionList={updateExpressionList} />
             )}
             {selectedSource === Expressions.EXPRESSIONS && (
-              <FinalExpressionForm updateExpressionList={updateFinaleExpressionList} />
+              <CompoundExpressionForm updateExpressionList={updateFinaleExpressionList} />
             )}
           </div>
         )}
       </div>
-      {expressions.final_expressions.length ? (
+      {expressions.compound_expressions.length ? (
         <div className='mt-[60px] flex flex-col gap-4 lg:mt-10 lg:gap-6'>
           <p className='text-sm font-medium lg:text-lg'>Compound Expressions</p>
           <Accordion
@@ -253,8 +253,8 @@ export const ExpressionsTab = () => {
             collapsible
             className='grid w-full grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
           >
-            {expressions.final_expressions.map((exp) => (
-              <EditFinalExpressionForm
+            {expressions.compound_expressions.map((exp) => (
+              <EditCompoundExpressionForm
                 expression={exp}
                 updateExpressionList={updateFinaleExpressionList}
                 key={exp.id}
