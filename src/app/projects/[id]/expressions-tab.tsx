@@ -124,7 +124,6 @@ export const ExpressionsTab = () => {
   if (!loading && !expressions.base_expressions.length && !addNew)
     return (
       <>
-        {' '}
         {isUserProject ? (
           <div className='mt-[160px] flex flex-col items-center gap-2'>
             <p className='text-lg font-medium'>You don’t have any expression yet</p>
@@ -239,7 +238,7 @@ export const ExpressionsTab = () => {
       </div>
       {expressions.final_expressions.length ? (
         <div className='mt-[60px] flex flex-col gap-4 lg:mt-10 lg:gap-6'>
-          <p className='text-sm font-medium lg:text-lg'>Final Expressions</p>
+          <p className='text-sm font-medium lg:text-lg'>Compound Expressions</p>
           <Accordion
             type='single'
             value={selectedFinaleExpression}

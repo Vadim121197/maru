@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react'
 
+import { TextLabel } from '~/components/form-components'
 import { InputBlock } from '~/components/input-block'
 import { Button } from '~/components/ui/button'
+import { Textarea } from '~/components/ui/textarea'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import type { Project } from '~/types/project'
@@ -49,13 +51,18 @@ export const UpdateProject = () => {
         }}
         label='Project Name'
       />
-      <InputBlock
-        value={description}
-        onChange={(e) => {
-          setDescription(e.target.value)
-        }}
-        label='Description'
-      />
+
+      <div className='flex flex-col gap-2'>
+        <TextLabel label='Descriptions' />
+        <Textarea
+          className='p-4 text-base font-medium text-muted '
+          placeholder='Enter expression'
+          value={description}
+          onChange={(e) => {
+            setDescription(e.target.value)
+          }}
+        />
+      </div>
       <Button type='submit' className='w-full' disabled={!name}>
         Save
       </Button>

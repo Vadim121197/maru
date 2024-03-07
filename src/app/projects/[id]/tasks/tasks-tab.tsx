@@ -99,7 +99,7 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
                           </div>
                         </div>
                         <div className='flex flex-col gap-3'>
-                          <p className='text-lg font-medium'>Final Expressions</p>
+                          <p className='text-lg font-medium'>Compound Expressions</p>
                           <div className='grid grid-cols-2 gap-4'>
                             {taskExpressions[t.id]?.final_expressions.map((exp) => (
                               <div key={exp.id} className='flex w-full  border-2 bg-background p-3 lg:p-4'>
