@@ -20,6 +20,7 @@ import {
   type ExpressionTypeResponse,
 } from '~/types/expressions'
 
+import { CalculationsTabs } from '../compound-expression-form/calculations-tabs'
 import { BaseExpressionField } from '../expression-field'
 import { TextLabel } from '../form-components'
 import { PrecalcSettings } from '../precalc-settings'
@@ -220,6 +221,7 @@ export const EditEventDataExpressionForm = ({
             </div>
             {precalcRes.length ? <PrecalcValues res={precalcRes} /> : <></>}
           </div>
+          <CalculationsTabs expressionId={expression.id} />
         </div>
       </AccordionContent>
     </AccordionItem>

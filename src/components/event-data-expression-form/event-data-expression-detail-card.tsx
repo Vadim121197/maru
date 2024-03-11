@@ -29,7 +29,7 @@ export const EventDataExpressionDetailCard = ({
               />
             </div>
             <AccordionTrigger>
-              <ChevronDown className='h-4 w-4 text-foreground lg:h-5 lg:w-5 hover:opacity-50' />
+              <ChevronDown className='h-4 w-4 text-foreground lg:h-5 lg:w-5 hover:opacity-50 cursor-pointer' />
             </AccordionTrigger>
           </div>
         )}
