@@ -127,14 +127,14 @@ export const EditCompoundExpressionForm = ({
                   <div>
                     <Trash
                       strokeWidth={1}
-                      className='h-4 w-4 text-foreground lg:h-5 lg:w-5 hover:opacity-50 cursor-pointer'
+                      className='h-4 w-4 cursor-pointer text-foreground hover:opacity-50 lg:h-5 lg:w-5'
                       onClick={() => {
                         void deleteExpression(expression.id, ExpressionTypeResponse.COMPOUND)
                       }}
                     />
                   </div>
                   <AccordionTrigger>
-                    <ChevronDown className='h-4 w-4 text-foreground lg:h-5 lg:w-5 hover:opacity-50 cursor-pointer' />
+                    <ChevronDown className='h-4 w-4 cursor-pointer text-foreground hover:opacity-50 lg:h-5 lg:w-5' />
                   </AccordionTrigger>
                 </div>
               )}

@@ -14,7 +14,7 @@ export const EventDataExpressionDetailCard = ({
   return (
     <div className='flex h-full flex-col justify-between gap-5'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
-        <p className='break-all border-2 bg-background px-5 lg:px-[26px] py-[6px] lg:py-1 text-[10px] font-normal leading-4 text-foreground lg:text-sm'>
+        <p className='break-all border-2 bg-background px-5 py-[6px] text-[10px] font-normal leading-4 text-foreground lg:px-[26px] lg:py-1 lg:text-sm'>
           {expression.name}
         </p>
         {deleteExpression && (
@@ -22,14 +22,14 @@ export const EventDataExpressionDetailCard = ({
             <div>
               <Trash
                 strokeWidth={1}
-                className='h-4 w-4 cursor-pointer text-foreground lg:h-5 lg:w-5 hover:opacity-50'
+                className='h-4 w-4 cursor-pointer text-foreground hover:opacity-50 lg:h-5 lg:w-5'
                 onClick={() => {
                   void deleteExpression(expression.id, ExpressionTypeResponse.EVENT_DATA)
                 }}
               />
             </div>
             <AccordionTrigger>
-              <ChevronDown className='h-4 w-4 text-foreground lg:h-5 lg:w-5 hover:opacity-50 cursor-pointer' />
+              <ChevronDown className='h-4 w-4 cursor-pointer text-foreground hover:opacity-50 lg:h-5 lg:w-5' />
             </AccordionTrigger>
           </div>
         )}

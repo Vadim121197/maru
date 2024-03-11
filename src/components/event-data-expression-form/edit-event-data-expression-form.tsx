@@ -7,7 +7,6 @@ import { X } from 'lucide-react'
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
-import { copyToClipboard } from '~/lib/copy-to-clipboard'
 import { cutAddress } from '~/lib/cut-address'
 import { cn } from '~/lib/utils'
 import type { PrecalculateResult } from '~/types/calculations'
@@ -136,28 +135,28 @@ export const EditEventDataExpressionForm = ({
       >
         {selectedExpression === expression.id.toString() ? (
           <div className='flex w-full flex-col'>
-            <div className='flex justify-end mb-6 lg:mb-2'>
+            <div className='mb-6 flex justify-end lg:mb-2'>
               <X
                 strokeWidth={1}
-                className='h-5 w-5 cursor-pointer lg:h-6 lg:w-6 hover:opacity-50'
+                className='h-5 w-5 cursor-pointer hover:opacity-50 lg:h-6 lg:w-6'
                 onClick={() => {
                   setSelectedExpression('')
                 }}
               />
             </div>
-            <div className='flex flex-col lg:flex-row gap-4 mb-4 lg:mb-6'>
+            <div className='mb-4 flex flex-col gap-4 lg:mb-6 lg:flex-row'>
               {expression.contract_address && (
-                <div className='flex flex-col gap-2  w-full'>
+                <div className='flex w-full flex-col  gap-2'>
                   <TextLabel label='Contact address' />
-                  <p className='py-[10px] px-4 border-2 w-full text-sm font-medium text-muted-foreground lg:text-base'>
+                  <p className='w-full border-2 px-4 py-[10px] text-sm font-medium text-muted-foreground lg:text-base'>
                     {cutAddress(expression.contract_address)}
                   </p>
                 </div>
               )}
               {expression.event && (
-                <div className='flex flex-col gap-2  w-full'>
+                <div className='flex w-full flex-col  gap-2'>
                   <TextLabel label='Event' />
-                  <p className='py-[10px] px-4 border-2 w-full text-sm font-medium lg:text-base'>
+                  <p className='w-full border-2 px-4 py-[10px] text-sm font-medium lg:text-base'>
                     {expression.event.split('(')[0]}
                   </p>
                 </div>
