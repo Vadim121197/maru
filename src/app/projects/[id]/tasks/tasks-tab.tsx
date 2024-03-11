@@ -91,7 +91,7 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
                         <div className='flex flex-col gap-3'>
                           <p className='text-lg font-medium'>Expressions</p>
                           <div className='grid grid-cols-2 gap-4'>
-                            {taskExpressions[t.id]?.[ExpressionTypeResponse.COMPOUND].map((exp) => (
+                            {taskExpressions[t.id]?.[ExpressionTypeResponse.EVENT_DATA].map((exp) => (
                               <div key={exp.id} className='flex w-full flex-col border-2 bg-background p-3 lg:p-4'>
                                 <EventDataExpressionDetailCard expression={exp} />
                               </div>

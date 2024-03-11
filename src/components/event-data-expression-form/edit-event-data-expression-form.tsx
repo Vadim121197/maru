@@ -21,6 +21,7 @@ import {
 } from '~/types/expressions'
 
 import { BaseExpressionField } from '../expression-field'
+import { TextLabel } from '../form-components'
 import { PrecalcSettings } from '../precalc-settings'
 import { PrecalcValues } from '../precalc-values'
 import { AccordionContent, AccordionItem } from '../ui/accordion'
@@ -128,41 +129,38 @@ export const EditEventDataExpressionForm = ({
     <AccordionItem value={expression.id.toString()} key={expression.id}>
       <div
         className={cn(
-          'flex w-full flex-col border-2 p-3 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5',
+          'flex w-full flex-col border-2 px-3 py-4 data-[state=open]:border-b-0 data-[state=open]:pb-0 lg:p-4 lg:data-[state=open]:px-5',
           !selectedExpression && 'h-full',
         )}
       >
         {selectedExpression === expression.id.toString() ? (
-          <div className='flex w-full flex-col gap-4'>
-            <div className='flex items-center justify-between'>
+          <div className='flex w-full flex-col'>
+            <div className='flex justify-end mb-6 lg:mb-2'>
+              <X
+                strokeWidth={1}
+                className='h-5 w-5 cursor-pointer lg:h-6 lg:w-6 hover:opacity-50'
+                onClick={() => {
+                  setSelectedExpression('')
+                }}
+              />
+            </div>
+            <div className='flex flex-col lg:flex-row gap-4 mb-4 lg:mb-6'>
               {expression.contract_address && (
-                <div className='flex items-center gap-4'>
-                  <p className='text-sm font-normal'>Contact</p>
-                  <div
-                    className='cursor-pointer border-2 bg-background px-2 py-1  text-sm font-normal text-muted-foreground'
-                    onClick={copyToClipboard(expression.contract_address)}
-                  >
+                <div className='flex flex-col gap-2  w-full'>
+                  <TextLabel label='Contact address' />
+                  <p className='py-[10px] px-4 border-2 w-full text-sm font-medium text-muted-foreground lg:text-base'>
                     {cutAddress(expression.contract_address)}
-                  </div>
+                  </p>
                 </div>
               )}
               {expression.event && (
-                <div className='flex items-center gap-4'>
-                  <p className='text-sm font-normal'>Event</p>
-                  <div className='break-all border-2 bg-background px-2 py-1  text-sm font-normal text-muted-foreground'>
+                <div className='flex flex-col gap-2  w-full'>
+                  <TextLabel label='Event' />
+                  <p className='py-[10px] px-4 border-2 w-full text-sm font-medium lg:text-base'>
                     {expression.event.split('(')[0]}
-                  </div>
+                  </p>
                 </div>
               )}
-              <div>
-                <X
-                  strokeWidth={1}
-                  className='h-5 w-5 cursor-pointer lg:h-6 lg:w-6'
-                  onClick={() => {
-                    setSelectedExpression('')
-                  }}
-                />
-              </div>
             </div>
             <BaseExpressionField
               aggregateFunctions={tools?.aggregate_operations ?? []}
