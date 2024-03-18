@@ -4,11 +4,12 @@ import Link from 'next/link'
 import { cn } from '~/lib/utils'
 import { Nav, type NavItem } from '~/types/nav'
 
+import { LimitsAccordion } from './limits-accordion'
 import { buttonVariants } from './ui/button'
 import { UserCard } from './user-card'
 
 export const AuthSidebar = ({ nav }: { nav: NavItem[] }) => (
-  <div className='flex w-full flex-col gap-4'>
+  <div className='flex w-full flex-col gap-4 lg:max-w-[196px]'>
     <p className='mb-2 text-base font-semibold lg:text-lg lg:font-medium'>Account</p>
     <UserCard />
     <div className='mt-2 flex flex-col gap-4'>
@@ -18,10 +19,11 @@ export const AuthSidebar = ({ nav }: { nav: NavItem[] }) => (
           <p className='text-[12px] font-normal leading-[18px] lg:text-sm'>{i.title}</p>
         </Link>
       ))}
+      <LimitsAccordion />
     </div>
     <Link
       href={Nav.PROJECT_CREATE}
-      className={cn('w-full gap-[10px] mt-6 lg:mt-0 lg:w-[196px] text-primary', buttonVariants())}
+      className={cn('w-full gap-[10px] mt-6 lg:mt-[30px] lg:w-[196px] text-primary', buttonVariants())}
     >
       <PlusIcon className='h-4 w-4 ' />
       <span>New Project</span>

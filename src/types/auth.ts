@@ -16,3 +16,10 @@ export interface User {
   installation_id: null | number
   avatar_url: null | string
 }
+
+export interface Quote {
+  name: string
+  used: number
+  total: number
+  type: string | null
+}

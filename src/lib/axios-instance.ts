@@ -17,6 +17,7 @@ export enum ApiRoutes {
   USERS_ORGS = '/users/orgs',
   USERS_ME = '/users/me',
   USERS_ME_PROJECTS = '/users/me/projects',
+  USERS_ME_QUOTAS = '/users/me/quotas',
 
   AUTH_CALLBACK = '/auth/callback',
   AUTH_REFRESH = '/auth/refresh',

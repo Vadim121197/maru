@@ -15,7 +15,7 @@ export const UserCard = async () => {
       ) : (
         <div className='h-6 w-6 rounded-full bg-primary' />
       )}
-      <p className='text-sm font-medium lg:text-base'>{session.user.username}</p>
+      <p className='text-sm font-medium lg:text-base break-all'>{session.user.username}</p>
     </div>
   )
 }
