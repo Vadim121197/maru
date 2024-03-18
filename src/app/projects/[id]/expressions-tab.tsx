@@ -7,10 +7,10 @@ import type { AxiosError } from 'axios'
 import { Bird, Plus, X } from 'lucide-react'
 
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
-import { CompoundExpressionForm } from '~/components/compound-expression-form'
-import { EditCompoundExpressionForm } from '~/components/compound-expression-form/edit-compound-expression-form'
-import { EventDataExpressionForm } from '~/components/event-data-expression-form'
-import { EditEventDataExpressionForm } from '~/components/event-data-expression-form/edit-event-data-expression-form'
+import { CreateCompound } from '~/components/compound/create-compound'
+import { EditCompound } from '~/components/compound/edit-compound'
+import { CreateEventData } from '~/components/event-data/create-event-data'
+import { EditEventData } from '~/components/event-data/edit-event-data'
 import { SelectComponent } from '~/components/form-components'
 import { Accordion } from '~/components/ui/accordion'
 import { Button } from '~/components/ui/button'
@@ -119,7 +119,7 @@ export const ExpressionsTab = () => {
     }
   }
 
-  if (loading === undefined && !expressions.event_data_expressions.length) return <></>
+  if ((loading === undefined || loading) && !expressions.event_data_expressions.length) return <></>
 
   if (!loading && !expressions.event_data_expressions.length && !addNew)
     return (
@@ -149,8 +149,6 @@ export const ExpressionsTab = () => {
         )}
       </>
     )
-
-  if (loading && !expressions.event_data_expressions.length) return <></>
 
   return (
     <div className='flex flex-col'>
@@ -192,7 +190,7 @@ export const ExpressionsTab = () => {
           className='grid w-full grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
         >
           {expressions.event_data_expressions.map((exp) => (
-            <EditEventDataExpressionForm
+            <EditEventData
               expression={exp}
               updateExpressionList={updateExpressionList}
               key={exp.id}
@@ -228,10 +226,10 @@ export const ExpressionsTab = () => {
               label='Data source'
             />
             {selectedSource === Expressions.EVENT_DATA && (
-              <EventDataExpressionForm updateExpressionList={updateExpressionList} />
+              <CreateEventData updateExpressionList={updateExpressionList} />
             )}
             {selectedSource === Expressions.EXPRESSIONS && (
-              <CompoundExpressionForm updateExpressionList={updateFinaleExpressionList} />
+              <CreateCompound updateExpressionList={updateFinaleExpressionList} />
             )}
           </div>
         )}
@@ -254,7 +252,7 @@ export const ExpressionsTab = () => {
             className='grid w-full grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
           >
             {expressions.compound_expressions.map((exp) => (
-              <EditCompoundExpressionForm
+              <EditCompound
                 expression={exp}
                 updateExpressionList={updateFinaleExpressionList}
                 key={exp.id}

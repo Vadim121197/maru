@@ -4,7 +4,7 @@ import { ExpressionTypeResponse, type Expression } from '~/types/expressions'
 
 import { AccordionTrigger } from '../ui/accordion'
 
-export const EventDataExpressionDetailCard = ({
+export const EventDataDetailCard = ({
   expression,
   deleteExpression,
 }: {

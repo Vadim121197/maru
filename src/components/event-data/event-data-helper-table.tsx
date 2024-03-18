@@ -21,7 +21,7 @@ export interface ExpressionHelperTable {
   // global_constants: ExpressionConstants | undefined
 }
 
-export const EventDataExpressionHelperTable = ({
+export const EventDataHelperTable = ({
   textareaRef,
   tools,
   event,

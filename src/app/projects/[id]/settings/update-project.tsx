@@ -56,7 +56,7 @@ export const UpdateProject = () => {
         <TextLabel label='Descriptions' />
         <Textarea
           className='p-4 text-base font-medium text-muted '
-          placeholder='Enter expression'
+          placeholder='Enter Description to your Project'
           value={description}
           onChange={(e) => {
             setDescription(e.target.value)

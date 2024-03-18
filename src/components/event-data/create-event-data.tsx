@@ -15,6 +15,7 @@ import {
   type ExpressionTools,
 } from '~/types/expressions'
 
+import { CalculationsTabs } from '../compound/calculations-tabs'
 import { BaseExpressionField } from '../expression-field'
 import { FailedFetchAbiModal } from '../failed-fetch-abi-modal'
 import { SelectComponent, TextLabel } from '../form-components'
@@ -22,15 +23,15 @@ import { InputBlock } from '../input-block'
 import { PrecalcSettings } from '../precalc-settings'
 import { PrecalcValues } from '../precalc-values'
 import { Button } from '../ui/button'
-import { EventDataExpressionHelperTable } from './event-data-expression-helper-table'
+import { EventDataHelperTable } from './event-data-helper-table'
 
 // 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7
 
-interface EventDataExpressionFormProps {
+interface CreateEventDataProps {
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
 }
 
-export const EventDataExpressionForm = ({ updateExpressionList }: EventDataExpressionFormProps) => {
+export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) => {
   const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
   const textarea = useRef<HTMLTextAreaElement>(null)
@@ -139,7 +140,10 @@ export const EventDataExpressionForm = ({ updateExpressionList }: EventDataExpre
         data_source: EventDataType.EVENT_DATA,
         filter_data: expressionValues.filter,
       })
+
       updateExpressionList(data, 'create')
+
+      return data.id
     } catch (error) {
       const err = error as AxiosError
 
@@ -201,7 +205,7 @@ export const EventDataExpressionForm = ({ updateExpressionList }: EventDataExpre
                 />
               </div>
               <div className='border-b pb-6 lg:pb-10'>
-                <EventDataExpressionHelperTable
+                <EventDataHelperTable
                   tools={tools}
                   event={selectedEvent}
                   setExpressionValues={setExpressionValues}
@@ -224,6 +228,7 @@ export const EventDataExpressionForm = ({ updateExpressionList }: EventDataExpre
                     await precalculate()
                   })()
                 }}
+                disabled={!expressionValues.rawData || !contractAddress || !expressionValues.aggregate}
               >
                 Precalculation
               </Button>
@@ -240,6 +245,9 @@ export const EventDataExpressionForm = ({ updateExpressionList }: EventDataExpre
               </Button>
             </div>
             {precalcRes.length ? <PrecalcValues res={precalcRes} /> : <></>}
+            <div className='mt-6'>
+              <CalculationsTabs save={save} />
+            </div>
           </div>
         )}
       </div>

@@ -5,7 +5,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { Bird } from 'lucide-react'
 
 import { CustomPagination } from '~/components/custom-pagination'
-import { EventDataExpressionDetailCard } from '~/components/event-data-expression-form/event-data-expression-detail-card'
+import { EventDataDetailCard } from '~/components/event-data/event-data-detail-card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { usePaginationRequest } from '~/hooks/pagination-request'
@@ -93,7 +93,7 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
                           <div className='grid grid-cols-2 gap-4'>
                             {taskExpressions[t.id]?.[ExpressionTypeResponse.EVENT_DATA].map((exp) => (
                               <div key={exp.id} className='flex w-full flex-col border-2 bg-background p-3 lg:p-4'>
-                                <EventDataExpressionDetailCard expression={exp} />
+                                <EventDataDetailCard expression={exp} />
                               </div>
                             ))}
                           </div>

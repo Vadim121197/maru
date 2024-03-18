@@ -62,17 +62,7 @@ const ProjectsPage = () => {
 
   if (!session) return <NotAuth />
 
-  if (loading === undefined && !projects.length) return <></>
-
-  if (!loading && !projects.length)
-    return (
-      <section className='mt-[100px] flex flex-col items-center justify-center px-7 lg:container lg:mt-[150px]'>
-        <Bird className='h-20 w-20' strokeWidth={1} />
-        <p className='text-xl font-semibold'>No projects</p>
-      </section>
-    )
-
-  if (loading && !projects.length) return <></>
+  if ((loading === undefined || loading) && !projects.length) return <></>
 
   return (
     <section className='container grid items-center py-10 lg:pt-[84px]'>
@@ -84,12 +74,21 @@ const ProjectsPage = () => {
             <span>New Project</span>
           </Link>
         </div>
-        <div className='grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-5'>
-          {projects.map((pr) => (
-            <ProjectCard key={pr.id} href={`${Nav.PROJECTS}/${pr.id}`} project={pr} />
-          ))}
-        </div>
-        <CustomPagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
+        {!projects.length ? (
+          <div className='mt-[100px] flex flex-col items-center justify-center px-7 lg:container lg:mt-[150px]'>
+            <Bird className='h-20 w-20' strokeWidth={1} />
+            <p className='text-xl font-semibold'>No projects</p>
+          </div>
+        ) : (
+          <>
+            <div className='grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-5'>
+              {projects.map((pr) => (
+                <ProjectCard key={pr.id} href={`${Nav.PROJECTS}/${pr.id}`} project={pr} />
+              ))}
+            </div>
+            <CustomPagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
+          </>
+        )}
       </div>
     </section>
   )

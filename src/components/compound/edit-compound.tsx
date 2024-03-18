@@ -22,9 +22,9 @@ import { PrecalcValues } from '../precalc-values'
 import { AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
 import { Button } from '../ui/button'
 import { CalculationsTabs } from './calculations-tabs'
-import { CompoundExpressionHelperTable } from './compound-expression-helper-table'
+import { CompoundHelperTable } from './compound-helper-table'
 
-interface EditCompoundExpressionFormProps {
+interface EditCompoundProps {
   expression: Expression
   selectedExpression: string
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
@@ -32,13 +32,13 @@ interface EditCompoundExpressionFormProps {
   setSelectedExpression: Dispatch<SetStateAction<string>>
 }
 
-export const EditCompoundExpressionForm = ({
+export const EditCompound = ({
   expression,
   selectedExpression,
   updateExpressionList,
   deleteExpression,
   setSelectedExpression,
-}: EditCompoundExpressionFormProps) => {
+}: EditCompoundProps) => {
   const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
   const textarea = useRef<HTMLTextAreaElement>(null)
@@ -151,11 +151,7 @@ export const EditCompoundExpressionForm = ({
           <div className='flex flex-col'>
             <div className='flex flex-col gap-[38px] border-b pb-4'>
               {tools && (
-                <CompoundExpressionHelperTable
-                  tools={tools}
-                  setExpressionValues={setExpressionValues}
-                  textareaRef={textarea}
-                />
+                <CompoundHelperTable tools={tools} setExpressionValues={setExpressionValues} textareaRef={textarea} />
               )}
             </div>
             <PrecalcSettings

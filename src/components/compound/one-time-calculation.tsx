@@ -12,7 +12,13 @@ import type { Task } from '~/types/task'
 import { InputBlock } from '../input-block'
 import { Button } from '../ui/button'
 
-export const PeriodicCalculation = ({ expressionId }: { expressionId: number }) => {
+export const OneTimeCalculation = ({
+  expressionId,
+  save,
+}: {
+  expressionId?: number
+  save?: () => Promise<number | undefined>
+}) => {
   const navigate = useRouter()
   const pathname = usePathname()
   const axiosAuth = useAxiosAuth()
@@ -21,14 +27,21 @@ export const PeriodicCalculation = ({ expressionId }: { expressionId: number }) 
     from: '',
     to: '',
   })
-  const [periodical, setPeriodical] = useState<string>('')
 
   const prove = async () => {
+    let expression_id: number | undefined
+
+    if (save) {
+      expression_id = await save()
+    } else {
+      expression_id = expressionId
+    }
+
+    if (!expression_id) return
     try {
       await axiosAuth.post<Task>(ApiRoutes.TASKS, {
         block_range: `${period.from}-${period.to}`,
-        expression_id: expressionId,
-        periodical,
+        expression_id,
       })
       navigate.push(`${pathname}/proofs`)
     } catch (error) {
@@ -49,7 +62,7 @@ export const PeriodicCalculation = ({ expressionId }: { expressionId: number }) 
 
   return (
     <>
-      <div className='grid  gap-4 lg:grid-cols-3 lg:gap-5'>
+      <div className='grid gap-4 lg:grid-cols-2 lg:gap-5'>
         <InputBlock
           className='w-full'
           type='number'
@@ -103,20 +116,10 @@ export const PeriodicCalculation = ({ expressionId }: { expressionId: number }) 
             }))
           }}
         />
-        <InputBlock
-          className='w-full'
-          type='number'
-          label='Periodical'
-          placeholder='Enter number'
-          value={periodical}
-          onChange={(e) => {
-            setPeriodical(e.target.value)
-          }}
-        />
       </div>
       <Button
         className='w-full self-center lg:w-[274px]'
-        disabled={addressValidationErrors || !period.from || !period.to || !periodical || minBlockHeightError}
+        disabled={addressValidationErrors || !period.from || !period.to || minBlockHeightError}
         onClick={() => {
           void (async () => {
             await prove()

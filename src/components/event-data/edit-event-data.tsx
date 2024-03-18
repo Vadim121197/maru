@@ -19,17 +19,17 @@ import {
   type ExpressionTypeResponse,
 } from '~/types/expressions'
 
-import { CalculationsTabs } from '../compound-expression-form/calculations-tabs'
+import { CalculationsTabs } from '../compound/calculations-tabs'
 import { BaseExpressionField } from '../expression-field'
 import { TextLabel } from '../form-components'
 import { PrecalcSettings } from '../precalc-settings'
 import { PrecalcValues } from '../precalc-values'
 import { AccordionContent, AccordionItem } from '../ui/accordion'
 import { Button } from '../ui/button'
-import { EventDataExpressionDetailCard } from './event-data-expression-detail-card'
-import { EventDataExpressionHelperTable } from './event-data-expression-helper-table'
+import { EventDataDetailCard } from './event-data-detail-card'
+import { EventDataHelperTable } from './event-data-helper-table'
 
-interface EditEventDataExpressionFormProps {
+interface EditEventDataProps {
   expression: Expression
   selectedExpression: string
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
@@ -37,13 +37,13 @@ interface EditEventDataExpressionFormProps {
   setSelectedExpression: Dispatch<SetStateAction<string>>
 }
 
-export const EditEventDataExpressionForm = ({
+export const EditEventData = ({
   expression,
   selectedExpression,
   updateExpressionList,
   deleteExpression,
   setSelectedExpression,
-}: EditEventDataExpressionFormProps) => {
+}: EditEventDataProps) => {
   const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
   const textarea = useRef<HTMLTextAreaElement>(null)
@@ -172,7 +172,7 @@ export const EditEventDataExpressionForm = ({
             />
           </div>
         ) : (
-          <EventDataExpressionDetailCard expression={expression} deleteExpression={deleteExpression} />
+          <EventDataDetailCard expression={expression} deleteExpression={deleteExpression} />
         )}
       </div>
       <AccordionContent>
@@ -180,7 +180,7 @@ export const EditEventDataExpressionForm = ({
           <div className='flex flex-col'>
             <div className='border-b pb-6 lg:pb-10'>
               {tools && selectedEvent && (
-                <EventDataExpressionHelperTable
+                <EventDataHelperTable
                   tools={tools}
                   event={selectedEvent}
                   setExpressionValues={setExpressionValues}

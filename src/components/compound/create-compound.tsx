@@ -14,9 +14,9 @@ import { TextLabel } from '../form-components'
 import { PrecalcSettings } from '../precalc-settings'
 import { PrecalcValues } from '../precalc-values'
 import { Button } from '../ui/button'
-import { CompoundExpressionHelperTable } from './compound-expression-helper-table'
+import { CompoundHelperTable } from './compound-helper-table'
 
-export const CompoundExpressionForm = ({
+export const CreateCompound = ({
   updateExpressionList,
 }: {
   updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
@@ -41,8 +41,6 @@ export const CompoundExpressionForm = ({
         const { data } = await axiosAuth.get<FinalExpressionTools>(
           ApiRoutes.PROJECTS_PROJECT_ID_TOOLS.replace(PROJECT_ID, project.id.toString()),
         )
-
-        console.log({ tools: data })
 
         setTools(data)
       } catch {}
@@ -93,11 +91,7 @@ export const CompoundExpressionForm = ({
                 textareaRef={textarea}
               />
             </div>
-            <CompoundExpressionHelperTable
-              tools={tools}
-              setExpressionValues={setExpressionValues}
-              textareaRef={textarea}
-            />
+            <CompoundHelperTable tools={tools} setExpressionValues={setExpressionValues} textareaRef={textarea} />
           </div>
           <PrecalcSettings
             project={project}
@@ -114,6 +108,7 @@ export const CompoundExpressionForm = ({
                   await precalculate()
                 })()
               }}
+              disabled={!expressionValues.rawData}
             >
               Precalculation
             </Button>
@@ -124,7 +119,7 @@ export const CompoundExpressionForm = ({
                   await save()
                 })()
               }}
-              disabled={!expressionValues.rawData || !expressionValues.name}
+              disabled={!expressionValues.rawData}
             >
               Save
             </Button>

@@ -14,7 +14,7 @@ interface ExpressionHelperTable {
   expression: string | undefined
 }
 
-export const CompoundExpressionHelperTable = ({
+export const CompoundHelperTable = ({
   tools,
   textareaRef,
   setExpressionValues,
