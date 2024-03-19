@@ -11,15 +11,30 @@ export interface Auth {
 
 export interface User {
   created_at: Date
-  id: number
   username: string
-  installation_id: null | number
   avatar_url: null | string
+  installation_id: null | number
+  id: number
+  bio: string | null
+  theme: 'light' | 'dark'
+}
+
+export enum QuoteName {
+  PROJECTS = 'Projects',
+  PROOFS = 'Proofs',
+  EVENTS = 'Events',
+  DEMOS = 'Demos',
+}
+
+export enum QuoteType {
+  DAILY = 'daily',
+  HOURLY = 'hourly',
 }
 
 export interface Quote {
-  name: string
+  name: QuoteName
   used: number
   total: number
-  type: string | null
+  type: QuoteType | null
+  percentage: number
 }

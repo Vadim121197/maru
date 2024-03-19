@@ -10,7 +10,7 @@ export const CalculationsTabs = ({
   save?: () => Promise<number | undefined>
 }) => {
   return (
-    <Tabs defaultValue='one_time' className='pt-5 border-t-[1px]'>
+    <Tabs defaultValue='one_time' className='border-t-[1px] pt-5'>
       <TabsList className='mb-6 w-full'>
         <TabsTrigger value='one_time' className='w-full data-[state=active]:bg-transparent'>
           One time calculation
