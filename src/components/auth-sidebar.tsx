@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { cn } from '~/lib/utils'
 import { Nav, type NavItem } from '~/types/nav'
 
+import { QuoteAccordion } from './quote-accordion'
 import { buttonVariants } from './ui/button'
 import { UserCard } from './user-card'
 
@@ -18,10 +19,11 @@ export const AuthSidebar = ({ nav }: { nav: NavItem[] }) => (
           <p className='text-[12px] font-normal leading-[18px] lg:text-sm'>{i.title}</p>
         </Link>
       ))}
+      <QuoteAccordion />
     </div>
     <Link
       href={Nav.PROJECT_CREATE}
-      className={cn('w-full gap-[10px] mt-6 lg:mt-0 lg:w-[196px] text-primary', buttonVariants())}
+      className={cn('w-full gap-[10px] mt-6 lg:mt-[30px] text-primary', buttonVariants())}
     >
       <PlusIcon className='h-4 w-4 ' />
       <span>New Project</span>
