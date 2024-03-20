@@ -34,6 +34,8 @@ export const Statistics = () => {
     }))
   }, [dasboard?.proofs_dashboard])
 
+  console.log(singleDateData)
+
   return (
     <div className='order-3 flex flex-col gap-5 lg:w-[20%]'>
       <div className='flex items-center gap-3'>
@@ -42,47 +44,69 @@ export const Statistics = () => {
         </div>
         <p className='text-base font-semibold lg:text-lg lg:font-medium'>Statistics</p>
       </div>
-      <div className='flex w-full flex-col border-2 border-border p-4 lg:py-5 lg:pl-5 lg:pr-[30px]'>
-        <p className='mb-6 text-base font-semibold text-muted-foreground lg:mb-5 lg:text-lg lg:font-medium'>
-          Proofs Generated
-        </p>
-        <div className='flex justify-end'>
-          <SparklineChart
-            width={139}
-            height={64}
-            data={singleDateData}
-            series={
-              <AreaSeries
-                symbols={null}
-                interpolation='smooth'
-                markLine={null}
-                area={
-                  <Area
-                    style={{ opacity: '0.4' }}
-                    gradient={
-                      <Gradient
-                        stops={[
-                          <GradientStop offset='10%' stopOpacity={0} key='start' color='#6D23F8' />,
-                          <GradientStop offset='100%' stopOpacity={1} key='stop' color='#6D23F8' />,
-                        ]}
-                      />
-                    }
-                  />
-                }
-                line={
-                  <Line
-                    strokeWidth={1.5}
-                    style={{ stroke: '#6D23F8', strokeLinecap: 'round', strokeLinejoin: 'round', opacity: '0.8' }}
-                  />
-                }
-              />
-            }
-          />
-        </div>
+      <div className='flex flex-col gap-[18px] lg:gap-6'>
+        <div className='flex w-full flex-col border-2 border-border p-4 lg:py-5 lg:pl-5 lg:pr-[30px]'>
+          <p className='mb-6 text-base font-semibold text-muted-foreground lg:mb-5 lg:text-lg lg:font-medium'>
+            Proofs Generated
+          </p>
+          <div className='flex justify-end'>
+            <SparklineChart
+              width={139}
+              height={64}
+              data={singleDateData}
+              series={
+                <AreaSeries
+                  symbols={null}
+                  interpolation='smooth'
+                  markLine={null}
+                  area={
+                    <Area
+                      style={{ opacity: '0.4' }}
+                      gradient={
+                        <Gradient
+                          stops={[
+                            <GradientStop offset='10%' stopOpacity={0} key='start' color='#6D23F8' />,
+                            <GradientStop offset='100%' stopOpacity={1} key='stop' color='#6D23F8' />,
+                          ]}
+                        />
+                      }
+                    />
+                  }
+                  line={
+                    <Line
+                      strokeWidth={1.5}
+                      style={{ stroke: '#6D23F8', strokeLinecap: 'round', strokeLinejoin: 'round', opacity: '0.8' }}
+                    />
+                  }
+                />
+              }
+            />
+          </div>
 
-        <p className='mt-[11px] text-base font-semibold lg:mt-[6px] lg:text-lg lg:font-medium'>
-          Total count: {dasboard?.proofs_count ?? 0}
-        </p>
+          <p className='mt-[11px] text-base font-semibold lg:mt-[6px] lg:text-lg lg:font-medium'>
+            Total count: {dasboard?.proofs_count ?? 0}
+          </p>
+        </div>
+        <div className='flex justify-between items-center gap-1 w-full  border-2 border-border p-4 lg:py-5'>
+          <p className='text-base font-semibold lg:text-lg lg:leading-[26px] lg:font-medium'>Projects count :</p>
+          <p className='font-semibold text-lg leading-[26px] lg:text-xl lg:leading-[30px]'>
+            {dasboard?.projects_count}
+          </p>
+        </div>
+        <div className='flex justify-between items-center gap-1 w-full  border-2 border-border p-4 lg:py-5'>
+          <p className='text-base font-semibold lg:text-lg lg:leading-[26px] lg:font-medium'>Total verifications :</p>
+          <p className='font-semibold text-lg leading-[26px] lg:text-xl lg:leading-[30px]'>
+            {dasboard?.contracts_verifications_total_count}
+          </p>
+        </div>
+        <div className='flex justify-between items-center gap-1 w-full  border-2 border-border p-4 lg:py-5'>
+          <p className='text-base font-semibold lg:text-lg lg:leading-[26px] lg:font-medium'>
+            Total success verifications:
+          </p>
+          <p className='font-semibold text-lg leading-[26px] lg:text-xl lg:leading-[30px]'>
+            {dasboard?.contracts_verifications_success_count}
+          </p>
+        </div>
       </div>
     </div>
   )
