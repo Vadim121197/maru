@@ -34,8 +34,6 @@ export const Statistics = () => {
     }))
   }, [dasboard?.proofs_dashboard])
 
-  console.log(singleDateData)
-
   return (
     <div className='order-3 flex flex-col gap-5 lg:w-[20%]'>
       <div className='flex items-center gap-3'>
@@ -87,23 +85,23 @@ export const Statistics = () => {
             Total count: {dasboard?.proofs_count ?? 0}
           </p>
         </div>
-        <div className='flex justify-between items-center gap-1 w-full  border-2 border-border p-4 lg:py-5'>
-          <p className='text-base font-semibold lg:text-lg lg:leading-[26px] lg:font-medium'>Projects count :</p>
-          <p className='font-semibold text-lg leading-[26px] lg:text-xl lg:leading-[30px]'>
+        <div className='flex w-full items-center justify-between gap-1  border-2 border-border p-4 lg:py-5'>
+          <p className='text-base font-semibold lg:text-lg lg:font-medium lg:leading-[26px]'>Projects count :</p>
+          <p className='text-lg font-semibold leading-[26px] lg:text-xl lg:leading-[30px]'>
             {dasboard?.projects_count}
           </p>
         </div>
-        <div className='flex justify-between items-center gap-1 w-full  border-2 border-border p-4 lg:py-5'>
-          <p className='text-base font-semibold lg:text-lg lg:leading-[26px] lg:font-medium'>Total verifications :</p>
-          <p className='font-semibold text-lg leading-[26px] lg:text-xl lg:leading-[30px]'>
+        <div className='flex w-full items-center justify-between gap-1  border-2 border-border p-4 lg:py-5'>
+          <p className='text-base font-semibold lg:text-lg lg:font-medium lg:leading-[26px]'>Total verifications :</p>
+          <p className='text-lg font-semibold leading-[26px] lg:text-xl lg:leading-[30px]'>
             {dasboard?.contracts_verifications_total_count}
           </p>
         </div>
-        <div className='flex justify-between items-center gap-1 w-full  border-2 border-border p-4 lg:py-5'>
-          <p className='text-base font-semibold lg:text-lg lg:leading-[26px] lg:font-medium'>
+        <div className='flex w-full items-center justify-between gap-1  border-2 border-border p-4 lg:py-5'>
+          <p className='text-base font-semibold lg:text-lg lg:font-medium lg:leading-[26px]'>
             Total success verifications:
           </p>
-          <p className='font-semibold text-lg leading-[26px] lg:text-xl lg:leading-[30px]'>
+          <p className='text-lg font-semibold leading-[26px] lg:text-xl lg:leading-[30px]'>
             {dasboard?.contracts_verifications_success_count}
           </p>
         </div>

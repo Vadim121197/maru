@@ -25,7 +25,10 @@ export const DangerZone = () => {
         navigate.push('/projects/profile')
       } catch (error) {
         const err = error as AxiosError
-        toast.error(`${err.message} (${err.config?.url}, ${err.config?.method})`)
+
+        const errData = err.response?.data as { detail: string | undefined }
+
+        toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
       }
     })()
   }
@@ -43,7 +46,10 @@ export const DangerZone = () => {
         setProject(data)
       } catch (error) {
         const err = error as AxiosError
-        toast.error(`${err.message} (${err.config?.url}, ${err.config?.method})`)
+
+        const errData = err.response?.data as { detail: string | undefined }
+
+        toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
       }
     })()
   }

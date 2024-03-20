@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-import { type AxiosError, type AxiosRequestHeaders } from 'axios'
+import { AxiosError, type AxiosRequestHeaders } from 'axios'
 import { useSession } from 'next-auth/react'
 
 import { axiosInstance } from '~/lib/axios-instance'
@@ -22,7 +22,7 @@ const useAxiosAuth = () => {
 
         return config
       },
-      (error) => Promise.reject(error),
+      () => Promise.reject(new AxiosError()),
     )
 
     const responseIntercept = axiosInstance.interceptors.response.use(

@@ -46,7 +46,10 @@ export const OneTimeCalculation = ({
       navigate.push(`${pathname}/proofs`)
     } catch (error) {
       const err = error as AxiosError
-      toast.error(`${err.message} (${err.config?.url}, ${err.config?.method})`)
+
+      const errData = err.response?.data as { detail: string | undefined }
+
+      toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
     }
   }
 

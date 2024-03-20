@@ -14,6 +14,7 @@ import { TextLabel } from '../form-components'
 import { PrecalcSettings } from '../precalc-settings'
 import { PrecalcValues } from '../precalc-values'
 import { Button } from '../ui/button'
+import { CalculationsTabs } from './calculations-tabs'
 import { CompoundHelperTable } from './compound-helper-table'
 
 export const CreateCompound = ({
@@ -62,7 +63,6 @@ export const CreateCompound = ({
   }
 
   const save = async () => {
-    if (!expressionValues.rawData || !expressionValues.name) return
     try {
       const { data } = await axiosAuth.post<Expression>(ApiRoutes.EXPRESSIONS, {
         raw_data: expressionValues.rawData,
@@ -72,9 +72,13 @@ export const CreateCompound = ({
       })
 
       updateExpressionList(data, 'create')
+      return data.id
     } catch (error) {
       const err = error as AxiosError
-      toast.error(`${err.message} (${err.config?.url}, ${err.config?.method})`)
+
+      const errData = err.response?.data as { detail: string | undefined }
+
+      toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
     }
   }
 
@@ -125,9 +129,11 @@ export const CreateCompound = ({
             </Button>
           </div>
           {precalculationResult.length ? <PrecalcValues res={precalculationResult} /> : <></>}
+          <div className='mt-6'>
+            <CalculationsTabs save={save} />
+          </div>
         </div>
       )}
-      {/* {createdExpression && <CalculationsTabs projectId={projectId} expressionId={createdExpression.id} />} */}
     </div>
   )
 }
