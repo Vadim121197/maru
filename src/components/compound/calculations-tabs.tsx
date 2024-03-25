@@ -2,13 +2,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { OneTimeCalculation } from './one-time-calculation'
 import { PeriodicCalculation } from './periodic-calculation'
 
-export const CalculationsTabs = ({
-  expressionId,
-  save,
-}: {
+export interface CalculationsTabsProps {
   expressionId?: number
   save?: () => Promise<number | undefined>
-}) => {
+  isChanged?: () => boolean
+}
+
+export const CalculationsTabs = ({ expressionId, save, isChanged }: CalculationsTabsProps) => {
   return (
     <Tabs defaultValue='one_time' className='border-t-[1px] pt-5'>
       <TabsList className='mb-6 w-full'>
@@ -20,10 +20,10 @@ export const CalculationsTabs = ({
         </TabsTrigger>
       </TabsList>
       <TabsContent value='one_time' className='flex flex-col gap-10'>
-        <OneTimeCalculation expressionId={expressionId} save={save} />
+        <OneTimeCalculation expressionId={expressionId} save={save} isChanged={isChanged} />
       </TabsContent>
       <TabsContent value='periodic' className='flex flex-col gap-10'>
-        <PeriodicCalculation expressionId={expressionId} save={save} />
+        <PeriodicCalculation expressionId={expressionId} save={save} isChanged={isChanged} />
       </TabsContent>
     </Tabs>
   )

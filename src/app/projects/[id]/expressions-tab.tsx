@@ -1,9 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { toast } from 'react-toastify'
 
-import type { AxiosError } from 'axios'
 import { Bird, Plus, X } from 'lucide-react'
 
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
@@ -17,6 +15,7 @@ import { Button } from '~/components/ui/button'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import { Expressions, expressionTypes } from '~/lib/expressions'
+import { showErrorToast } from '~/lib/show-error-toast'
 import type { Expression, ExpressionTypeResponse, ExpressionsResponse } from '~/types/expressions'
 
 export const ExpressionsTab = () => {
@@ -114,11 +113,7 @@ export const ExpressionsTab = () => {
 
       setExpressions(expressions)
     } catch (error) {
-      const err = error as AxiosError
-
-      const errData = err.response?.data as { detail: string | undefined }
-
-      toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
+      showErrorToast(error)
     }
   }
 

@@ -1,8 +1,5 @@
 'use client'
 
-import { toast } from 'react-toastify'
-
-import type { AxiosError } from 'axios'
 import { Bird, Copy, InfoIcon } from 'lucide-react'
 import moment from 'moment'
 
@@ -14,6 +11,7 @@ import useAxiosAuth from '~/hooks/axios-auth'
 import { usePaginationRequest } from '~/hooks/pagination-request'
 import { ApiRoutes, BASE_URL, PROJECT_ID, PROOF_ID } from '~/lib/axios-instance'
 import { copyToClipboard } from '~/lib/copy-to-clipboard'
+import { showErrorToast } from '~/lib/show-error-toast'
 import { cn } from '~/lib/utils'
 import { ProofStatus, type Proof } from '~/types/proof'
 
@@ -67,11 +65,7 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
 
         setProofs(updatedProof)
       } catch (error) {
-        const err = error as AxiosError
-
-        const errData = err.response?.data as { detail: string | undefined }
-
-        toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
+        showErrorToast(error)
       }
     })()
   }

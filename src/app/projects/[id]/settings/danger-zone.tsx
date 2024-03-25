@@ -1,13 +1,11 @@
 'use client'
 
-import { toast } from 'react-toastify'
-
-import type { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 
 import { Button } from '~/components/ui/button'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
+import { showErrorToast } from '~/lib/show-error-toast'
 import type { Project } from '~/types/project'
 
 import { useProject } from '../ProjectProvider'
@@ -24,11 +22,7 @@ export const DangerZone = () => {
         await axiosAuth.delete(ApiRoutes.PROJECTS_PROJECT_ID.replace(PROJECT_ID, project.id.toString()))
         navigate.push('/projects/profile')
       } catch (error) {
-        const err = error as AxiosError
-
-        const errData = err.response?.data as { detail: string | undefined }
-
-        toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
+        showErrorToast(error)
       }
     })()
   }
@@ -45,11 +39,7 @@ export const DangerZone = () => {
         )
         setProject(data)
       } catch (error) {
-        const err = error as AxiosError
-
-        const errData = err.response?.data as { detail: string | undefined }
-
-        toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
+        showErrorToast(error)
       }
     })()
   }

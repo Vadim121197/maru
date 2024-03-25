@@ -1,14 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { toast } from 'react-toastify'
-
-import type { AxiosError } from 'axios'
 
 import { InputComponent, TextLabel } from '~/components/form-components'
 import { Button } from '~/components/ui/button'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes } from '~/lib/axios-instance'
+import { showErrorToast } from '~/lib/show-error-toast'
 import type { User } from '~/types/auth'
 
 import { useUser } from '../user-provider'
@@ -32,11 +30,7 @@ const ProfilePage = () => {
 
             setUser(user)
           } catch (error) {
-            const err = error as AxiosError
-
-            const errData = err.response?.data as { detail: string | undefined }
-
-            toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
+            showErrorToast(error)
           }
         })()
       }}

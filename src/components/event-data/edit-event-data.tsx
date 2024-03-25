@@ -8,6 +8,7 @@ import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
 import { cutAddress } from '~/lib/cut-address'
+import { showErrorToast } from '~/lib/show-error-toast'
 import { cn } from '~/lib/utils'
 import type { PrecalculateResult } from '~/types/calculations'
 import {
@@ -92,11 +93,7 @@ export const EditEventData = ({
 
       setPrecalcRes(data)
     } catch (error) {
-      const err = error as AxiosError
-
-      const errData = err.response?.data as { detail: string | undefined }
-
-      toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
+      showErrorToast(error)
     }
   }
 
@@ -115,12 +112,17 @@ export const EditEventData = ({
 
       updateExpressionList(data, 'update')
     } catch (error) {
-      const err = error as AxiosError
-
-      const errData = err.response?.data as { detail: string | undefined }
-
-      toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
+      showErrorToast(error)
     }
+  }
+
+  const isChanged = () => {
+    return (
+      expression.raw_data !== expressionValues.rawData ||
+      expression.name !== expressionValues.name ||
+      expression.aggregate_operation !== expressionValues.aggregate ||
+      expression.filter_data !== expressionValues.filter
+    )
   }
 
   if (!project) return
@@ -220,7 +222,7 @@ export const EditEventData = ({
             </div>
             {precalcRes.length ? <PrecalcValues res={precalcRes} /> : <></>}
           </div>
-          <CalculationsTabs expressionId={expression.id} />
+          <CalculationsTabs expressionId={expression.id} isChanged={isChanged} />
         </div>
       </AccordionContent>
     </AccordionItem>

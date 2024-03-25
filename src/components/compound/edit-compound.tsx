@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
-import { toast } from 'react-toastify'
 
-import type { AxiosError } from 'axios'
 import { ChevronDown, Trash, X } from 'lucide-react'
 
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
+import { showErrorToast } from '~/lib/show-error-toast'
 import type { PrecalculateResult } from '~/types/calculations'
 import {
   EventDataType,
@@ -89,11 +88,7 @@ export const EditCompound = ({
       )
       updateExpressionList(data, 'update')
     } catch (error) {
-      const err = error as AxiosError
-
-      const errData = err.response?.data as { detail: string | undefined }
-
-      toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
+      showErrorToast(error)
     }
   }
 

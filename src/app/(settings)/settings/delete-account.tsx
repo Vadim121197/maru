@@ -1,14 +1,12 @@
 'use client'
 
-import { toast } from 'react-toastify'
-
-import type { AxiosError } from 'axios'
 import { signOut } from 'next-auth/react'
 
 import { Button, buttonVariants } from '~/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '~/components/ui/dialog'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes } from '~/lib/axios-instance'
+import { showErrorToast } from '~/lib/show-error-toast'
 import { cn } from '~/lib/utils'
 
 export const DeleteAccount = () => {
@@ -66,11 +64,7 @@ export const DeleteAccount = () => {
                   await axiosAuth.delete(ApiRoutes.USERS_ME)
                   await signOut()
                 } catch (error) {
-                  const err = error as AxiosError
-
-                  const errData = err.response?.data as { detail: string | undefined }
-
-                  toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
+                  showErrorToast(error)
                 }
               })()
             }}

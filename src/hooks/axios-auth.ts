@@ -22,7 +22,8 @@ const useAxiosAuth = () => {
 
         return config
       },
-      () => Promise.reject(new AxiosError()),
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+      (error) => Promise.reject(error),
     )
 
     const responseIntercept = axiosInstance.interceptors.response.use(

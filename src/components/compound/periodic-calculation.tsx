@@ -1,24 +1,24 @@
 import { useMemo, useState } from 'react'
-import { toast } from 'react-toastify'
 
-import type { AxiosError } from 'axios'
 import { usePathname, useRouter } from 'next/navigation'
 
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes } from '~/lib/axios-instance'
 import { MIN_BLOCK_HEIGHT } from '~/lib/constants'
+import { showErrorToast } from '~/lib/show-error-toast'
 import type { Task } from '~/types/task'
 
 import { InputBlock } from '../input-block'
 import { Button } from '../ui/button'
+import type { CalculationsTabsProps } from './calculations-tabs'
 
-export const PeriodicCalculation = ({
-  expressionId,
-  save,
-}: {
-  expressionId?: number
-  save?: () => Promise<number | undefined>
-}) => {
+interface PeriodicCalculationProps {
+  expressionId: CalculationsTabsProps['expressionId']
+  save: CalculationsTabsProps['save']
+  isChanged: CalculationsTabsProps['isChanged']
+}
+
+export const PeriodicCalculation = ({ expressionId, save, isChanged }: PeriodicCalculationProps) => {
   const navigate = useRouter()
   const pathname = usePathname()
   const axiosAuth = useAxiosAuth()
@@ -48,11 +48,7 @@ export const PeriodicCalculation = ({
       })
       navigate.push(`${pathname}/proofs`)
     } catch (error) {
-      const err = error as AxiosError
-
-      const errData = err.response?.data as { detail: string | undefined }
-
-      toast.error(errData.detail ?? `${err.message} (${err.config?.url}, ${err.config?.method})`)
+      showErrorToast(error)
     }
   }
 
@@ -137,6 +133,7 @@ export const PeriodicCalculation = ({
         className='w-full self-center lg:w-[274px]'
         disabled={addressValidationErrors || !period.from || !period.to || !periodical || minBlockHeightError}
         onClick={() => {
+          if (isChanged && isChanged()) return
           void (async () => {
             await prove()
           })()
