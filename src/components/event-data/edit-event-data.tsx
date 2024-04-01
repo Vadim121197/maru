@@ -125,6 +125,15 @@ export const EditEventData = ({
     )
   }
 
+  const resetEdits = () => {
+    setExpressionValues({
+      rawData: expression.raw_data,
+      name: expression.name ?? '',
+      aggregate: expression.aggregate_operation ?? '',
+      filter: expression.filter_data ?? '',
+    })
+  }
+
   if (!project) return
 
   return (
@@ -227,6 +236,7 @@ export const EditEventData = ({
             isChanged={isChanged}
             action={ExpressionActions.UPDATE}
             save={save}
+            resetEdits={resetEdits}
           />
         </div>
       </AccordionContent>

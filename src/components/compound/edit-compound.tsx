@@ -99,6 +99,13 @@ export const EditCompound = ({
     return expression.raw_data !== expressionValues.rawData || expression.name !== expressionValues.name
   }
 
+  const resetEdits = () => {
+    setExpressionValues({
+      rawData: expression.raw_data,
+      name: expression.name ?? '',
+    })
+  }
+
   if (!project) return <></>
 
   return (
@@ -196,6 +203,7 @@ export const EditCompound = ({
             save={save}
             action={ExpressionActions.UPDATE}
             isChanged={isChanged}
+            resetEdits={resetEdits}
           />
         </div>
       </AccordionContent>

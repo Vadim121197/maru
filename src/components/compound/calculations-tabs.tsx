@@ -21,10 +21,11 @@ export interface CalculationsTabsProps {
   expressionId?: number
   save: () => Promise<number | undefined>
   isChanged?: () => boolean
+  resetEdits?: () => void
   action: ExpressionActions
 }
 
-export const CalculationsTabs = ({ action, expressionId, save, isChanged }: CalculationsTabsProps) => {
+export const CalculationsTabs = ({ action, expressionId, save, isChanged, resetEdits }: CalculationsTabsProps) => {
   const navigate = useRouter()
   const pathname = usePathname()
   const axiosAuth = useAxiosAuth()
@@ -136,6 +137,10 @@ export const CalculationsTabs = ({ action, expressionId, save, isChanged }: Calc
               variant='outline'
               onClick={() => {
                 setOpenModal(false)
+                resetEdits && resetEdits()
+                void (async () => {
+                  await prove()
+                })()
               }}
             >
               No
