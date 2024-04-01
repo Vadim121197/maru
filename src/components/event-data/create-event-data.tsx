@@ -13,6 +13,7 @@ import {
   type Expression,
   type ExpressionEvent,
   type ExpressionTools,
+  ExpressionActions,
 } from '~/types/expressions'
 
 import { CalculationsTabs } from '../compound/calculations-tabs'
@@ -28,7 +29,7 @@ import { EventDataHelperTable } from './event-data-helper-table'
 // 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7
 
 interface CreateEventDataProps {
-  updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
+  updateExpressionList: (expression: Expression, type: ExpressionActions) => void
 }
 
 export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) => {
@@ -137,7 +138,7 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
         filter_data: expressionValues.filter,
       })
 
-      updateExpressionList(data, 'create')
+      updateExpressionList(data, ExpressionActions.CREATE)
 
       return data.id
     } catch (error) {
@@ -211,7 +212,7 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
                 setProject(newProject)
               }}
             />
-            <div className='grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-[30px]'>
+            <div className='grid gap-4 lg:grid-cols-2 lg:gap-5'>
               <Button
                 variant='outline'
                 className='w-full'
@@ -238,7 +239,7 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
             </div>
             {precalcRes.length ? <PrecalcValues res={precalcRes} /> : <></>}
             <div className='mt-6'>
-              <CalculationsTabs save={save} />
+              <CalculationsTabs save={save} action={ExpressionActions.CREATE} />
             </div>
           </div>
         )}

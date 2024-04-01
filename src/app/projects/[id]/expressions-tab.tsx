@@ -16,7 +16,12 @@ import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import { Expressions, expressionTypes } from '~/lib/expressions'
 import { showErrorToast } from '~/lib/show-error-toast'
-import type { Expression, ExpressionTypeResponse, ExpressionsResponse } from '~/types/expressions'
+import {
+  ExpressionActions,
+  type Expression,
+  type ExpressionTypeResponse,
+  type ExpressionsResponse,
+} from '~/types/expressions'
 
 export const ExpressionsTab = () => {
   const { project, expressions, isUserProject, setExpressions } = useProject()((state) => state)
@@ -48,12 +53,12 @@ export const ExpressionsTab = () => {
     })()
   }, [project?.id, axiosAuth, setExpressions])
 
-  const updateExpressionList = (expression: Expression, type: 'create' | 'update') => {
+  const updateExpressionList = (expression: Expression, type: ExpressionActions) => {
     // if other person's project do nothing
     if (!isUserProject) return
 
     let index: number
-    if (type === 'update') {
+    if (type === ExpressionActions.UPDATE) {
       index = expressions.event_data_expressions.findIndex((exp) => exp.id === expression.id)
     } else {
       index = expressions.event_data_expressions.length
@@ -73,12 +78,12 @@ export const ExpressionsTab = () => {
     setSelectedSource(undefined)
   }
 
-  const updateFinaleExpressionList = (expression: Expression, type: 'create' | 'update') => {
+  const updateFinaleExpressionList = (expression: Expression, type: ExpressionActions) => {
     // if other person's project do nothing
     if (!isUserProject) return
 
     let index: number
-    if (type === 'update') {
+    if (type === ExpressionActions.UPDATE) {
       index = expressions.compound_expressions.findIndex((exp) => exp.id === expression.id)
     } else {
       index = expressions.compound_expressions.length

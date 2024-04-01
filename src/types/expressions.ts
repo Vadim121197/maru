@@ -115,3 +115,8 @@ export interface ExpressionCreateResponse {
   updated_at: Date
   parsed_data: string
 }
+
+export enum ExpressionActions {
+  CREATE = 'create',
+  UPDATE = 'update',
+}

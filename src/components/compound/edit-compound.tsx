@@ -13,6 +13,7 @@ import {
   type Expression,
   type ExpressionValues,
   type FinalExpressionTools,
+  ExpressionActions,
 } from '~/types/expressions'
 
 import { FinalExpressionField } from '../expression-field'
@@ -26,7 +27,7 @@ import { CompoundHelperTable } from './compound-helper-table'
 interface EditCompoundProps {
   expression: Expression
   selectedExpression: string
-  updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
+  updateExpressionList: (expression: Expression, type: ExpressionActions) => void
   deleteExpression?: (id: number, type: ExpressionTypeResponse) => Promise<void>
   setSelectedExpression: Dispatch<SetStateAction<string>>
 }
@@ -86,10 +87,16 @@ export const EditCompound = ({
           name: expressionValues.name,
         },
       )
-      updateExpressionList(data, 'update')
+      updateExpressionList(data, ExpressionActions.UPDATE)
+
+      return data.id
     } catch (error) {
       showErrorToast(error)
     }
+  }
+
+  const isChanged = () => {
+    return expression.raw_data !== expressionValues.rawData || expression.name !== expressionValues.name
   }
 
   if (!project) return <></>
@@ -184,7 +191,12 @@ export const EditCompound = ({
             </div>
             {precalculationResult.length ? <PrecalcValues res={precalculationResult} /> : <></>}
           </div>
-          <CalculationsTabs expressionId={expression.id} />
+          <CalculationsTabs
+            expressionId={expression.id}
+            save={save}
+            action={ExpressionActions.UPDATE}
+            isChanged={isChanged}
+          />
         </div>
       </AccordionContent>
     </AccordionItem>

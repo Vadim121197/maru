@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
-import { toast } from 'react-toastify'
 
-import type { AxiosError } from 'axios'
 import { X } from 'lucide-react'
 
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
@@ -18,6 +16,7 @@ import {
   type ExpressionEvent,
   type ExpressionTools,
   type ExpressionTypeResponse,
+  ExpressionActions,
 } from '~/types/expressions'
 
 import { CalculationsTabs } from '../compound/calculations-tabs'
@@ -33,7 +32,7 @@ import { EventDataHelperTable } from './event-data-helper-table'
 interface EditEventDataProps {
   expression: Expression
   selectedExpression: string
-  updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
+  updateExpressionList: (expression: Expression, type: ExpressionActions) => void
   deleteExpression?: (id: number, type: ExpressionTypeResponse) => Promise<void>
   setSelectedExpression: Dispatch<SetStateAction<string>>
 }
@@ -110,7 +109,8 @@ export const EditEventData = ({
         },
       )
 
-      updateExpressionList(data, 'update')
+      updateExpressionList(data, ExpressionActions.UPDATE)
+      return data.id
     } catch (error) {
       showErrorToast(error)
     }
@@ -196,7 +196,7 @@ export const EditEventData = ({
                 setProject(newProject)
               }}
             />
-            <div className='grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-[30px]'>
+            <div className='grid gap-4 lg:grid-cols-2 lg:gap-5'>
               <Button
                 variant='outline'
                 className='w-full'
@@ -222,7 +222,12 @@ export const EditEventData = ({
             </div>
             {precalcRes.length ? <PrecalcValues res={precalcRes} /> : <></>}
           </div>
-          <CalculationsTabs expressionId={expression.id} isChanged={isChanged} />
+          <CalculationsTabs
+            expressionId={expression.id}
+            isChanged={isChanged}
+            action={ExpressionActions.UPDATE}
+            save={save}
+          />
         </div>
       </AccordionContent>
     </AccordionItem>

@@ -1,70 +1,38 @@
-import { useMemo, useState } from 'react'
+import { type Dispatch, type SetStateAction } from 'react'
 
-import { usePathname, useRouter } from 'next/navigation'
-
-import useAxiosAuth from '~/hooks/axios-auth'
-import { ApiRoutes } from '~/lib/axios-instance'
 import { MIN_BLOCK_HEIGHT } from '~/lib/constants'
-import { showErrorToast } from '~/lib/show-error-toast'
-import type { Task } from '~/types/task'
+import type { Period } from '~/types/calculations'
 
 import { InputBlock } from '../input-block'
 import { Button } from '../ui/button'
 import type { CalculationsTabsProps } from './calculations-tabs'
 
 interface PeriodicCalculationProps {
-  expressionId: CalculationsTabsProps['expressionId']
-  save: CalculationsTabsProps['save']
+  periodical: string
+  period: Period
+  minBlockHeightError: boolean
+  addressValidationErrors: boolean
+  prove: () => Promise<void>
+  setPeriodical: Dispatch<SetStateAction<string>>
+  setPeriod: Dispatch<SetStateAction<Period>>
+  setOpenModal: Dispatch<SetStateAction<boolean>>
   isChanged: CalculationsTabsProps['isChanged']
 }
 
-export const PeriodicCalculation = ({ expressionId, save, isChanged }: PeriodicCalculationProps) => {
-  const navigate = useRouter()
-  const pathname = usePathname()
-  const axiosAuth = useAxiosAuth()
-
-  const [period, setPeriod] = useState<{ from: string; to: string }>({
-    from: '',
-    to: '',
-  })
-  const [periodical, setPeriodical] = useState<string>('')
-
-  const prove = async () => {
-    let expression_id: number | undefined
-
-    if (save) {
-      expression_id = await save()
-    } else {
-      expression_id = expressionId
-    }
-
-    if (!expression_id) return
-
-    try {
-      await axiosAuth.post<Task>(ApiRoutes.TASKS, {
-        block_range: `${period.from}-${period.to}`,
-        expression_id,
-        periodical,
-      })
-      navigate.push(`${pathname}/proofs`)
-    } catch (error) {
-      showErrorToast(error)
-    }
-  }
-
-  const addressValidationErrors = useMemo(() => {
-    if (!period.from || !period.to) return false
-    return Number(period.from) > Number(period.to)
-  }, [period])
-
-  const minBlockHeightError = useMemo(() => {
-    if (!period.from) return false
-    return Number(period.from) < MIN_BLOCK_HEIGHT
-  }, [period])
-
+export const PeriodicCalculation = ({
+  periodical,
+  period,
+  minBlockHeightError,
+  addressValidationErrors,
+  prove,
+  setPeriodical,
+  setPeriod,
+  setOpenModal,
+  isChanged,
+}: PeriodicCalculationProps) => {
   return (
     <>
-      <div className='grid  gap-4 lg:grid-cols-3 lg:gap-5'>
+      <div className='grid gap-4 lg:grid-cols-3 lg:gap-5'>
         <InputBlock
           className='w-full'
           type='number'
@@ -133,7 +101,11 @@ export const PeriodicCalculation = ({ expressionId, save, isChanged }: PeriodicC
         className='w-full self-center lg:w-[274px]'
         disabled={addressValidationErrors || !period.from || !period.to || !periodical || minBlockHeightError}
         onClick={() => {
-          if (isChanged && isChanged()) return
+          if (isChanged && isChanged()) {
+            setOpenModal(true)
+            return
+          }
+
           void (async () => {
             await prove()
           })()

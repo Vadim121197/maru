@@ -55,7 +55,7 @@ export const UpdateProject = () => {
       <div className='flex flex-col gap-2'>
         <TextLabel label='Descriptions' />
         <Textarea
-          className='p-4 text-base font-medium text-muted '
+          className='min-h-[180px] p-4 text-base font-medium text-muted'
           placeholder='Enter Description to your Project'
           value={description}
           onChange={(e) => {

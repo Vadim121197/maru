@@ -5,7 +5,13 @@ import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import { showErrorToast } from '~/lib/show-error-toast'
 import type { PrecalculateResult } from '~/types/calculations'
-import { EventDataType, type Expression, type ExpressionValues, type FinalExpressionTools } from '~/types/expressions'
+import {
+  EventDataType,
+  ExpressionActions,
+  type Expression,
+  type ExpressionValues,
+  type FinalExpressionTools,
+} from '~/types/expressions'
 
 import { FinalExpressionField } from '../expression-field'
 import { TextLabel } from '../form-components'
@@ -18,7 +24,7 @@ import { CompoundHelperTable } from './compound-helper-table'
 export const CreateCompound = ({
   updateExpressionList,
 }: {
-  updateExpressionList: (expression: Expression, type: 'create' | 'update') => void
+  updateExpressionList: (expression: Expression, type: ExpressionActions) => void
 }) => {
   const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
@@ -69,7 +75,7 @@ export const CreateCompound = ({
         data_source: EventDataType.EXPRESSIONS,
       })
 
-      updateExpressionList(data, 'create')
+      updateExpressionList(data, ExpressionActions.CREATE)
       return data.id
     } catch (error) {
       showErrorToast(error)
@@ -124,7 +130,7 @@ export const CreateCompound = ({
           </div>
           {precalculationResult.length ? <PrecalcValues res={precalculationResult} /> : <></>}
           <div className='mt-6'>
-            <CalculationsTabs save={save} />
+            <CalculationsTabs save={save} action={ExpressionActions.CREATE} />
           </div>
         </div>
       )}
