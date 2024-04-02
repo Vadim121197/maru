@@ -27,8 +27,8 @@ import { CompoundHelperTable } from './compound-helper-table'
 interface EditCompoundProps {
   expression: Expression
   selectedExpression: string
-  updateExpressionList: (expression: Expression, type: ExpressionActions) => void
-  deleteExpression?: (id: number, type: ExpressionTypeResponse) => Promise<void>
+  updateExpressionList: (expression: Expression) => void
+  deleteExpression?: (id: number, type: ExpressionTypeResponse) => void
   setSelectedExpression: Dispatch<SetStateAction<string>>
 }
 
@@ -87,7 +87,7 @@ export const EditCompound = ({
           name: expressionValues.name,
         },
       )
-      updateExpressionList(data, ExpressionActions.UPDATE)
+      updateExpressionList(data)
 
       return data.id
     } catch (error) {
@@ -141,7 +141,7 @@ export const EditCompound = ({
                       strokeWidth={1}
                       className='h-4 w-4 cursor-pointer text-foreground hover:opacity-50 lg:h-5 lg:w-5'
                       onClick={() => {
-                        void deleteExpression(expression.id, ExpressionTypeResponse.COMPOUND)
+                        deleteExpression(expression.id, ExpressionTypeResponse.COMPOUND)
                       }}
                     />
                   </div>

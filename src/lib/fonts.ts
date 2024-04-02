@@ -1,6 +1,6 @@
-import { Poppins as FontSans } from 'next/font/google'
+import { Poppins } from '@next/font/google'
 
-export const fontSans = FontSans({
+export const fontSans = Poppins({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-sans',

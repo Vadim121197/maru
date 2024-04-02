@@ -15,8 +15,8 @@ import {
   type Expression,
   type ExpressionEvent,
   type ExpressionTools,
-  type ExpressionTypeResponse,
   ExpressionActions,
+  ExpressionTypeResponse,
 } from '~/types/expressions'
 
 import { CalculationsTabs } from '../compound/calculations-tabs'
@@ -29,11 +29,11 @@ import { Button } from '../ui/button'
 import { EventDataDetailCard } from './event-data-detail-card'
 import { EventDataHelperTable } from './event-data-helper-table'
 
-interface EditEventDataProps {
+export interface EditEventDataProps {
   expression: Expression
   selectedExpression: string
-  updateExpressionList: (expression: Expression, type: ExpressionActions) => void
-  deleteExpression?: (id: number, type: ExpressionTypeResponse) => Promise<void>
+  updateExpressionList: (expression: Expression) => void
+  deleteExpression?: (id: number, type: ExpressionTypeResponse) => void
   setSelectedExpression: Dispatch<SetStateAction<string>>
 }
 
@@ -109,7 +109,9 @@ export const EditEventData = ({
         },
       )
 
-      updateExpressionList(data, ExpressionActions.UPDATE)
+      console.log({ newVersion: data, oldVersion: expression })
+
+      updateExpressionList(data)
       return data.id
     } catch (error) {
       showErrorToast(error)

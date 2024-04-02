@@ -5,13 +5,14 @@ import { cutAddress } from '~/lib/cut-address'
 import { ExpressionTypeResponse, type Expression } from '~/types/expressions'
 
 import { AccordionTrigger } from '../ui/accordion'
+import type { EditEventDataProps } from './edit-event-data'
 
 export const EventDataDetailCard = ({
   expression,
   deleteExpression,
 }: {
   expression: Expression
-  deleteExpression?: (id: number, type: ExpressionTypeResponse) => Promise<void>
+  deleteExpression?: EditEventDataProps['deleteExpression']
 }) => {
   return (
     <div className='flex flex-col gap-6'>
@@ -66,7 +67,7 @@ export const EventDataDetailCard = ({
                 strokeWidth={1}
                 className='h-4 w-4 cursor-pointer text-muted-foreground lg:h-5 lg:w-5'
                 onClick={() => {
-                  void deleteExpression(expression.id, ExpressionTypeResponse.EVENT_DATA)
+                  deleteExpression(expression.id, ExpressionTypeResponse.EVENT_DATA)
                 }}
               />
             </div>

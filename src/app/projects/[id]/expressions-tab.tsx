@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 
+import { Dialog } from '@radix-ui/react-dialog'
 import { Bird, Plus, X } from 'lucide-react'
 
 import { useProject } from '~/app/projects/[id]/ProjectProvider'
@@ -10,8 +11,10 @@ import { EditCompound } from '~/components/compound/edit-compound'
 import { CreateEventData } from '~/components/event-data/create-event-data'
 import { EditEventData } from '~/components/event-data/edit-event-data'
 import { SelectComponent } from '~/components/form-components'
+import { Icons } from '~/components/icons'
 import { Accordion } from '~/components/ui/accordion'
 import { Button } from '~/components/ui/button'
+import { DialogContent, DialogHeader } from '~/components/ui/dialog'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import { Expressions, expressionTypes } from '~/lib/expressions'
@@ -19,7 +22,7 @@ import { showErrorToast } from '~/lib/show-error-toast'
 import {
   ExpressionActions,
   type Expression,
-  type ExpressionTypeResponse,
+  ExpressionTypeResponse,
   type ExpressionsResponse,
 } from '~/types/expressions'
 
@@ -30,93 +33,85 @@ export const ExpressionsTab = () => {
   const ref = useRef<HTMLInputElement>(null)
 
   const [loading, setLoading] = useState<boolean | undefined>()
-  const [selectedBaseExpression, setSelectedBaseExpression] = useState<string>('')
-  const [selectedFinaleExpression, setSelectedFinaleExpression] = useState('')
+  const [selectedExpressionToDelete, setSelectedExpressionToDelete] = useState<{
+    id: number
+    type: ExpressionTypeResponse
+  } | null>(null)
+  const [selectedEventData, setSelectedEventData] = useState<string>('')
+  const [selectedCompound, setSelectedCompound] = useState('')
   const [addNew, setAddNew] = useState<boolean>(false)
   const [selectedSource, setSelectedSource] = useState<Expressions | undefined>()
+
+  const getExpressions = async () => {
+    if (!project) return
+    try {
+      setLoading(true)
+      const { data: projectExpressions } = await axiosAuth.get<ExpressionsResponse>(
+        ApiRoutes.PROJECTS_PROJECT_ID_EXPRESSIONS.replace(PROJECT_ID, project.id.toString()),
+      )
+
+      setExpressions(projectExpressions)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (!project?.id) return
 
     void (async () => {
-      try {
-        setLoading(true)
-        const { data: projectExpressions } = await axiosAuth.get<ExpressionsResponse>(
-          ApiRoutes.PROJECTS_PROJECT_ID_EXPRESSIONS.replace(PROJECT_ID, project.id.toString()),
-        )
-
-        setExpressions(projectExpressions)
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-      }
+      await getExpressions()
     })()
-  }, [project?.id, axiosAuth, setExpressions])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project?.id])
 
-  const updateExpressionList = (expression: Expression, type: ExpressionActions) => {
-    // if other person's project do nothing
-    if (!isUserProject) return
+  const updateExpressionList =
+    (expressionType: ExpressionTypeResponse, action: ExpressionActions) => (expression: Expression) => {
+      // if other person's project do nothing
+      if (!isUserProject) return
 
-    let index: number
-    if (type === ExpressionActions.UPDATE) {
-      index = expressions.event_data_expressions.findIndex((exp) => exp.id === expression.id)
-    } else {
-      index = expressions.event_data_expressions.length
+      if (action === ExpressionActions.UPDATE) {
+        void getExpressions()
+      } else {
+        const index = expressions[expressionType].length
+
+        const newList = expressions[expressionType]
+
+        newList[index] = expression
+
+        setExpressions({
+          ...expressions,
+          [expressionType]: newList,
+        })
+      }
+      setSelectedEventData('')
+      setAddNew(false)
+      setSelectedSource(undefined)
     }
-
-    const newList = expressions.event_data_expressions
-
-    newList[index] = expression
-
-    setExpressions({
-      compound_expressions: expressions.compound_expressions,
-      event_data_expressions: newList,
-    })
-
-    setSelectedBaseExpression('')
-    setAddNew(false)
-    setSelectedSource(undefined)
-  }
-
-  const updateFinaleExpressionList = (expression: Expression, type: ExpressionActions) => {
-    // if other person's project do nothing
-    if (!isUserProject) return
-
-    let index: number
-    if (type === ExpressionActions.UPDATE) {
-      index = expressions.compound_expressions.findIndex((exp) => exp.id === expression.id)
-    } else {
-      index = expressions.compound_expressions.length
-    }
-
-    const newList = expressions.compound_expressions
-
-    newList[index] = expression
-
-    setExpressions({
-      event_data_expressions: expressions.event_data_expressions,
-      compound_expressions: newList,
-    })
-
-    setSelectedFinaleExpression('')
-    setAddNew(false)
-    setSelectedSource(undefined)
-  }
 
   if (!project) return <></>
 
-  const deleteExpression = async (id: number, type: ExpressionTypeResponse) => {
+  const deleteExpression = (id: number, type: ExpressionTypeResponse) => {
+    setSelectedExpressionToDelete({
+      id,
+      type,
+    })
+  }
+
+  const approveDelete = async () => {
     // if other person's project do nothing
-    if (!isUserProject) return
-
+    if (!isUserProject || !selectedExpressionToDelete) return
     try {
-      await axiosAuth.delete<Expression>(ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, id.toString()))
-
-      const filteredExpression = expressions[type].filter((exp) => exp.id !== id)
-
-      expressions[type] = filteredExpression
-
+      await axiosAuth.delete<Expression>(
+        ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, selectedExpressionToDelete.id.toString()),
+      )
+      const filteredExpression = expressions[selectedExpressionToDelete.type].filter(
+        (exp) => exp.id !== selectedExpressionToDelete.id,
+      )
+      expressions[selectedExpressionToDelete.type] = filteredExpression
       setExpressions(expressions)
+      setSelectedExpressionToDelete(null)
     } catch (error) {
       showErrorToast(error)
     }
@@ -154,121 +149,161 @@ export const ExpressionsTab = () => {
     )
 
   return (
-    <div className='flex flex-col'>
-      <div className='flex flex-col gap-6'>
-        <div className='flex w-full items-center justify-between'>
-          <p className='text-sm font-medium lg:text-lg'>Expression</p>
-          {expressions.event_data_expressions.length && isUserProject ? (
-            <Button
-              variant='outline'
-              className='flex w-[152px] items-center gap-[10px] lg:w-[274px]'
-              onClick={() => {
-                ref.current?.scrollIntoView({ behavior: 'smooth' })
-                setAddNew(true)
-                setSelectedBaseExpression('')
-                setSelectedFinaleExpression('')
-              }}
-            >
-              <div>
-                <Plus className='h-4 w-4' />
-              </div>
-              <p className='text-sm font-bold lg:text-base'>Expression</p>
-            </Button>
-          ) : (
-            <></>
-          )}
-        </div>
-        <Accordion
-          type='single'
-          value={selectedBaseExpression}
-          onValueChange={(value) => {
-            // if other person's project do nothing
-            if (!isUserProject) return
-
-            setSelectedBaseExpression(value)
-            setSelectedFinaleExpression('')
-            setAddNew(false)
-          }}
-          collapsible
-          className='grid w-full grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
-        >
-          {expressions.event_data_expressions.map((exp) => (
-            <EditEventData
-              expression={exp}
-              updateExpressionList={updateExpressionList}
-              key={exp.id}
-              selectedExpression={selectedBaseExpression}
-              deleteExpression={isUserProject ? deleteExpression : undefined}
-              setSelectedExpression={setSelectedBaseExpression}
-            />
-          ))}
-        </Accordion>
-      </div>
-      <div ref={ref} className={!addNew ? 'h-0' : ''}>
-        {addNew && isUserProject && (
-          <div className='mt-6 flex w-full flex-col bg-card px-4 pb-[60px] pt-4 lg:w-[calc(50%-11px)] lg:px-5'>
-            <div className='mb-6 grid grid-cols-3'>
-              <div />
-              <p className='text-center text-xl font-medium text-muted-foreground lg:text-2xl lg:font-bold'>Editor</p>
-              <div className='flex items-center justify-end'>
-                <X
-                  strokeWidth={1}
-                  className='h-5 w-5 cursor-pointer lg:h-6 lg:w-6'
-                  onClick={() => {
-                    setAddNew(false)
-                  }}
-                />
-              </div>
-            </div>
-            <SelectComponent
-              value={selectedSource}
-              onValueChange={(e) => {
-                setSelectedSource(e as Expressions)
-              }}
-              options={expressionTypes}
-              label='Data source'
-            />
-            {selectedSource === Expressions.EVENT_DATA && (
-              <CreateEventData updateExpressionList={updateExpressionList} />
-            )}
-            {selectedSource === Expressions.EXPRESSIONS && (
-              <CreateCompound updateExpressionList={updateFinaleExpressionList} />
+    <>
+      <div className='flex flex-col'>
+        <div className='flex flex-col gap-6'>
+          <div className='flex w-full items-center justify-between'>
+            <p className='text-sm font-medium lg:text-lg'>Expression</p>
+            {expressions.event_data_expressions.length && isUserProject ? (
+              <Button
+                variant='outline'
+                className='flex w-[152px] items-center gap-[10px] lg:w-[274px]'
+                onClick={() => {
+                  ref.current?.scrollIntoView({ behavior: 'smooth' })
+                  setAddNew(true)
+                  setSelectedEventData('')
+                  setSelectedCompound('')
+                }}
+              >
+                <div>
+                  <Plus className='h-4 w-4' />
+                </div>
+                <p className='text-sm font-bold lg:text-base'>Expression</p>
+              </Button>
+            ) : (
+              <></>
             )}
           </div>
-        )}
-      </div>
-      {expressions.compound_expressions.length ? (
-        <div className='mt-[60px] flex flex-col gap-4 lg:mt-10 lg:gap-6'>
-          <p className='text-sm font-medium lg:text-lg'>Compound Expressions</p>
           <Accordion
             type='single'
-            value={selectedFinaleExpression}
+            value={selectedEventData}
             onValueChange={(value) => {
               // if other person's project do nothing
               if (!isUserProject) return
 
-              setSelectedFinaleExpression(value)
-              setSelectedBaseExpression('')
+              setSelectedEventData(value)
+              setSelectedCompound('')
               setAddNew(false)
             }}
             collapsible
             className='grid w-full grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
           >
-            {expressions.compound_expressions.map((exp) => (
-              <EditCompound
+            {expressions.event_data_expressions.map((exp) => (
+              <EditEventData
                 expression={exp}
-                updateExpressionList={updateFinaleExpressionList}
+                updateExpressionList={updateExpressionList(ExpressionTypeResponse.EVENT_DATA, ExpressionActions.UPDATE)}
                 key={exp.id}
-                selectedExpression={selectedFinaleExpression}
+                selectedExpression={selectedEventData}
                 deleteExpression={isUserProject ? deleteExpression : undefined}
-                setSelectedExpression={setSelectedFinaleExpression}
+                setSelectedExpression={setSelectedEventData}
               />
             ))}
           </Accordion>
         </div>
-      ) : (
-        <></>
-      )}
-    </div>
+        <div ref={ref} className={!addNew ? 'h-0' : ''}>
+          {addNew && isUserProject && (
+            <div className='mt-6 flex w-full flex-col bg-card px-4 pb-[60px] pt-4 lg:w-[calc(50%-11px)] lg:px-5'>
+              <div className='mb-6 grid grid-cols-3'>
+                <div />
+                <p className='text-center text-xl font-medium text-muted-foreground lg:text-2xl lg:font-bold'>Editor</p>
+                <div className='flex items-center justify-end'>
+                  <X
+                    strokeWidth={1}
+                    className='h-5 w-5 cursor-pointer lg:h-6 lg:w-6'
+                    onClick={() => {
+                      setAddNew(false)
+                    }}
+                  />
+                </div>
+              </div>
+              <SelectComponent
+                value={selectedSource}
+                onValueChange={(e) => {
+                  setSelectedSource(e as Expressions)
+                }}
+                options={expressionTypes}
+                label='Data source'
+              />
+              {selectedSource === Expressions.EVENT_DATA && (
+                <CreateEventData
+                  updateExpressionList={updateExpressionList(
+                    ExpressionTypeResponse.EVENT_DATA,
+                    ExpressionActions.CREATE,
+                  )}
+                />
+              )}
+              {selectedSource === Expressions.EXPRESSIONS && (
+                <CreateCompound
+                  updateExpressionList={updateExpressionList(ExpressionTypeResponse.COMPOUND, ExpressionActions.CREATE)}
+                />
+              )}
+            </div>
+          )}
+        </div>
+        {expressions.compound_expressions.length ? (
+          <div className='mt-[60px] flex flex-col gap-4 lg:mt-10 lg:gap-6'>
+            <p className='text-sm font-medium lg:text-lg'>Compound Expressions</p>
+            <Accordion
+              type='single'
+              value={selectedCompound}
+              onValueChange={(value) => {
+                // if other person's project do nothing
+                if (!isUserProject) return
+
+                setSelectedCompound(value)
+                setSelectedEventData('')
+                setAddNew(false)
+              }}
+              collapsible
+              className='grid w-full grid-cols-1 gap-x-[22px] gap-y-4 lg:grid-cols-2'
+            >
+              {expressions.compound_expressions.map((exp) => (
+                <EditCompound
+                  expression={exp}
+                  updateExpressionList={updateExpressionList(ExpressionTypeResponse.COMPOUND, ExpressionActions.UPDATE)}
+                  key={exp.id}
+                  selectedExpression={selectedCompound}
+                  deleteExpression={isUserProject ? deleteExpression : undefined}
+                  setSelectedExpression={setSelectedCompound}
+                />
+              ))}
+            </Accordion>
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
+      <Dialog open={Boolean(selectedExpressionToDelete)}>
+        <DialogContent>
+          <DialogHeader className='flex flex-row items-center gap-2 border-b-0 pb-10'>
+            <div>
+              <Icons.warning />
+            </div>
+            <p className='text-base font-medium text-muted-foreground'>Are you sure you want to delete expression?</p>
+          </DialogHeader>
+          <div className='flex flex-col gap-4 lg:flex-row'>
+            <Button
+              className='w-full'
+              variant='outline'
+              onClick={() => {
+                setSelectedExpressionToDelete(null)
+              }}
+            >
+              No
+            </Button>
+            <Button
+              className='w-full'
+              onClick={() => {
+                void (async () => {
+                  await approveDelete()
+                })()
+              }}
+            >
+              Yes
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

@@ -24,7 +24,7 @@ import { CompoundHelperTable } from './compound-helper-table'
 export const CreateCompound = ({
   updateExpressionList,
 }: {
-  updateExpressionList: (expression: Expression, type: ExpressionActions) => void
+  updateExpressionList: (expression: Expression) => void
 }) => {
   const { project, setProject } = useProject()((state) => state)
   const axiosAuth = useAxiosAuth()
@@ -75,7 +75,7 @@ export const CreateCompound = ({
         data_source: EventDataType.EXPRESSIONS,
       })
 
-      updateExpressionList(data, ExpressionActions.CREATE)
+      updateExpressionList(data)
       return data.id
     } catch (error) {
       showErrorToast(error)

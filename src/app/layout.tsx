@@ -35,7 +35,7 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
 
   return (
     <html lang='en' suppressHydrationWarning>
-      <body className={cn('min-h-screen bg-background font-sans antialiased relative', fontSans.variable)}>
+      <body className={cn('min-h-screen bg-background relative', fontSans.variable)}>
         <div className='absolute bottom-0 left-[-200px] hidden h-[576px] w-[600px] rounded-full bg-[rgba(32,27,47,0.75)] blur-[250px] lg:block' />
         <ToastContainer
           position='top-right'
