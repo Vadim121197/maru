@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@next/font':
-    specifier: ^14.1.4
-    version: 14.1.4(next@14.0.4)
   '@radix-ui/react-accordion':
     specifier: ^1.1.2
     version: 1.1.2(@types/react-dom@18.2.18)(@types/react@18.2.23)(react-dom@18.2.0)(react@18.2.0)
@@ -581,14 +578,6 @@ packages:
     resolution: {integrity: sha512-V3ipYiIUhYjP7BqpOY06mgRFFGoR9cKawD4iJQFhEnuy3j3e0ipcr+OpNQLbOBrIU3p9wuPw3OwBn0hHopDW0A==}
     dependencies:
       esm-seedrandom: 3.0.5
-    dev: false
-
-  /@next/font@14.1.4(next@14.0.4):
-    resolution: {integrity: sha512-a7CnpjEA3zXsKpCB7JX92mNiDYvjDImLfRjK+szi/q64vwbNrrs54up2xgFE1T4K1OE8GaI/eQ3zrZFWIbOJ1Q==}
-    peerDependencies:
-      next: '*'
-    dependencies:
-      next: registry.npmmirror.com/next@14.0.4(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /@next/swc-darwin-arm64@14.0.4:

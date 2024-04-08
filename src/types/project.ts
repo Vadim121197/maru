@@ -16,6 +16,7 @@ export interface Project {
   name: string | null
   created_at: Date
   description: string | null
+  expression_count: number
   updated_at: Date
   id: number
   stars_count: number

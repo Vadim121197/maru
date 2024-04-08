@@ -49,7 +49,7 @@ const ProfilePage = () => {
         placeholder='Enter bio'
       />
       <div className='flex flex-col gap-2'>
-        <TextLabel label='Email' />
+        <TextLabel label='Notifications email' />
         <div className='h-11 border-2 bg-background px-4 py-[10px] text-base font-medium'>{}</div>
       </div>
       <Button className='mt-[26px] w-full lg:w-[274px] lg:self-center' disabled={user?.bio === bio}>

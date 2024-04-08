@@ -35,6 +35,9 @@ export const ProjectCard = ({ href, project, className }: { href: string; projec
       <p className='text-sm font-medium text-muted-foreground lg:text-base'>
         Last updated {moment.utc(project.updated_at).startOf('hour').fromNow()}
       </p>
+      <p className='mt-2 text-sm font-medium text-muted-foreground lg:text-base'>
+        {project.expression_count} expression(s)
+      </p>
     </div>
   </Link>
 )

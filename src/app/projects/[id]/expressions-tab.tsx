@@ -273,7 +273,12 @@ export const ExpressionsTab = () => {
           <></>
         )}
       </div>
-      <Dialog open={Boolean(selectedExpressionToDelete)}>
+      <Dialog
+        open={Boolean(selectedExpressionToDelete)}
+        onOpenChange={(open) => {
+          !open && setSelectedExpressionToDelete(null)
+        }}
+      >
         <DialogContent>
           <DialogHeader className='flex flex-row items-center gap-2 border-b-0 pb-10'>
             <div>
