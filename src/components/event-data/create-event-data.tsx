@@ -48,6 +48,7 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
   const [tools, setTools] = useState<ExpressionTools | undefined>()
   const [fetchAddressError, setFetchAddressError] = useState<boolean>(false)
   const [precalcRes, setPrecalcRes] = useState<PrecalculateResult[]>([])
+  const [openAbi, setOpenAbi] = useState<boolean>(false)
 
   const addressValidationErrors = useMemo(() => {
     if (!contractAddress) return false
@@ -63,6 +64,7 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
     setTools(data)
     setSelectedEvent(data.events[0])
     setExpressionValues((state) => ({ ...state, aggregate: data.aggregate_operations[0]?.name }))
+    setOpenAbi(false)
   }
 
   useEffect(() => {
@@ -73,19 +75,15 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
     }
 
     if (addressValidationErrors) return
-
     void (async () => {
       try {
         await fetchTools()
       } catch (error) {
         const err = error as AxiosError
-
         const errDetail = err.response?.data as { detail: string }
-
         if (errDetail.detail) {
           setFetchAddressError(errDetail.detail === 'Contract ABI not found')
         }
-
         setTools(undefined)
         setSelectedEvent(undefined)
       }
@@ -150,29 +148,42 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
     <>
       <div className='mt-6 flex w-full flex-col'>
         <div className='grid gap-6 lg:grid-cols-2 lg:gap-4'>
-          <InputBlock
-            label='Contact address'
-            className='w-full'
-            value={contractAddress}
-            onChange={(e) => {
-              setContractAddress(e.target.value)
-              setFetchAddressError(false)
-              setTools(undefined)
-              setSelectedEvent(undefined)
-            }}
-            validations={[
-              {
-                type: 'error',
-                issue: 'Invalid address',
-                checkFn: () => addressValidationErrors,
-              },
-              {
-                type: 'warn',
-                issue: '',
-                checkFn: () => fetchAddressError,
-              },
-            ]}
-          />
+          <div className='flex flex-col gap-1'>
+            <InputBlock
+              label='Contact address'
+              className='w-full'
+              value={contractAddress}
+              onChange={(e) => {
+                setContractAddress(e.target.value)
+                setFetchAddressError(false)
+                setTools(undefined)
+                setSelectedEvent(undefined)
+              }}
+              validations={[
+                {
+                  type: 'error',
+                  issue: 'Invalid address',
+                  checkFn: () => addressValidationErrors,
+                },
+                {
+                  type: 'warn',
+                  issue: '',
+                  checkFn: () => fetchAddressError,
+                },
+              ]}
+            />
+            {(tools || fetchAddressError) && (
+              <Button
+                variant='ghost'
+                className='h-fit w-fit py-0 text-sm font-normal text-primary'
+                onClick={() => {
+                  setOpenAbi(true)
+                }}
+              >
+                Upload custom ABI
+              </Button>
+            )}
+          </div>
           {tools && (
             <SelectComponent
               value={selectedEvent?.name}
@@ -185,6 +196,7 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
             />
           )}
         </div>
+
         {selectedEvent && tools && (
           <div className='mt-10 flex flex-col'>
             <div className='flex flex-col'>
@@ -245,11 +257,10 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
         )}
       </div>
       <FailedFetchAbiModal
-        open={fetchAddressError}
+        open={openAbi}
         contractAddress={contractAddress}
         onOpenChange={(value) => {
-          setFetchAddressError(value)
-          setContractAddress('')
+          setOpenAbi(value)
         }}
         fetchTools={fetchTools}
       />

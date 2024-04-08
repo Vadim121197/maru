@@ -46,6 +46,7 @@ export const FailedFetchAbiModal = ({
         await axiosAuth.post(ApiRoutes.CONTRACTS, form)
 
         await fetchTools()
+        setFile(undefined)
       } catch {}
     })()
   }
