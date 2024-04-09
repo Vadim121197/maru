@@ -21,6 +21,7 @@ export enum ApiRoutes {
 
   AUTH_CALLBACK = '/auth/callback',
   AUTH_REFRESH = '/auth/refresh',
+  AUTH_LOGOUT = '/auth/logout',
 
   PROJECTS = '/projects',
   PROJECTS_IMPORT = '/projects/import',

@@ -27,7 +27,6 @@ export const SignInProvider = ({ children }: { children: ReactNode }) => {
       await signIn('credentials', {
         code,
         redirect: false,
-        callbackUrl: pathname,
       })
     })()
   }, [code, pathname, searchParams])

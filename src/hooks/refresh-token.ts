@@ -25,6 +25,9 @@ export const useRefreshToken = () => {
       }
     } catch (error) {
       await signOut()
+      await axiosInstance.post(ApiRoutes.AUTH_LOGOUT, {
+        refresh_token: session?.refreshToken,
+      })
     }
   }
 }

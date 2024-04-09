@@ -1,10 +1,13 @@
 'use client'
 
+import { useState } from 'react'
+
 import { UserRound } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 
 import { siteConfig } from '~/config/site'
+import { ApiRoutes, axiosInstance } from '~/lib/axios-instance'
 
 import { SigninButton } from './signin-button'
 import { Button } from './ui/button'
@@ -12,11 +15,17 @@ import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger 
 
 export const UserButton = () => {
   const { data: session } = useSession()
+  const [open, setOpen] = useState<boolean>(false)
 
   return (
     <>
       <SigninButton variant='outline' className={!session ? 'hidden lg:inline-flex' : 'hidden'} />
-      <Sheet>
+      <Sheet
+        open={open}
+        onOpenChange={(value) => {
+          setOpen(value)
+        }}
+      >
         <SheetTrigger>
           <div className={!session ? 'hidden' : 'hidden lg:block'}>
             <UserRound strokeWidth='1' className='ml-3 h-8 w-8' />
@@ -38,10 +47,24 @@ export const UserButton = () => {
               {!session ? (
                 <SigninButton className='w-full' />
               ) : (
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-expect-error
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                <Button className='w-full' onClick={signOut}>
+                <Button
+                  className='w-full'
+                  onClick={() => {
+                    void (async () => {
+                      try {
+                        await signOut({
+                          redirect: false,
+                        })
+                        await axiosInstance.post(ApiRoutes.AUTH_LOGOUT, {
+                          refresh_token: session.refreshToken,
+                        })
+                        setOpen(false)
+                      } catch {
+                        setOpen(false)
+                      }
+                    })()
+                  }}
+                >
                   Sign out
                 </Button>
               )}
