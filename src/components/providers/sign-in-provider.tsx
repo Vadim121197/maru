@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, type ReactNode, useMemo } from 'react'
 
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { usePathname, useSearchParams } from 'next/navigation'
@@ -10,6 +10,10 @@ export const SignInProvider = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname()
   const { data: session } = useSession()
 
+  const code = useMemo(() => {
+    return searchParams.get('code')
+  }, [searchParams])
+
   useEffect(() => {
     if (session?.error === 'RefreshAccessTokenError') {
       void signOut()
@@ -17,17 +21,16 @@ export const SignInProvider = ({ children }: { children: ReactNode }) => {
   }, [session])
 
   useEffect(() => {
-    const code = searchParams.get('code')
     if (!code) return
 
     void (async () => {
       await signIn('credentials', {
         code,
-        redirect: true,
+        redirect: false,
         callbackUrl: pathname,
       })
     })()
-  }, [searchParams, pathname])
+  }, [code, pathname, searchParams])
 
   return <>{children}</>
 }

@@ -49,11 +49,7 @@ const IndexPage = async () => {
     <section className='grid items-center px-7 pt-10 lg:pt-[60px]'>
       <div className='flex flex-col justify-between gap-[100px]  lg:flex-row lg:gap-6'>
         <div className='order-2 flex flex-col gap-10 lg:order-1 lg:w-[20%]'>
-          {session && (
-            <div className='hidden w-full lg:block'>
-              <AuthSidebar nav={siteConfig.secondaryNav} />
-            </div>
-          )}
+          <AuthSidebar nav={siteConfig.secondaryNav} className='hidden w-full lg:block' />
           <div className='flex flex-col gap-[2px]'>
             <p className='mb-[14px] text-base font-semibold lg:text-lg lg:font-medium'>Resources</p>
             {resources.map((r) => (
@@ -75,11 +71,8 @@ const IndexPage = async () => {
               New Project
             </Link>
           </div>
-          {session && (
-            <div className='order-2 mt-10 block w-full lg:mt-0 lg:hidden'>
-              <AuthSidebar nav={siteConfig.secondaryNav} />
-            </div>
-          )}
+
+          <AuthSidebar nav={siteConfig.secondaryNav} className='order-2 mt-10 flex w-full lg:mt-0 lg:hidden' />
           {projects.length ? (
             <Link
               href={Nav.PROJECTS}
