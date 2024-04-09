@@ -11,19 +11,19 @@ import { cn } from '~/lib/utils'
 import type { PrecalculateResult } from '~/types/calculations'
 import {
   EventDataType,
+  ExpressionActions,
+  ExpressionTypeResponse,
   type BaseExpressionValues,
   type Expression,
   type ExpressionEvent,
   type ExpressionTools,
-  ExpressionActions,
-  ExpressionTypeResponse,
 } from '~/types/expressions'
 
 import { CalculationsTabs } from '../compound/calculations-tabs'
-import { BaseExpressionField } from '../expression-field'
+import { EventDataExpressionField } from '../expression-field'
 import { TextLabel } from '../form-components'
 import { PrecalcSettings } from '../precalc-settings'
-import { PrecalcValues } from '../precalc-values'
+import { Precalculations } from '../precalc-values'
 import { AccordionContent, AccordionItem } from '../ui/accordion'
 import { Button } from '../ui/button'
 import { EventDataDetailCard } from './event-data-detail-card'
@@ -175,7 +175,7 @@ export const EditEventData = ({
                 </div>
               )}
             </div>
-            <BaseExpressionField
+            <EventDataExpressionField
               aggregateFunctions={tools?.aggregate_operations ?? []}
               expressionValues={expressionValues}
               setExpressionValues={setExpressionValues}
@@ -231,7 +231,7 @@ export const EditEventData = ({
                 Save
               </Button>
             </div>
-            {precalcRes.length ? <PrecalcValues res={precalcRes} /> : <></>}
+            {precalcRes.length ? <Precalculations res={precalcRes} /> : <></>}
           </div>
           <CalculationsTabs
             expressionId={expression.id}

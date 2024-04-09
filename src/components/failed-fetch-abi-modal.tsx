@@ -10,17 +10,21 @@ import { Dropzone } from './dropzone'
 import { Button } from './ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
 
-export const FailedFetchAbiModal = ({
+interface UploadAbiModalProps {
+  open: boolean
+  contractAddress: string
+  errorModal: boolean
+  onOpenChange: DialogProps['onOpenChange']
+  fetchTools: () => Promise<void>
+}
+
+export const UploadAbiModal = ({
   open,
+  errorModal,
   contractAddress,
   onOpenChange,
   fetchTools,
-}: {
-  open: boolean
-  contractAddress: string
-  onOpenChange: DialogProps['onOpenChange']
-  fetchTools: () => Promise<void>
-}) => {
+}: UploadAbiModalProps) => {
   const axiosAuth = useAxiosAuth()
 
   const [file, setFile] = useState<File | undefined>()
@@ -56,19 +60,21 @@ export const FailedFetchAbiModal = ({
       <DialogContent className='px-7 py-[36px]'>
         <DialogHeader className='pb-3'>
           <DialogTitle className='flex items-center gap-2 text-base font-medium text-muted-foreground'>
-            <AlertTriangle className='h-4 w-4 text-[rgba(255,219,0,1)]' />
-            Failed to fetch contract ABI.
+            {errorModal && <AlertTriangle className='h-4 w-4 text-[rgba(255,219,0,1)]' />}
+            {errorModal ? 'Failed to fetch contract ABI.' : 'Upload custom ABI.'}
           </DialogTitle>
         </DialogHeader>
-        <div className='mt-6 flex flex-col items-center gap-4'>
+        <div className='mt-6 flex flex-col gap-4'>
           <p className='text-sm font-normal text-muted-foreground'>
-            You can attach ABI file or continue with a demo contract address
+            You can attach ABI file {errorModal && 'or continue with a demo contract address'}
           </p>
           <Dropzone onDrop={onDrop} file={file} />
           <div className='mt-6 flex w-full gap-5'>
-            <Button className='w-full' variant='outline' disabled>
-              Use demo address
-            </Button>
+            {errorModal && (
+              <Button className='w-full' variant='outline' disabled>
+                Use demo address
+              </Button>
+            )}
             <Button className='w-full' onClick={handleContinue} disabled={!file}>
               Continue
             </Button>

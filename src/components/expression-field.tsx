@@ -1,4 +1,4 @@
-import { useMemo, type Dispatch, type SetStateAction, type RefObject } from 'react'
+import { useMemo, type Dispatch, type RefObject, type SetStateAction } from 'react'
 
 import { cn } from '~/lib/utils'
 import type { BaseExpressionValues, ExpressionAggregateFunctions, ExpressionValues } from '~/types/expressions'
@@ -83,7 +83,7 @@ export const FinalExpressionField = ({
   )
 }
 
-interface BaseExpressionFieldProps {
+interface EventDataExpressionFieldProps {
   aggregateFunctions?: ExpressionAggregateFunctions[]
   expressionValues: BaseExpressionValues
   setExpressionValues: Dispatch<SetStateAction<BaseExpressionValues>>
@@ -92,14 +92,14 @@ interface BaseExpressionFieldProps {
   textareaRef: RefObject<HTMLTextAreaElement>
 }
 
-export const BaseExpressionField = ({
+export const EventDataExpressionField = ({
   aggregateFunctions,
   expressionValues,
   className,
   textAreaClassName,
   setExpressionValues,
   textareaRef,
-}: BaseExpressionFieldProps) => {
+}: EventDataExpressionFieldProps) => {
   const selectOptions = useMemo(() => {
     if (!aggregateFunctions?.length) return []
     return aggregateFunctions.map((aggr) => {

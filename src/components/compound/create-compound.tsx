@@ -16,7 +16,7 @@ import {
 import { FinalExpressionField } from '../expression-field'
 import { TextLabel } from '../form-components'
 import { PrecalcSettings } from '../precalc-settings'
-import { PrecalcValues } from '../precalc-values'
+import { Precalculations } from '../precalc-values'
 import { Button } from '../ui/button'
 import { CalculationsTabs } from './calculations-tabs'
 import { CompoundHelperTable } from './compound-helper-table'
@@ -128,7 +128,7 @@ export const CreateCompound = ({
               Save
             </Button>
           </div>
-          {precalculationResult.length ? <PrecalcValues res={precalculationResult} /> : <></>}
+          {precalculationResult.length ? <Precalculations res={precalculationResult} /> : <></>}
           <div className='mt-6'>
             <CalculationsTabs save={save} action={ExpressionActions.CREATE} />
           </div>

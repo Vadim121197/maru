@@ -9,16 +9,16 @@ import { showErrorToast } from '~/lib/show-error-toast'
 import type { PrecalculateResult } from '~/types/calculations'
 import {
   EventDataType,
+  ExpressionActions,
   ExpressionTypeResponse,
   type Expression,
   type ExpressionValues,
   type FinalExpressionTools,
-  ExpressionActions,
 } from '~/types/expressions'
 
 import { FinalExpressionField } from '../expression-field'
 import { PrecalcSettings } from '../precalc-settings'
-import { PrecalcValues } from '../precalc-values'
+import { Precalculations } from '../precalc-values'
 import { AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
 import { Button } from '../ui/button'
 import { CalculationsTabs } from './calculations-tabs'
@@ -196,7 +196,7 @@ export const EditCompound = ({
                 Save
               </Button>
             </div>
-            {precalculationResult.length ? <PrecalcValues res={precalculationResult} /> : <></>}
+            {precalculationResult.length ? <Precalculations res={precalculationResult} /> : <></>}
           </div>
           <CalculationsTabs
             expressionId={expression.id}

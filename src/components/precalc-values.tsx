@@ -1,6 +1,6 @@
 import type { PrecalculateResult } from '~/types/calculations'
 
-export const PrecalcValues = ({ res }: { res: PrecalculateResult[] }) => {
+export const Precalculations = ({ res }: { res: PrecalculateResult[] }) => {
   return (
     <div className='mt-[60px] flex flex-col gap-6 lg:mt-10 lg:gap-4'>
       <p className='text-sm font-medium lg:text-base'>Expression Values</p>
