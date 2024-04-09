@@ -109,8 +109,6 @@ export const EditEventData = ({
         },
       )
 
-      console.log({ newVersion: data, oldVersion: expression })
-
       updateExpressionList(data)
       return data.id
     } catch (error) {

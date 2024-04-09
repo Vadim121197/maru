@@ -1,8 +1,6 @@
 import { Link2 } from 'lucide-react'
-import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 
-import { authOptions } from '~/auth'
 import { AuthSidebar } from '~/components/auth-sidebar'
 import { ProjectCard } from '~/components/project-card'
 import { buttonVariants } from '~/components/ui/button'
@@ -34,8 +32,6 @@ const resources = [
 ]
 
 const IndexPage = async () => {
-  const session = await getServerSession(authOptions)
-
   let projects: Project[] = []
   try {
     const {

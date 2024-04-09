@@ -1,31 +1,27 @@
-import axios from 'axios'
 import NextAuth from 'next-auth'
-import type { AuthOptions, Session, User } from 'next-auth'
+import type { AuthOptions, Session } from 'next-auth'
 import type { JWT } from 'next-auth/jwt'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-import type { Auth, User as CustomUser } from '~/types/auth'
+import type { Auth } from '~/types/auth'
 
-import { ApiRoutes } from './lib/axios-instance'
+import { ApiRoutes, axiosInstance } from './lib/axios-instance'
 
 export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      async authorize(credentials: { code: string }) {
+      async authorize(cred) {
+        const credentials = cred as { code: string }
         try {
-          const url = process.env.NEXT_PUBLIC_API_URL + ApiRoutes.AUTH_CALLBACK + `?code=${credentials.code}`
+          const { data } = await axiosInstance.get<Auth>(ApiRoutes.AUTH_CALLBACK + `?code=${credentials.code}`)
 
-          const { data } = await axios.get<Auth>(url)
-
-          return {
+          return Promise.resolve({
             ...data,
             id: data.id.toString(),
-          }
+          })
         } catch (error) {
-          return null
+          return Promise.resolve(null)
         }
       },
       credentials: {
@@ -37,57 +33,44 @@ export const authOptions: AuthOptions = {
     strategy: 'jwt',
   },
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
     async session({ session, token }: { session: Session; token: JWT }) {
-      session.accessToken = token.accessToken
-      session.error = token.error
-      session.refreshToken = token.refreshToken
+      const { accessToken, error, refreshToken, user } = token
 
-      if (session.accessToken) {
-        try {
-          const url = process.env.NEXT_PUBLIC_API_URL + ApiRoutes.USERS_ME
-
-          const { data } = await axios.get<CustomUser>(url, {
-            headers: {
-              Authorization: `Bearer ${token.accessToken}`,
-            },
-          })
-
-          session.user = data
-          return session
-        } catch (error) {
-          return
-        }
+      session.accessToken = accessToken
+      session.error = error
+      session.refreshToken = refreshToken
+      session.user = {
+        created_at: user.created_at,
+        username: user.username,
+        avatar_url: user.avatar_url,
+        installation_id: user.installation_id,
+        id: Number(user.id),
+        bio: user.bio,
+        theme: user.theme,
       }
+
+      return Promise.resolve(session)
     },
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    jwt({
-      token,
-      user,
-      trigger,
-      session,
-    }: {
-      token: JWT
-      user: User | null
-      trigger: string
-      session: Session | null
-    }) {
+
+    async jwt({ token, user: u, trigger, session: s }) {
+      const session = s as Session | undefined
+      const user = u as unknown as Auth | undefined
+
       if (trigger === 'update' && session?.accessToken && session.refreshToken) {
-        return {
+        return Promise.resolve({
           ...token,
           refreshToken: session.refreshToken,
           accessToken: session.accessToken,
-        }
+        })
       }
 
       if (user) {
         token.refreshToken = user.refresh_token
         token.accessToken = user.access_token
+        token.user = user
       }
 
-      return token
+      return Promise.resolve(token)
     },
   },
 }

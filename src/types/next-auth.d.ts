@@ -24,5 +24,7 @@ declare module 'next-auth/jwt' {
     accessToken: string
     expiresIn: number
     error: string | null
+    user: Auth
   }
+  interface User extends Auth {}
 }

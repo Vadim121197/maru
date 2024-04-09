@@ -48,7 +48,7 @@ export const Statistics = () => {
             Proofs Generated
           </p>
           <div className='flex justify-end'>
-            <SparklineChart
+            {/* <SparklineChart
               width={139}
               height={64}
               data={singleDateData}
@@ -78,7 +78,7 @@ export const Statistics = () => {
                   }
                 />
               }
-            />
+            /> */}
           </div>
 
           <p className='mt-[11px] text-base font-semibold lg:mt-[6px] lg:text-lg lg:font-medium'>

@@ -7,6 +7,8 @@ export interface Auth {
   access_token: string
   refresh_token: string
   expires_at: Date
+  bio: string
+  theme: 'light' | 'dark'
 }
 
 export interface User {

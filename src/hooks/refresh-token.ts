@@ -1,8 +1,9 @@
 'use client'
 
+import axios from 'axios'
 import { signOut, useSession } from 'next-auth/react'
 
-import { ApiRoutes, axiosInstance } from '~/lib/axios-instance'
+import { ApiRoutes, BASE_URL, axiosInstance } from '~/lib/axios-instance'
 import type { Auth } from '~/types/auth'
 
 export const useRefreshToken = () => {
@@ -10,7 +11,7 @@ export const useRefreshToken = () => {
 
   return async () => {
     try {
-      const { data } = await axiosInstance.post<Auth>(ApiRoutes.AUTH_REFRESH, {
+      const { data } = await axios.post<Auth>(BASE_URL + ApiRoutes.AUTH_REFRESH, {
         refresh_token: session?.refreshToken,
       })
 
