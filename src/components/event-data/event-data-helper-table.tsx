@@ -1,25 +1,11 @@
-import { useEffect, useMemo, useState, type Dispatch, type RefObject, type SetStateAction } from 'react'
+import { useEffect, useState, type Dispatch, type RefObject, type SetStateAction, useMemo } from 'react'
 
 import { Info } from 'lucide-react'
 
-import type {
-  BaseExpressionValues,
-  ChainlinkPrice,
-  ExpressionConstants,
-  ExpressionEvent,
-  ExpressionEventParam,
-  ExpressionTools,
-} from '~/types/expressions'
+import type { BaseExpressionValues, ExpressionEvent, ExpressionTools } from '~/types/expressions'
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
-
-export interface ExpressionHelperTable {
-  key: number
-  constant: ExpressionConstants | undefined
-  chainlinkPrice: ChainlinkPrice | undefined
-  param: ExpressionEventParam | undefined
-  // global_constants: ExpressionConstants | undefined
-}
 
 export const EventDataHelperTable = ({
   textareaRef,
@@ -43,31 +29,6 @@ export const EventDataHelperTable = ({
     textareaRef.current.setSelectionRange(start, end)
   }, [selection, textareaRef])
 
-  const data = useMemo(() => {
-    const maxLength = Math.max(
-      tools.constants.length,
-      tools.chainlink_prices.length,
-      // tools.global_constants.length,
-      event.params.length,
-    )
-
-    const arr: ExpressionHelperTable[] = []
-
-    for (let i = 0; i < maxLength; i += 1) {
-      const obj: ExpressionHelperTable = {
-        key: i,
-        constant: tools.constants[i],
-        chainlinkPrice: tools.chainlink_prices[i],
-        param: event.params[i],
-        // global_constants: tools.global_constants[i],
-      }
-
-      arr.push(obj)
-    }
-
-    return arr
-  }, [tools, event])
-
   const helperClick = (value: string | undefined) => () => {
     if (!textareaRef.current || !value) return
 
@@ -83,6 +44,11 @@ export const EventDataHelperTable = ({
 
     setSelection({ start: startPosition + value.length, end: startPosition + value.length })
   }
+
+  const filteredParams = useMemo(() => {
+    return event.params.filter((i) => !i.is_indexed)
+  }, [event.params])
+
   return (
     <>
       <div className='flex flex-col gap-10 lg:hidden'>
@@ -94,20 +60,24 @@ export const EventDataHelperTable = ({
                 <Info className='h-4 w-4 text-primary' />
               </div>
             </div>
-            <div className='grid grid-cols-3 gap-6'>
-              {tools.constants.map((i) => (
-                <div className='flex flex-col items-start gap-1' key={i.name}>
-                  <p className='text-[10px] font-semibold leading-3 text-primary'>{i.arg_type}</p>
-                  <button
-                    onClick={helperClick(i.name)}
-                    type='button'
-                    className='text-left text-[12px] font-normal text-muted-foreground'
-                  >
-                    {i.name}
-                  </button>
-                </div>
-              ))}
-            </div>
+            <Select
+              defaultValue={tools.constants[0]?.name}
+              onValueChange={(value) => {
+                helperClick(value)()
+              }}
+            >
+              <SelectTrigger className='border-0 bg-transparent w-fit gap-2 '>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {tools.constants.map((opt) => (
+                  <SelectItem value={opt.name} key={opt.name}>
+                    <p className='text-[10px] font-semibold leading-3 text-primary'>{opt.arg_type}</p>
+                    <p className='text-left text-[12px] font-normal text-muted-foreground'>{opt.name}</p>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         ) : (
           <></>
@@ -120,25 +90,29 @@ export const EventDataHelperTable = ({
                 <Info className='h-4 w-4 text-primary' />
               </div>
             </div>
-            <div className='grid grid-cols-3 gap-6'>
-              {tools.chainlink_prices.map((i) => (
-                <div className='flex flex-col items-start gap-1' key={i.name}>
-                  <p className='text-[10px] font-semibold leading-3 text-primary'>{i.arg_type}</p>
-                  <button
-                    onClick={helperClick(i.name)}
-                    type='button'
-                    className='break-all text-left text-[12px] font-normal text-muted-foreground'
-                  >
-                    {i.name}
-                  </button>
-                </div>
-              ))}
-            </div>
+            <Select
+              defaultValue={tools.chainlink_prices[0]?.name}
+              onValueChange={(value) => {
+                helperClick(value)()
+              }}
+            >
+              <SelectTrigger className='border-0 bg-transparent w-fit gap-2 '>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {tools.chainlink_prices.map((opt) => (
+                  <SelectItem value={opt.name} key={opt.name}>
+                    <p className='text-[10px] font-semibold leading-3 text-primary'>{opt.arg_type}</p>
+                    <p className='text-left text-[12px] font-normal text-muted-foreground'>{opt.name}</p>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         ) : (
           <></>
         )}
-        {event.params.length ? (
+        {filteredParams.length ? (
           <div className='flex flex-col gap-4'>
             <div className='flex items-start gap-4'>
               <p className='text-[12px] font-normal leading-[18px]'>Event Params</p>
@@ -147,7 +121,7 @@ export const EventDataHelperTable = ({
               </div>
             </div>
             <div className='grid grid-cols-3 gap-6'>
-              {event.params.map((i) => (
+              {filteredParams.map((i) => (
                 <div className='flex flex-col items-start gap-1' key={i.name}>
                   <p className='text-[10px] font-semibold leading-3 text-primary'>{i.arg_type}</p>
                   <button
@@ -196,28 +170,80 @@ export const EventDataHelperTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((i) => (
-            <TableRow key={i.key}>
-              <TableCell>
-                <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{i.constant?.arg_type}</p>
-                <button onClick={helperClick(i.constant?.name)} type='button'>
-                  {i.constant?.name}
-                </button>
-              </TableCell>
-              <TableCell className='text-center'>
-                <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{i.chainlinkPrice?.arg_type}</p>
-                <button onClick={helperClick(i.chainlinkPrice?.name)} type='button'>
-                  {i.chainlinkPrice?.name}
-                </button>
-              </TableCell>
-              <TableCell className='text-center'>
-                <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{i.param?.arg_type}</p>
-                <button disabled={i.param?.is_indexed} onClick={helperClick(i.param?.name)} type='button'>
-                  {i.param?.name}
-                </button>
-              </TableCell>
-            </TableRow>
-          ))}
+          <TableRow>
+            <TableCell>
+              {tools.constants.length ? (
+                <Select
+                  defaultValue={tools.constants[0]?.name}
+                  onValueChange={(value) => {
+                    helperClick(value)()
+                  }}
+                >
+                  <SelectTrigger className='border-0 bg-transparent w-fit gap-2 '>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {tools.constants.map((opt) => (
+                      <SelectItem value={opt.name} key={opt.name}>
+                        <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{opt.arg_type}</p>
+                        <p className='break-all text-left text-[12px] font-normal text-muted-foreground'>{opt.name}</p>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <></>
+              )}
+            </TableCell>
+            <TableCell>
+              {tools.chainlink_prices.length ? (
+                <Select
+                  defaultValue={tools.chainlink_prices[0]?.name}
+                  onValueChange={(value) => {
+                    helperClick(value)()
+                  }}
+                >
+                  <SelectTrigger className='border-0 bg-transparent w-fit gap-2'>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {tools.chainlink_prices.map((opt) => (
+                      <SelectItem value={opt.name} key={opt.name}>
+                        <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{opt.arg_type}</p>
+                        <p className='break-all text-left text-[12px] font-normal text-muted-foreground'>{opt.name}</p>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <></>
+              )}
+            </TableCell>
+            <TableCell className='text-center'>
+              <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{filteredParams[0]?.arg_type}</p>
+              <button
+                disabled={filteredParams[0]?.is_indexed}
+                onClick={helperClick(filteredParams[0]?.name)}
+                type='button'
+              >
+                {filteredParams[0]?.name}
+              </button>
+            </TableCell>
+          </TableRow>
+          {filteredParams
+            .filter((_, index) => index !== 0)
+            .map((i) => (
+              <TableRow key={i.name}>
+                <TableCell />
+                <TableCell />
+                <TableCell className='text-center'>
+                  <p className='pb-1 text-[10px] font-semibold leading-3 text-primary'>{i.arg_type}</p>
+                  <button disabled={i.is_indexed} onClick={helperClick(i.name)} type='button'>
+                    {i.name}
+                  </button>
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </>
