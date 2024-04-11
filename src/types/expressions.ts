@@ -75,6 +75,7 @@ export interface Expression {
   created_at: Date
   updated_at: Date
   version: number
+  topics: (string | null)[] | null
 }
 
 export enum ExpressionTypeResponse {

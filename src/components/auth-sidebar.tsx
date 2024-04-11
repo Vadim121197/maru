@@ -15,7 +15,7 @@ export const AuthSidebar = ({ nav, className }: { nav: NavItem[]; className: str
   const { data } = useSession()
 
   if (!data) return
-  
+
   return (
     <div className={cn('flex w-full flex-col gap-4}', className)}>
       <p className='mb-2 text-base font-semibold lg:text-lg lg:font-medium'>Account</p>

@@ -66,7 +66,7 @@ export const EventDataHelperTable = ({
                 helperClick(value)()
               }}
             >
-              <SelectTrigger className='border-0 bg-transparent w-fit gap-2 '>
+              <SelectTrigger className='w-fit gap-2 border-0 bg-transparent '>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -96,7 +96,7 @@ export const EventDataHelperTable = ({
                 helperClick(value)()
               }}
             >
-              <SelectTrigger className='border-0 bg-transparent w-fit gap-2 '>
+              <SelectTrigger className='w-fit gap-2 border-0 bg-transparent '>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -179,7 +179,7 @@ export const EventDataHelperTable = ({
                     helperClick(value)()
                   }}
                 >
-                  <SelectTrigger className='border-0 bg-transparent w-fit gap-2 '>
+                  <SelectTrigger className='w-fit gap-2 border-0 bg-transparent '>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -203,7 +203,7 @@ export const EventDataHelperTable = ({
                     helperClick(value)()
                   }}
                 >
-                  <SelectTrigger className='border-0 bg-transparent w-fit gap-2'>
+                  <SelectTrigger className='w-fit gap-2 border-0 bg-transparent'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>

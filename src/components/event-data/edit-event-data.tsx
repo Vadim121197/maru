@@ -28,6 +28,7 @@ import { AccordionContent, AccordionItem } from '../ui/accordion'
 import { Button } from '../ui/button'
 import { EventDataDetailCard } from './event-data-detail-card'
 import { EventDataHelperTable } from './event-data-helper-table'
+import { Filters, type Filter } from './filters'
 
 export interface EditEventDataProps {
   expression: Expression
@@ -54,9 +55,25 @@ export const EditEventData = ({
     aggregate: expression.aggregate_operation ?? '',
     filter: expression.filter_data ?? '',
   })
-  const [selectedEvent, setSelectedEvent] = useState<ExpressionEvent | undefined>()
-  const [precalcRes, setPrecalcRes] = useState<PrecalculateResult[]>([])
+  const [event, setEvent] = useState<ExpressionEvent | undefined>()
+  const [precalculations, setPrecalculations] = useState<PrecalculateResult[]>([])
   const [tools, setTools] = useState<ExpressionTools | undefined>()
+  const [filters, setFilters] = useState<Filter[]>([])
+
+  const updateFilters = (tools: ExpressionTools, event: string) => {
+    const filters = tools.events
+      .find((i) => i.name === event)
+      ?.params.filter((i) => !isNaN(Number(i.value)) && Number(i.value) > 0)
+      .sort((a, b) => Number(a.value) - Number(b.value))
+      .map((i, index) => ({
+        ...i,
+        value: Number(i.value),
+        vissible: index === 0,
+        enteredValue: expression.topics ? expression.topics[index] ?? '' : '',
+      }))
+
+    setFilters(filters ?? [])
+  }
 
   useEffect(() => {
     if (selectedExpression !== expression.id.toString() || !expression.contract_address) return
@@ -67,17 +84,22 @@ export const EditEventData = ({
           ApiRoutes.EXPRESSIONS_ADDRESS_TOOLS.replace(ADDRESS, expression.contract_address as string),
         )
 
+        if (expression.event) {
+          const event = tools.events.find((ev) => ev.name === expression.event?.split('(')[0])
+          setEvent(event)
+
+          event?.name && updateFilters(tools, event.name)
+        }
+
         setTools(tools)
-
-        if (!expression.event) return
-
-        setSelectedEvent(tools.events.find((ev) => ev.name === expression.event?.split('(')[0]))
       } catch {}
     })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [axiosAuth, expression, selectedExpression])
 
   const precalculate = async () => {
     try {
+      const topics = filters.sort((a, b) => a.value - b.value).map((i) => i.enteredValue || null)
       const { data } = await axiosAuth.post<PrecalculateResult[]>(ApiRoutes.EXPRESSIONS_DEMO, {
         raw_data: expressionValues.rawData,
         name: expressionValues.name,
@@ -88,9 +110,10 @@ export const EditEventData = ({
         data_source: EventDataType.EVENT_DATA,
         filter_data: expressionValues.filter,
         block_range: project?.block_range,
+        topics,
       })
 
-      setPrecalcRes(data)
+      setPrecalculations(data)
     } catch (error) {
       showErrorToast(error)
     }
@@ -98,6 +121,8 @@ export const EditEventData = ({
 
   const save = async () => {
     try {
+      const topics = filters.sort((a, b) => a.value - b.value).map((i) => i.enteredValue || null)
+
       const { data } = await axiosAuth.put<Expression>(
         ApiRoutes.EXPRESSIONS_EXPRESSION_ID.replace(EXPRESSION_ID, expression.id.toString()),
         {
@@ -106,6 +131,7 @@ export const EditEventData = ({
           name: expressionValues.name,
           aggregate_operation: expressionValues.aggregate,
           filter_data: expressionValues.filter,
+          topics,
         },
       )
 
@@ -152,6 +178,8 @@ export const EditEventData = ({
                 className='h-5 w-5 cursor-pointer hover:opacity-50 lg:h-6 lg:w-6'
                 onClick={() => {
                   setSelectedExpression('')
+
+                  tools && event?.name && updateFilters(tools, event.name)
                 }}
               />
             </div>
@@ -173,6 +201,13 @@ export const EditEventData = ({
                 </div>
               )}
             </div>
+            {filters.length ? (
+              <div className='mb-4 lg:mb-6'>
+                <Filters filters={filters} setFilters={setFilters} />
+              </div>
+            ) : (
+              <></>
+            )}
             <EventDataExpressionField
               aggregateFunctions={tools?.aggregate_operations ?? []}
               expressionValues={expressionValues}
@@ -190,10 +225,10 @@ export const EditEventData = ({
         <div className='flex w-full flex-col gap-6 border-x-[2px] border-b-[2px] px-3 pb-[62px] pt-6 lg:px-5'>
           <div className='flex flex-col'>
             <div className='border-b pb-6 lg:pb-10'>
-              {tools && selectedEvent && (
+              {tools && event && (
                 <EventDataHelperTable
                   tools={tools}
-                  event={selectedEvent}
+                  event={event}
                   setExpressionValues={setExpressionValues}
                   textareaRef={textarea}
                 />
@@ -229,7 +264,7 @@ export const EditEventData = ({
                 Save
               </Button>
             </div>
-            {precalcRes.length ? <Precalculations res={precalcRes} /> : <></>}
+            {precalculations.length ? <Precalculations res={precalculations} /> : <></>}
           </div>
           <CalculationsTabs
             expressionId={expression.id}

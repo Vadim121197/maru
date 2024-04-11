@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { TrendingUp } from 'lucide-react'
 import moment from 'moment'
-import { Area, AreaSeries, Gradient, GradientStop, Line, SparklineChart } from 'reaviz'
+import { SparklineChart, AreaSeries, Area, Gradient, Line, GradientStop } from 'reaviz'
 
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes } from '~/lib/axios-instance'
@@ -48,7 +48,7 @@ export const Statistics = () => {
             Proofs Generated
           </p>
           <div className='flex justify-end'>
-            {/* <SparklineChart
+            <SparklineChart
               width={139}
               height={64}
               data={singleDateData}
@@ -78,7 +78,7 @@ export const Statistics = () => {
                   }
                 />
               }
-            /> */}
+            />
           </div>
 
           <p className='mt-[11px] text-base font-semibold lg:mt-[6px] lg:text-lg lg:font-medium'>

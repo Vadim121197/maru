@@ -25,6 +25,7 @@ import { PrecalcSettings } from '../precalc-settings'
 import { Precalculations } from '../precalc-values'
 import { Button } from '../ui/button'
 import { EventDataHelperTable } from './event-data-helper-table'
+import { Filters, type Filter } from './filters'
 
 // 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7
 
@@ -49,11 +50,26 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
   const [toolsError, setToolsError] = useState<boolean>(false)
   const [precalculations, setPrecalculations] = useState<PrecalculateResult[]>([])
   const [openUploadAbi, setOpenUploadAbi] = useState<boolean>(false)
+  const [filters, setFilters] = useState<Filter[]>([])
 
   const isAddressValid = useMemo(() => {
     if (!contract) return false
     return contract.length !== 42 || contract.substring(0, 2) !== '0x'
   }, [contract])
+
+  const updateFilters = (event: ExpressionEvent) => {
+    const filters = event.params
+      .filter((i) => !isNaN(Number(i.value)) && Number(i.value) > 0)
+      .sort((a, b) => Number(a.value) - Number(b.value))
+      .map((i, index) => ({
+        ...i,
+        value: Number(i.value),
+        vissible: index === 0,
+        enteredValue: '',
+      }))
+
+    setFilters(filters)
+  }
 
   const fetchTools = async () => {
     setToolsError(false)
@@ -65,6 +81,8 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
     setEvent(data.events[0])
     setExpression((state) => ({ ...state, aggregate: data.aggregate_operations[0]?.name }))
     setOpenUploadAbi(false)
+
+    data.events[0] && updateFilters(data.events[0])
   }
 
   useEffect(() => {
@@ -107,6 +125,7 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
 
   const precalculate = async () => {
     try {
+      const topics = filters.sort((a, b) => a.value - b.value).map((i) => i.enteredValue || null)
       const { data } = await axiosAuth.post<PrecalculateResult[]>(ApiRoutes.EXPRESSIONS_DEMO, {
         raw_data: expression.rawData,
         name: expression.name,
@@ -117,6 +136,7 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
         data_source: EventDataType.EVENT_DATA,
         filter_data: expression.filter,
         block_range: project.block_range,
+        topics,
       })
       setPrecalculations(data)
     } catch (error) {
@@ -126,6 +146,7 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
 
   const save = async () => {
     try {
+      const topics = filters.sort((a, b) => a.value - b.value).map((i) => i.enteredValue || null)
       const { data } = await axiosAuth.post<Expression>(ApiRoutes.EXPRESSIONS, {
         raw_data: expression.rawData,
         name: expression.name,
@@ -135,6 +156,7 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
         event: `${event?.name}(${event?.params.map((i) => i.arg_type).join(',')})`,
         data_source: EventDataType.EVENT_DATA,
         filter_data: expression.filter,
+        topics,
       })
 
       updateExpressionList(data)
@@ -189,7 +211,10 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
             <SelectComponent
               value={event?.name}
               onValueChange={(e) => {
-                setEvent(tools.events.find((event) => event.name === e))
+                const selectedEvent = tools.events.find((event) => event.name === e)
+                setEvent(selectedEvent)
+
+                selectedEvent && updateFilters(selectedEvent)
               }}
               options={events}
               label='Signature'
@@ -198,6 +223,13 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
           )}
         </div>
 
+        {filters.length ? (
+          <div className='mt-4 lg:mt-6'>
+            <Filters filters={filters} setFilters={setFilters} />
+          </div>
+        ) : (
+          <></>
+        )}
         {event && tools && (
           <div className='mt-10 flex flex-col'>
             <div className='flex flex-col'>

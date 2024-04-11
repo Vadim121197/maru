@@ -13,7 +13,6 @@ export const ProjectInfoCard = ({ id }: { id: string }) => {
   const axiosAuth = useAxiosAuth()
   const { data: session } = useSession()
 
-
   const { project, isUserProject, setProject, setProjectOwnership } = useProject()((state) => state)
 
   useEffect(() => {
