@@ -71,6 +71,7 @@ export const EditCompound = ({
         raw_data: expressionValues.rawData,
         data_source: EventDataType.EXPRESSIONS,
         project_id: project?.id,
+        name: expressionValues.name,
       })
       setPrecalculationResult(data)
     } catch (error) {}
