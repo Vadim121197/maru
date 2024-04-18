@@ -9,7 +9,7 @@ import { Button } from '~/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { usePaginationRequest } from '~/hooks/pagination-request'
-import { ApiRoutes, BASE_URL, PROJECT_ID, PROOF_ID } from '~/lib/axios-instance'
+import { ApiRoutes, BASE_URL, PROJECT_ID, PROOF_ID, axiosInstance } from '~/lib/axios-instance'
 import { copyToClipboard } from '~/lib/copy-to-clipboard'
 import { showErrorToast } from '~/lib/show-error-toast'
 import { cn } from '~/lib/utils'
@@ -70,6 +70,16 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
     })()
   }
 
+  const copyPrefetchData = (url: string) => () => {
+    void (async () => {
+      try {
+        const { data } = await axiosInstance.get<object>(url)
+
+        copyToClipboard(JSON.stringify(data))()
+      } catch (error) {}
+    })()
+  }
+
   return (
     <>
       <div className='hidden bg-card px-5 lg:block'>
@@ -99,7 +109,7 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                 <TableCell className='border-t-[1px] text-base font-medium'>
                   <div className='flex items-center justify-center gap-5'>
                     <a
-                      href={`${BASE_URL}/proofs/${pr.id}/input`}
+                      href={`${BASE_URL}${ApiRoutes.PROOFS_PROOF_ID_INPUT.replace(PROOF_ID, pr.id.toString())}`}
                       target='_blank'
                       rel='noopener noreferrer'
                       className='flex items-center justify-center'
@@ -107,15 +117,19 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                       <InfoIcon strokeWidth={1} className='h-5 w-5' />
                     </a>
                     <div>
-                      <Copy strokeWidth={1} className='h-5 w-5 cursor-pointer' onClick={copyToClipboard(pr.input)} />
+                      <Copy
+                        strokeWidth={1}
+                        className='h-5 w-5 cursor-pointer'
+                        onClick={copyPrefetchData(ApiRoutes.PROOFS_PROOF_ID_INPUT.replace(PROOF_ID, pr.id.toString()))}
+                      />
                     </div>
                   </div>
                 </TableCell>
                 <TableCell className='border-t-[1px] text-center text-base font-medium'>
-                  {pr.result ? (
+                  {pr.status === ProofStatus.SUCCESS ? (
                     <div className='flex items-center justify-center gap-5'>
                       <a
-                        href={`${BASE_URL}/proofs/${pr.id}/result`}
+                        href={`${BASE_URL}${ApiRoutes.PROOFS_PROOF_ID_RESULT.replace(PROOF_ID, pr.id.toString())}`}
                         target='_blank'
                         rel='noopener noreferrer'
                         className='flex items-center justify-center'
@@ -123,7 +137,13 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                         <InfoIcon strokeWidth={1} className='h-5 w-5' />
                       </a>
                       <div>
-                        <Copy strokeWidth={1} className='h-5 w-5' onClick={copyToClipboard(pr.result)} />
+                        <Copy
+                          strokeWidth={1}
+                          className='h-5 w-5 cursor-pointer'
+                          onClick={copyPrefetchData(
+                            ApiRoutes.PROOFS_PROOF_ID_RESULT.replace(PROOF_ID, pr.id.toString()),
+                          )}
+                        />
                       </div>
                     </div>
                   ) : (
@@ -173,7 +193,7 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
               <p className='text-base font-semibold'>Input</p>
               <div className='flex items-center justify-center gap-5'>
                 <a
-                  href={`${BASE_URL}/proofs/${pr.id}/input`}
+                  href={`${BASE_URL}${ApiRoutes.PROOFS_PROOF_ID_INPUT.replace(PROOF_ID, pr.id.toString())}`}
                   target='_blank'
                   rel='noopener noreferrer'
                   className='flex items-center justify-center'
@@ -181,16 +201,20 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                   <InfoIcon strokeWidth={1} className='h-5 w-5' />
                 </a>
                 <div>
-                  <Copy strokeWidth={1} className='h-5 w-5 cursor-pointer' onClick={copyToClipboard(pr.input)} />
+                  <Copy
+                    strokeWidth={1}
+                    className='h-5 w-5 cursor-pointer'
+                    onClick={copyPrefetchData(ApiRoutes.PROOFS_PROOF_ID_INPUT.replace(PROOF_ID, pr.id.toString()))}
+                  />
                 </div>
               </div>
             </div>
             <div className='flex items-center justify-between border-b-[1px] py-3'>
               <p className='text-base font-semibold'>Proofs</p>
-              {pr.result ? (
+              {pr.status === ProofStatus.SUCCESS ? (
                 <div className='flex items-center justify-center gap-5'>
                   <a
-                    href={`${BASE_URL}/proofs/${pr.id}/result`}
+                    href={`${BASE_URL}${ApiRoutes.PROOFS_PROOF_ID_RESULT.replace(PROOF_ID, pr.id.toString())}`}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='flex items-center justify-center'
@@ -198,7 +222,11 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                     <InfoIcon strokeWidth={1} className='h-5 w-5' />
                   </a>
                   <div>
-                    <Copy strokeWidth={1} className='h-5 w-5 cursor-pointer' onClick={copyToClipboard(pr.result)} />
+                    <Copy
+                      strokeWidth={1}
+                      className='h-5 w-5 cursor-pointer'
+                      onClick={copyPrefetchData(ApiRoutes.PROOFS_PROOF_ID_RESULT.replace(PROOF_ID, pr.id.toString()))}
+                    />
                   </div>
                 </div>
               ) : (

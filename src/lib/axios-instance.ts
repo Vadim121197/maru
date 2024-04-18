@@ -46,6 +46,8 @@ export enum ApiRoutes {
 
   PROOFS = '/proofs',
   PROOFS_PROOF_ID = '/proofs/{proof_id}',
+  PROOFS_PROOF_ID_INPUT = '/proofs/{proof_id}/input',
+  PROOFS_PROOF_ID_RESULT = '/proofs/{proof_id}/result',
   PROOFS_PROOF_ID_VERIFY = '/proofs/{proof_id}/verify',
 
   TASKS = '/tasks',
