@@ -80,6 +80,8 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
     })()
   }
 
+  console.log(proofs)
+
   return (
     <>
       <div className='hidden bg-card px-5 lg:block'>
@@ -153,7 +155,14 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                 <TableCell className='flex justify-center border-t-[1px] text-center text-base font-medium'>
                   {pr.status === ProofStatus.SUCCESS ? (
                     pr.verification ? (
-                      <div className='w-[86px] border-b-[1px] border-primary p-1 text-center'>Verified</div>
+                      <a
+                        className='underline cursor-pointer'
+                        href={`https://sepolia.etherscan.io/tx/${pr.verification}`}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        {pr.verification.slice(0, 7) + '...' + pr.verification.slice(pr.verification.length - 7)}
+                      </a>
                     ) : (
                       isUserProject && (
                         <Button variant='outline' className='h-9 w-[86px]' onClick={verify(pr.id)}>
@@ -237,7 +246,14 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
               <p className='text-base font-semibold'>Verification</p>
               {pr.status === ProofStatus.SUCCESS ? (
                 pr.verification ? (
-                  <div className='w-[86px] border-b-[1px] border-primary p-1 text-center'>Verified</div>
+                  <a
+                    className='underline cursor-pointer'
+                    href={`https://sepolia.etherscan.io/tx/${pr.verification}`}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    {pr.verification.slice(0, 7) + '...' + pr.verification.slice(pr.verification.length - 7)}
+                  </a>
                 ) : (
                   <Button variant='outline' className='h-9 w-[86px]' onClick={verify(pr.id)}>
                     Verify
