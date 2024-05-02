@@ -32,6 +32,7 @@ export enum ApiRoutes {
   PROJECTS_PROJECT_ID_PROOFS = '/projects/{project_id}/proofs',
   PROJECTS_PROJECT_ID_TASKS = '/projects/{project_id}/tasks',
   PROJECTS_PROJECT_ID_DEPLOYMENTS = '/projects/{project_id}/deployments',
+  PROJECTS_PROJECT_ID_SUMMARY = '/projects/{project_id}/summary',
 
   EXPRESSIONS = '/expressions',
   EXPRESSIONS_ADDRESS_TOOLS = '/expressions/{address}/tools',

@@ -17,12 +17,14 @@ interface ProjectSlice {
   tasks: Task[]
   expressions: ExpressionsResponse
   deployments: Deployment[]
+  summary: string
   setProjectOwnership: (isUserProject: boolean) => void
   setProject: (project: Project) => void
   setProofs: (proofs: Proof[]) => void
   setTask: (tasks: Task[]) => void
   setExpressions: (expression: ExpressionsResponse) => void
   setDeployments: (deployments: Deployment[]) => void
+  setSummary: (summary: string) => void
 }
 
 const createStore = () => {
@@ -37,6 +39,7 @@ const createStore = () => {
         compound_expressions: [],
       },
       deployments: [],
+      summary: '',
       setProjectOwnership(isUserProject) {
         set({
           isUserProject,
@@ -56,6 +59,11 @@ const createStore = () => {
       },
       setDeployments(deployments) {
         set({ deployments })
+      },
+      setSummary(summary) {
+        set({
+          summary,
+        })
       },
     }
   })

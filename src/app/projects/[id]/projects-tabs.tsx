@@ -14,6 +14,7 @@ export enum ProjectTabs {
   PROOFS = 'proofs',
   DEPLOYMENTS = 'deployments',
   SETINGS = 'settings',
+  SUMMARY = 'summary',
 }
 
 interface ProjectTab {
@@ -26,6 +27,11 @@ export const tabs: ProjectTab[] = [
   {
     value: ProjectTabs.EXPRESSION,
     href: '/',
+    isPrivate: false,
+  },
+  {
+    value: ProjectTabs.SUMMARY,
+    href: '/summary',
     isPrivate: false,
   },
   {

@@ -29,3 +29,7 @@ export interface Project {
   }
   tags: Tag[]
 }
+
+export interface ProjectSummary {
+  content: string
+}

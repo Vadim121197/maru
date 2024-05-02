@@ -156,7 +156,7 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                   {pr.status === ProofStatus.SUCCESS ? (
                     pr.verification ? (
                       <a
-                        className='underline cursor-pointer'
+                        className='cursor-pointer underline'
                         href={`https://sepolia.etherscan.io/tx/${pr.verification}`}
                         target='_blank'
                         rel='noopener noreferrer'
@@ -247,7 +247,7 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
               {pr.status === ProofStatus.SUCCESS ? (
                 pr.verification ? (
                   <a
-                    className='underline cursor-pointer'
+                    className='cursor-pointer underline'
                     href={`https://sepolia.etherscan.io/tx/${pr.verification}`}
                     target='_blank'
                     rel='noopener noreferrer'
