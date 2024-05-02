@@ -1,33 +1,71 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Markdown from 'react-markdown'
 
+import { Button } from '~/components/ui/button'
+import { Textarea } from '~/components/ui/textarea'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
+import { showErrorToast } from '~/lib/show-error-toast'
 import type { ProjectSummary } from '~/types/project'
 
 import { useProject } from '../ProjectProvider'
 
 export const SummaryTab = ({ projectId }: { projectId: string }) => {
   const axiosAuth = useAxiosAuth()
-  const { summary, setSummary } = useProject()((state) => state)
+  const { isUserProject, summary, setSummary } = useProject()((state) => state)
+
+  const [loading, setLoading] = useState<boolean | undefined>()
 
   useEffect(() => {
     void (async () => {
+      setLoading(true)
       try {
         const { data: summary } = await axiosAuth.get<ProjectSummary>(
           ApiRoutes.PROJECTS_PROJECT_ID_SUMMARY.replace(PROJECT_ID, projectId),
         )
 
         setSummary(summary.content)
-      } catch (error) {}
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+      }
     })()
   }, [projectId, axiosAuth, setSummary])
 
+  const save = () => {
+    void (async () => {
+      try {
+        await axiosAuth.post(ApiRoutes.PROJECTS_PROJECT_ID_SUMMARY.replace(PROJECT_ID, projectId), {
+          content: summary,
+        })
+      } catch (error) {
+        showErrorToast(error)
+      }
+    })()
+  }
+
+  if (loading === undefined || loading) return <></>
+
   return (
-    <div className='min-h-[404px] w-full bg-[rgba(24,21,36,0.65)] px-5 py-4'>
+    <div className='flex min-h-[404px] w-full flex-col items-end gap-2 bg-[rgba(24,21,36,0.65)] px-5 py-4'>
+      {isUserProject && (
+        <Button variant='secondary' className='w-[200px]' onClick={save}>
+          Save
+        </Button>
+      )}
+      {isUserProject && (
+        <Textarea
+          value={summary}
+          onChange={(e) => {
+            setSummary(e.target.value)
+          }}
+          className='min-h-[202px]'
+        />
+      )}
       <Markdown
+        className='w-full'
         components={{
           p: ({ children }) => <p className='text-base font-medium text-[#CEC5C5]'>{children}</p>,
           h1: ({ children }) => (
