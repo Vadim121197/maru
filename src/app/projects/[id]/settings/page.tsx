@@ -5,4 +5,3 @@ const SettingsPage = ({ params }: { params: { id: string } }) => {
 }
 
 export default SettingsPage
-a
