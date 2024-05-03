@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 
 
 import { ChevronDown, Trash, X } from 'lucide-react'
 
-import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import { useProject } from '~/app/projects/[id]/project-provider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, EXPRESSION_ID, PROJECT_ID } from '~/lib/axios-instance'
 import { showErrorToast } from '~/lib/show-error-toast'

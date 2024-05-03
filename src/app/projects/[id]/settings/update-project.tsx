@@ -10,7 +10,7 @@ import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import type { Project } from '~/types/project'
 
-import { useProject } from '../ProjectProvider'
+import { useProject } from '../project-provider'
 
 export const UpdateProject = () => {
   const axiosAuth = useAxiosAuth()

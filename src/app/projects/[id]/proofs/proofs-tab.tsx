@@ -3,7 +3,7 @@
 import { Bird, Copy, InfoIcon } from 'lucide-react'
 import moment from 'moment'
 
-import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import { useProject } from '~/app/projects/[id]/project-provider'
 import { CustomPagination } from '~/components/custom-pagination'
 import { Button } from '~/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'

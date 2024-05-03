@@ -1,7 +1,7 @@
 'use client'
 
-import ProjectProvider from './ProjectProvider'
 import { ProjectInfoCard } from './project-info-card'
+import ProjectProvider from './project-provider'
 import { ProjectsTabs } from './projects-tabs'
 
 const Layout = ({ children, params }: { children: React.ReactNode; params: { id: string } }) => {

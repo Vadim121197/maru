@@ -12,7 +12,7 @@ import { usePaginationRequest } from '~/hooks/pagination-request'
 import { ApiRoutes, PROJECT_ID, TASK_ID } from '~/lib/axios-instance'
 import { ExpressionTypeResponse, type ExpressionsResponse } from '~/types/expressions'
 
-import { useProject } from '../ProjectProvider'
+import { useProject } from '../project-provider'
 
 export const TasksTab = ({ projectId }: { projectId: string }) => {
   const axiosAuth = useAxiosAuth()

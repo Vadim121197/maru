@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 import type { AxiosError } from 'axios'
 
-import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import { useProject } from '~/app/projects/[id]/project-provider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ADDRESS, ApiRoutes } from '~/lib/axios-instance'
 import { showErrorToast } from '~/lib/show-error-toast'

@@ -8,7 +8,7 @@ import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import { showErrorToast } from '~/lib/show-error-toast'
 import type { Project } from '~/types/project'
 
-import { useProject } from '../ProjectProvider'
+import { useProject } from '../project-provider'
 
 export const DangerZone = () => {
   const navigate = useRouter()

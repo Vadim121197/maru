@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Nav } from '~/types/nav'
 
-import { useProject } from './ProjectProvider'
+import { useProject } from './project-provider'
 
 export enum ProjectTabs {
   EXPRESSION = 'expression',
@@ -42,11 +42,6 @@ export const tabs: ProjectTab[] = [
   {
     value: ProjectTabs.PROOFS,
     href: '/proofs',
-    isPrivate: false,
-  },
-  {
-    value: ProjectTabs.DEPLOYMENTS,
-    href: '/deployments',
     isPrivate: false,
   },
   {

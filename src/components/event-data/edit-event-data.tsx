@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 
 
 import { X } from 'lucide-react'
 
-import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import { useProject } from '~/app/projects/[id]/project-provider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ADDRESS, ApiRoutes, EXPRESSION_ID } from '~/lib/axios-instance'
 import { cutAddress } from '~/lib/cut-address'

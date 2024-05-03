@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Dialog } from '@radix-ui/react-dialog'
 import { Bird, Plus, X } from 'lucide-react'
 
-import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import { useProject } from '~/app/projects/[id]/project-provider'
 import { CreateCompound } from '~/components/compound/create-compound'
 import { EditCompound } from '~/components/compound/edit-compound'
 import { CreateEventData } from '~/components/event-data/create-event-data'
@@ -21,8 +21,8 @@ import { Expressions, expressionTypes } from '~/lib/expressions'
 import { showErrorToast } from '~/lib/show-error-toast'
 import {
   ExpressionActions,
-  type Expression,
   ExpressionTypeResponse,
+  type Expression,
   type ExpressionsResponse,
 } from '~/types/expressions'
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import { useProject } from '~/app/projects/[id]/project-provider'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import { showErrorToast } from '~/lib/show-error-toast'

@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 
-import { useProject } from '~/app/projects/[id]/ProjectProvider'
+import { useProject } from '~/app/projects/[id]/project-provider'
 import { BackButton } from '~/components/back-button'
 import useAxiosAuth from '~/hooks/axios-auth'
 import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'

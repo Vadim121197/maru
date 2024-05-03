@@ -9,7 +9,7 @@ import { ApiRoutes, PROJECT_ID } from '~/lib/axios-instance'
 import { cutAddress } from '~/lib/cut-address'
 import { Network } from '~/types/deployment'
 
-import { useProject } from '../ProjectProvider'
+import { useProject } from '../project-provider'
 
 const explores: Record<Network, string> = {
   [Network.MAINNET]: 'https://etherscan.io/address/',
