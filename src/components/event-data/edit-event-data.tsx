@@ -61,6 +61,8 @@ export const EditEventData = ({
   const [filters, setFilters] = useState<Filter[]>([])
 
   const updateFilters = (tools: ExpressionTools, event: string) => {
+    const isDefaultValue = expression.topics?.find((i) => i !== null)
+
     const filters = tools.events
       .find((i) => i.name === event)
       ?.params.filter((i) => !isNaN(Number(i.value)) && Number(i.value) > 0)
@@ -68,9 +70,11 @@ export const EditEventData = ({
       .map((i, index) => ({
         ...i,
         value: Number(i.value),
-        vissible: index === 0,
+        vissible: isDefaultValue ? Boolean(expression.topics && expression.topics[index]) : index === 0,
         enteredValue: expression.topics ? expression.topics[index] ?? '' : '',
       }))
+      // sort by vissible - [true, true, false]
+      .sort((a, b) => (a.vissible === b.vissible ? 0 : a.vissible ? -1 : 1))
 
     setFilters(filters ?? [])
   }
@@ -175,7 +179,7 @@ export const EditEventData = ({
             <div className='mb-6 flex justify-end lg:mb-2'>
               <X
                 strokeWidth={1}
-                className='h-5 w-5 cursor-pointer hover:opacity-50 lg:h-6 lg:w-6'
+                className='size-5 cursor-pointer hover:opacity-50 lg:size-6'
                 onClick={() => {
                   setSelectedExpression('')
 
@@ -222,7 +226,7 @@ export const EditEventData = ({
         )}
       </div>
       <AccordionContent>
-        <div className='flex w-full flex-col gap-6 border-x-[2px] border-b-[2px] px-3 pb-[62px] pt-6 lg:px-5'>
+        <div className='flex w-full flex-col gap-6 border-x-2 border-b-2 px-3 pb-[62px] pt-6 lg:px-5'>
           <div className='flex flex-col'>
             <div className='border-b pb-6 lg:pb-10'>
               {tools && event && (

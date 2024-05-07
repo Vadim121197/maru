@@ -77,7 +77,7 @@ export const CompoundHelperTable = ({
             <div className='flex items-start gap-4'>
               <p className='text-[12px] font-normal leading-[18px]'>Expressions</p>
               <div>
-                <Info className='h-4 w-4 text-primary' />
+                <Info className='size-4 text-primary' />
               </div>
             </div>
             <div className='grid grid-cols-3 gap-6'>
@@ -104,7 +104,7 @@ export const CompoundHelperTable = ({
               <div className='flex items-start gap-4'>
                 <p className='text-sm font-normal'>Global Consts</p>
                 <div>
-                  <Info className='h-4 w-4 text-primary' />
+                  <Info className='size-4 text-primary' />
                 </div>
               </div>
             </TableHead>
@@ -112,7 +112,7 @@ export const CompoundHelperTable = ({
               <div className='flex items-start justify-center gap-4'>
                 <p className='text-sm font-normal'>Proved Values</p>
                 <div>
-                  <Info className='h-4 w-4 text-primary' />
+                  <Info className='size-4 text-primary' />
                 </div>
               </div>
             </TableHead>
@@ -120,7 +120,7 @@ export const CompoundHelperTable = ({
               <div className='flex items-start justify-center gap-4'>
                 <p className='text-sm font-normal'>Expressions</p>
                 <div>
-                  <Info className='h-4 w-4 text-primary' />
+                  <Info className='size-4 text-primary' />
                 </div>
               </div>
             </TableHead>
@@ -128,7 +128,7 @@ export const CompoundHelperTable = ({
               <div className='flex items-start justify-center gap-4'>
                 <p className='text-sm font-normal'>Global Functions</p>
                 <div>
-                  <Info className='h-4 w-4 text-primary' />
+                  <Info className='size-4 text-primary' />
                 </div>
               </div>
             </TableHead>

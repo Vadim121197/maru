@@ -117,7 +117,7 @@ export const EditCompound = ({
             <div className='self-end'>
               <X
                 strokeWidth={1}
-                className='h-5 w-5 cursor-pointer lg:h-6 lg:w-6'
+                className='size-5 cursor-pointer lg:size-6'
                 onClick={() => {
                   setSelectedExpression('')
                 }}
@@ -140,14 +140,14 @@ export const EditCompound = ({
                   <div>
                     <Trash
                       strokeWidth={1}
-                      className='h-4 w-4 cursor-pointer text-foreground hover:opacity-50 lg:h-5 lg:w-5'
+                      className='size-4 cursor-pointer text-foreground hover:opacity-50 lg:size-5'
                       onClick={() => {
                         deleteExpression(expression.id, ExpressionTypeResponse.COMPOUND)
                       }}
                     />
                   </div>
                   <AccordionTrigger>
-                    <ChevronDown className='h-4 w-4 cursor-pointer text-foreground hover:opacity-50 lg:h-5 lg:w-5' />
+                    <ChevronDown className='size-4 cursor-pointer text-foreground hover:opacity-50 lg:size-5' />
                   </AccordionTrigger>
                 </div>
               )}
@@ -160,7 +160,7 @@ export const EditCompound = ({
       </div>
 
       <AccordionContent>
-        <div className='flex w-full flex-col border-x-[2px] border-b-[2px] px-3 pb-[62px] pt-6 lg:px-5'>
+        <div className='flex w-full flex-col border-x-2 border-b-2 px-3 pb-[62px] pt-6 lg:px-5'>
           <div className='flex flex-col'>
             <div className='flex flex-col gap-[38px] border-b pb-4'>
               {tools && (

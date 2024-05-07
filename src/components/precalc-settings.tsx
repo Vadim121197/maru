@@ -64,7 +64,7 @@ export const PrecalcSettings = ({
           blocks.
         </p>
         <div>
-          <Info className='h-4 w-4 text-primary' />
+          <Info className='size-4 text-primary' />
         </div>
       </div>
 
@@ -110,7 +110,7 @@ export const PrecalcSettings = ({
                 }}
               />
             </div>
-            <Button className='w-[50%]' disabled={Number(period.from) > Number(period.to)} onClick={updateBlockRange}>
+            <Button className='w-1/2' disabled={Number(period.from) > Number(period.to)} onClick={updateBlockRange}>
               Save
             </Button>
           </div>

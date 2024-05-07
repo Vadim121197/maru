@@ -16,7 +16,7 @@ export const ProjectCard = ({ href, project, className }: { href: string; projec
         <p className='text-sm font-medium lg:text-base'>{project.user.username}</p>
       </div>
       <div className='flex items-center gap-2'>
-        <StarIcon stroke='#FFE600' fill='#FFE600' className='h-4 w-4 lg:h-6 lg:w-6' />
+        <StarIcon stroke='#FFE600' fill='#FFE600' className='size-4 lg:size-6' />
         <p className='text-lg font-semibold lg:text-xl'>{project.stars_count}</p>
       </div>
     </div>

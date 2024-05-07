@@ -65,10 +65,10 @@ export const UsersTabs = () => {
           })}
         </TabsList>
       </Tabs>
-      <div className='flex items-center justify-between border-b-[1px] border-primary py-3 lg:hidden'>
+      <div className='flex items-center justify-between border-b-DEFAULT border-primary py-3 lg:hidden'>
         <ChevronLeft
           strokeWidth={1}
-          className='h-6 w-6'
+          className='size-6'
           onClick={() => {
             const index = tabs.findIndex((t) => t.value === tabValue)
             if (index < 1) return
@@ -78,7 +78,7 @@ export const UsersTabs = () => {
         <p className='text-sm font-bold capitalize'>{tabValue}</p>
         <ChevronRight
           strokeWidth={1}
-          className='h-6 w-6'
+          className='size-6'
           onClick={() => {
             const index = tabs.findIndex((t) => t.value === tabValue)
             if (index === tabs.length - 1) return

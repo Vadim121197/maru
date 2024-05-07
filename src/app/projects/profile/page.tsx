@@ -70,13 +70,13 @@ const ProjectsPage = () => {
         <div className='flex items-center justify-between'>
           <p className='text-xl font-medium lg:text-2xl lg:font-bold'>My Projects</p>
           <Link href={Nav.PROJECT_CREATE} className={cn('w-[152px] lg:w-[196px] gap-[10px]', buttonVariants())}>
-            <PlusIcon className='h-4 w-4 text-white' />
+            <PlusIcon className='size-4 text-white' />
             <span>New Project</span>
           </Link>
         </div>
         {!projects.length ? (
           <div className='mt-[100px] flex flex-col items-center justify-center px-7 lg:container lg:mt-[150px]'>
-            <Bird className='h-20 w-20' strokeWidth={1} />
+            <Bird className='size-20' strokeWidth={1} />
             <p className='text-xl font-semibold'>No projects</p>
           </div>
         ) : (

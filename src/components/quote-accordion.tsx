@@ -37,11 +37,11 @@ export const QuoteAccordion = () => {
         <AccordionTrigger className='flex w-full items-center justify-between gap-2'>
           <div className='flex items-center gap-2'>
             <div>
-              <BarChartBig strokeWidth='1' className='h-6 w-6' />
+              <BarChartBig strokeWidth='1' className='size-6' />
             </div>
             <p className='text-[12px] font-normal leading-[18px] lg:text-sm'>Limits</p>
           </div>
-          <ChevronDown strokeWidth={1} className='h-6 w-6 shrink-0 text-foreground transition-transform duration-200' />
+          <ChevronDown strokeWidth={1} className='size-6 shrink-0 text-foreground transition-transform duration-200' />
         </AccordionTrigger>
         <AccordionContent className='mt-10 flex flex-col gap-6'>
           {quotes.map((q) => (

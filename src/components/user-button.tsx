@@ -28,7 +28,7 @@ export const UserButton = () => {
       >
         <SheetTrigger>
           <div className={!session ? 'hidden' : 'hidden lg:block'}>
-            <UserRound strokeWidth='1' className='ml-3 h-8 w-8' />
+            <UserRound strokeWidth='1' className='ml-3 size-8' />
           </div>
           <div className='block lg:hidden'>
             <svg xmlns='http://www.w3.org/2000/svg' width='29' height='18' viewBox='0 0 29 18' fill='none'>
@@ -69,7 +69,7 @@ export const UserButton = () => {
                 </Button>
               )}
             </div>
-            <nav className='mb-6 flex flex-col gap-4 border-b-[1px] border-border pb-6'>
+            <nav className='mb-6 flex flex-col gap-4 border-b-DEFAULT border-border pb-6'>
               {siteConfig.mainNav.map(
                 (item) =>
                   item.href && (
@@ -82,7 +82,7 @@ export const UserButton = () => {
                   ),
               )}
             </nav>
-            <nav className='mb-[18px] flex flex-col gap-4 border-b-[1px] border-border pb-6'>
+            <nav className='mb-[18px] flex flex-col gap-4 border-b-DEFAULT border-border pb-6'>
               {siteConfig.secondaryNav.map(
                 (item) =>
                   item.href && (

@@ -35,10 +35,10 @@ export const Statistics = () => {
   }, [dasboard?.proofs_dashboard])
 
   return (
-    <div className='order-3 flex flex-col gap-5 lg:w-[20%]'>
+    <div className='order-3 flex flex-col gap-5 lg:w-1/5'>
       <div className='flex items-center gap-3'>
         <div>
-          <TrendingUp strokeWidth={1} className='h-6 w-6 text-primary' />
+          <TrendingUp strokeWidth={1} className='size-6 text-primary' />
         </div>
         <p className='text-base font-semibold lg:text-lg lg:font-medium'>Statistics</p>
       </div>

@@ -65,14 +65,14 @@ export const EventDataDetailCard = ({
             <div>
               <Trash
                 strokeWidth={1}
-                className='h-4 w-4 cursor-pointer text-muted-foreground lg:h-5 lg:w-5'
+                className='size-4 cursor-pointer text-muted-foreground lg:size-5'
                 onClick={() => {
                   deleteExpression(expression.id, ExpressionTypeResponse.EVENT_DATA)
                 }}
               />
             </div>
             <AccordionTrigger>
-              <ChevronDown className='h-4 w-4 text-muted-foreground lg:h-5 lg:w-5' />
+              <ChevronDown className='size-4 text-muted-foreground lg:size-5' />
             </AccordionTrigger>
           </div>
         )}

@@ -118,7 +118,7 @@ export const EventDataExpressionField = ({
     >
       <div className='flex items-center gap-4'>
         <Input
-          className='h-7 w-[50%] text-[12px] font-normal placeholder:text-[12px] lg:w-[200px] lg:text-sm'
+          className='h-7 w-1/2 text-[12px] font-normal placeholder:text-[12px] lg:w-[200px] lg:text-sm'
           placeholder='Enter expression name'
           value={expressionValues.name}
           onChange={(e) => {
@@ -142,7 +142,7 @@ export const EventDataExpressionField = ({
       />
       <div className='flex items-center justify-between gap-2'>
         <p className='text-[12px] font-normal lg:text-sm'>).filter(|result|</p>
-        <div className='flex w-[100px] flex-1 items-center md:w-[50%] lg:w-[40%]'>
+        <div className='flex w-[100px] flex-1 items-center md:w-1/2 lg:w-2/5'>
           <Input
             className='h-7 text-[12px] font-normal placeholder:text-[12px] lg:text-sm'
             placeholder='Enter filter'

@@ -86,7 +86,7 @@ export const CalculationsTabs = ({ action, expressionId, save, isChanged, resetE
         onValueChange={(value) => {
           setTab(value as CalculationType)
         }}
-        className='border-t-[1px] pt-5'
+        className='border-t-DEFAULT pt-5'
       >
         <TabsList className='mb-6 w-full'>
           <TabsTrigger value={CalculationType.ONE_TIME} className='w-full data-[state=active]:bg-transparent'>

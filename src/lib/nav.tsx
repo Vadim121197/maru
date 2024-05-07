@@ -6,13 +6,13 @@ export const mainNav: NavItem[] = [
   {
     title: 'Discover',
     href: '/projects',
-    icon: <LayoutGrid strokeWidth={1} className='h-6 w-6' />,
+    icon: <LayoutGrid strokeWidth={1} className='size-6' />,
     protected: false,
   },
   {
     title: 'My Projects',
     href: '/projects/profile',
-    icon: <AlignLeft strokeWidth={1} className='h-6 w-6' />,
+    icon: <AlignLeft strokeWidth={1} className='size-6' />,
     protected: true,
   },
 ]
@@ -21,11 +21,11 @@ export const secondaryNav: NavItem[] = [
   {
     title: 'Profile',
     href: '/profile',
-    icon: <UserRound strokeWidth='1' className='h-6 w-6' />,
+    icon: <UserRound strokeWidth='1' className='size-6' />,
   },
   {
     title: 'Settings',
     href: '/settings',
-    icon: <SlidersHorizontal strokeWidth='1' className='h-6 w-6' />,
+    icon: <SlidersHorizontal strokeWidth='1' className='size-6' />,
   },
 ]

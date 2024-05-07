@@ -45,7 +45,7 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
   if (!loading && !tasks.length)
     return (
       <section className='mt-[100px] flex flex-col items-center justify-center px-7 lg:container lg:mt-[150px]'>
-        <Bird className='h-20 w-20' strokeWidth={1} />
+        <Bird className='size-20' strokeWidth={1} />
         <p className='text-xl font-semibold'>No tasks</p>
       </section>
     )
@@ -68,8 +68,8 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
             {tasks.map((t) => (
               <Fragment key={t.id}>
                 <TableRow className='h-[56px]'>
-                  <TableCell className='border-t-[1px] text-base font-medium'>{t.id}</TableCell>
-                  <TableCell className='flex items-center justify-center border-t-[1px] text-center text-base font-medium'>
+                  <TableCell className='border-t-DEFAULT text-base font-medium'>{t.id}</TableCell>
+                  <TableCell className='flex items-center justify-center border-t-DEFAULT text-center text-base font-medium'>
                     <div
                       className='w-fit cursor-pointer'
                       onClick={() => {
@@ -79,8 +79,8 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
                       {t.name}
                     </div>
                   </TableCell>
-                  <TableCell className='border-t-[1px] text-center text-base font-medium'>{t.block_range}</TableCell>
-                  <TableCell className='border-t-[1px] text-center text-base font-medium'>
+                  <TableCell className='border-t-DEFAULT text-center text-base font-medium'>{t.block_range}</TableCell>
+                  <TableCell className='border-t-DEFAULT text-center text-base font-medium'>
                     {t.periodical ?? '-'}
                   </TableCell>
                 </TableRow>
@@ -122,19 +122,19 @@ export const TasksTab = ({ projectId }: { projectId: string }) => {
       <div className='flex flex-col gap-6 lg:hidden'>
         {tasks.map((t) => (
           <div key={t.id} className='flex flex-col bg-card p-4 '>
-            <div className='flex items-center justify-between border-b-[1px] pb-3'>
+            <div className='flex items-center justify-between border-b-DEFAULT pb-3'>
               <p className='text-base font-semibold'>Task</p>
               <p className='text-sm font-medium'>{t.id}</p>
             </div>
-            <div className='flex items-center justify-between border-b-[1px] py-3'>
+            <div className='flex items-center justify-between border-b-DEFAULT py-3'>
               <p className='text-base font-semibold'>Expression</p>
               <p className='text-sm font-medium'>{t.name}</p>
             </div>
-            <div className='flex items-center justify-between border-b-[1px] py-3'>
+            <div className='flex items-center justify-between border-b-DEFAULT py-3'>
               <p className='text-base font-semibold'>Range</p>
               <p className='text-sm font-medium'>{t.block_range}</p>
             </div>
-            <div className='flex items-center justify-between border-b-[1px] py-3'>
+            <div className='flex items-center justify-between border-b-DEFAULT py-3'>
               <p className='text-base font-semibold'>Periodical</p>
               <p className='text-sm font-medium'>{t.periodical ?? '-'}</p>
             </div>

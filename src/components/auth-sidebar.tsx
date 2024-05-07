@@ -33,7 +33,7 @@ export const AuthSidebar = ({ nav, className }: { nav: NavItem[]; className: str
         href={Nav.PROJECT_CREATE}
         className={cn('w-full gap-[10px] mt-6 lg:mt-[30px] text-primary', buttonVariants())}
       >
-        <PlusIcon className='h-4 w-4 ' />
+        <PlusIcon className='size-4 ' />
         <span>New Project</span>
       </Link>
     </div>

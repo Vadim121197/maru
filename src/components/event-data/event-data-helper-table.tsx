@@ -57,7 +57,7 @@ export const EventDataHelperTable = ({
             <div className='flex items-start gap-4'>
               <p className='text-[12px] font-normal leading-[18px]'>Contract Consts</p>
               <div>
-                <Info className='h-4 w-4 text-primary' />
+                <Info className='size-4 text-primary' />
               </div>
             </div>
             <Select
@@ -87,7 +87,7 @@ export const EventDataHelperTable = ({
             <div className='flex items-start gap-4'>
               <p className='text-[12px] font-normal leading-[18px]'>ChainLink Prices</p>
               <div>
-                <Info className='h-4 w-4 text-primary' />
+                <Info className='size-4 text-primary' />
               </div>
             </div>
             <Select
@@ -117,7 +117,7 @@ export const EventDataHelperTable = ({
             <div className='flex items-start gap-4'>
               <p className='text-[12px] font-normal leading-[18px]'>Event Params</p>
               <div>
-                <Info className='h-4 w-4 text-primary' />
+                <Info className='size-4 text-primary' />
               </div>
             </div>
             <div className='grid grid-cols-3 gap-6'>
@@ -147,7 +147,7 @@ export const EventDataHelperTable = ({
               <div className='flex items-start gap-4'>
                 <p className='text-sm font-normal'>Contract Consts</p>
                 <div>
-                  <Info className='h-4 w-4 text-primary' />
+                  <Info className='size-4 text-primary' />
                 </div>
               </div>
             </TableHead>
@@ -155,7 +155,7 @@ export const EventDataHelperTable = ({
               <div className='flex items-start justify-center gap-4'>
                 <p className='text-sm font-normal'>ChainLink Prices</p>
                 <div>
-                  <Info className='h-4 w-4 text-primary' />
+                  <Info className='size-4 text-primary' />
                 </div>
               </div>
             </TableHead>
@@ -163,7 +163,7 @@ export const EventDataHelperTable = ({
               <div className='flex items-start justify-center gap-4'>
                 <p className='text-sm font-normal'>Event Params</p>
                 <div>
-                  <Info className='h-4 w-4 text-primary' />
+                  <Info className='size-4 text-primary' />
                 </div>
               </div>
             </TableHead>

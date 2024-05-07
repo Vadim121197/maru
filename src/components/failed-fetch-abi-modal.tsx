@@ -60,7 +60,7 @@ export const UploadAbiModal = ({
       <DialogContent className='px-7 py-[36px]'>
         <DialogHeader className='pb-3'>
           <DialogTitle className='flex items-center gap-2 text-base font-medium text-muted-foreground'>
-            {errorModal && <AlertTriangle className='h-4 w-4 text-[rgba(255,219,0,1)]' />}
+            {errorModal && <AlertTriangle className='size-4 text-[rgba(255,219,0,1)]' />}
             {errorModal ? 'Failed to fetch contract ABI.' : 'Upload custom ABI.'}
           </DialogTitle>
         </DialogHeader>

@@ -198,7 +198,7 @@ export const CreateEventData = ({ updateExpressionList }: CreateEventDataProps) 
             {(tools || toolsError) && (
               <Button
                 variant='ghost'
-                className='h-fit w-fit py-0 text-sm font-normal text-primary'
+                className='size-fit py-0 text-sm font-normal text-primary'
                 onClick={() => {
                   setOpenUploadAbi(true)
                 }}

@@ -141,7 +141,7 @@ export const ExpressionsTab = () => {
           </div>
         ) : (
           <section className='mt-[100px] flex flex-col items-center justify-center px-7 lg:container lg:mt-[150px]'>
-            <Bird className='h-20 w-20' strokeWidth={1} />
+            <Bird className='size-20' strokeWidth={1} />
             <p className='text-xl font-semibold'>No expressions</p>
           </section>
         )}
@@ -166,7 +166,7 @@ export const ExpressionsTab = () => {
                 }}
               >
                 <div>
-                  <Plus className='h-4 w-4' />
+                  <Plus className='size-4' />
                 </div>
                 <p className='text-sm font-bold lg:text-base'>Expression</p>
               </Button>
@@ -209,7 +209,7 @@ export const ExpressionsTab = () => {
                 <div className='flex items-center justify-end'>
                   <X
                     strokeWidth={1}
-                    className='h-5 w-5 cursor-pointer lg:h-6 lg:w-6'
+                    className='size-5 cursor-pointer lg:size-6'
                     onClick={() => {
                       setAddNew(false)
                     }}

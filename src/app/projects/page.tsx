@@ -21,7 +21,7 @@ const ProjectsPage = () => {
   if (!loading && !projects.length)
     return (
       <section className='mt-[100px] flex flex-col items-center justify-center px-7 lg:container lg:mt-[150px]'>
-        <Bird className='h-20 w-20' strokeWidth={1} />
+        <Bird className='size-20' strokeWidth={1} />
         <p className='text-xl font-semibold'>No projects</p>
       </section>
     )

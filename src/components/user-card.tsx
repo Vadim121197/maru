@@ -13,7 +13,7 @@ export const UserCard = () => {
       {data.user.avatar_url ? (
         <Image src={data.user.avatar_url} width={24} height={24} className='rounded-full' alt='avatar' />
       ) : (
-        <div className='h-6 w-6 rounded-full bg-primary' />
+        <div className='size-6 rounded-full bg-primary' />
       )}
       <p className='break-all text-sm font-medium lg:text-base'>{data.user.username}</p>
     </div>

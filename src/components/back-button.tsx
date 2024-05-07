@@ -22,7 +22,7 @@ export const BackButton = ({ href }: { href?: string }) => {
             }),
           )}
         >
-          <MoveLeft className='h-6 w-6 text-muted-foreground' />
+          <MoveLeft className='size-6 text-muted-foreground' />
           <p className='text-base font-semibold text-muted-foreground'>Back</p>
         </Link>
       ) : (
@@ -33,7 +33,7 @@ export const BackButton = ({ href }: { href?: string }) => {
           className='flex items-center gap-4 hover:opacity-50'
           variant='ghost'
         >
-          <MoveLeft className='h-6 w-6 text-muted-foreground' />
+          <MoveLeft className='size-6 text-muted-foreground' />
           <p className='text-base font-semibold text-muted-foreground'>Back</p>
         </Button>
       )}

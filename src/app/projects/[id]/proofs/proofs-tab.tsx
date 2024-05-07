@@ -98,15 +98,15 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
           <TableBody className='text-muted'>
             {proofs.map((pr) => (
               <TableRow key={pr.id} className='h-[56px]'>
-                <TableCell className='border-t-[1px]'>
+                <TableCell className='border-t-DEFAULT'>
                   <Status status={pr.status} />
                 </TableCell>
-                <TableCell className='border-t-[1px] text-center text-base font-medium'>{pr.version}</TableCell>
-                <TableCell className='border-t-[1px] text-center text-base font-medium'>{pr.name}</TableCell>
-                <TableCell className='border-t-[1px] text-center text-base font-medium'>
+                <TableCell className='border-t-DEFAULT text-center text-base font-medium'>{pr.version}</TableCell>
+                <TableCell className='border-t-DEFAULT text-center text-base font-medium'>{pr.name}</TableCell>
+                <TableCell className='border-t-DEFAULT text-center text-base font-medium'>
                   {moment.utc(pr.updated_at).startOf('minutes').fromNow()}
                 </TableCell>
-                <TableCell className='border-t-[1px] text-base font-medium'>
+                <TableCell className='border-t-DEFAULT text-base font-medium'>
                   <div className='flex items-center justify-center gap-5'>
                     <a
                       href={`${BASE_URL}${ApiRoutes.PROOFS_PROOF_ID_INPUT.replace(PROOF_ID, pr.id.toString())}`}
@@ -114,18 +114,18 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                       rel='noopener noreferrer'
                       className='flex items-center justify-center'
                     >
-                      <InfoIcon strokeWidth={1} className='h-5 w-5' />
+                      <InfoIcon strokeWidth={1} className='size-5' />
                     </a>
                     <div>
                       <Copy
                         strokeWidth={1}
-                        className='h-5 w-5 cursor-pointer'
+                        className='size-5 cursor-pointer'
                         onClick={copyPrefetchData(ApiRoutes.PROOFS_PROOF_ID_INPUT.replace(PROOF_ID, pr.id.toString()))}
                       />
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className='border-t-[1px] text-center text-base font-medium'>
+                <TableCell className='border-t-DEFAULT text-center text-base font-medium'>
                   {pr.status === ProofStatus.SUCCESS ? (
                     <div className='flex items-center justify-center gap-5'>
                       <a
@@ -134,12 +134,12 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                         rel='noopener noreferrer'
                         className='flex items-center justify-center'
                       >
-                        <InfoIcon strokeWidth={1} className='h-5 w-5' />
+                        <InfoIcon strokeWidth={1} className='size-5' />
                       </a>
                       <div>
                         <Copy
                           strokeWidth={1}
-                          className='h-5 w-5 cursor-pointer'
+                          className='size-5 cursor-pointer'
                           onClick={copyPrefetchData(
                             ApiRoutes.PROOFS_PROOF_ID_RESULT.replace(PROOF_ID, pr.id.toString()),
                           )}
@@ -150,7 +150,7 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                     '-'
                   )}
                 </TableCell>
-                <TableCell className='flex justify-center border-t-[1px] text-center text-base font-medium'>
+                <TableCell className='flex justify-center border-t-DEFAULT text-center text-base font-medium'>
                   {pr.status === ProofStatus.SUCCESS ? (
                     pr.verification ? (
                       <a
@@ -180,23 +180,23 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
       <div className='flex flex-col gap-6 lg:hidden'>
         {proofs.map((pr) => (
           <div key={pr.id} className='flex flex-col bg-card p-4 '>
-            <div className='flex items-center justify-between border-b-[1px] pb-3'>
+            <div className='flex items-center justify-between border-b-DEFAULT pb-3'>
               <p className='text-base font-semibold'>Status</p>
               <Status status={pr.status} />
             </div>
-            <div className='flex items-center justify-between border-b-[1px] py-3'>
+            <div className='flex items-center justify-between border-b-DEFAULT py-3'>
               <p className='text-base font-semibold'>Version</p>
               <p className='text-sm font-medium'>{pr.version}</p>
             </div>
-            <div className='flex items-center justify-between border-b-[1px] py-3'>
+            <div className='flex items-center justify-between border-b-DEFAULT py-3'>
               <p className='text-base font-semibold'>Expression</p>
               <p className='text-sm font-medium'>{pr.name}</p>
             </div>
-            <div className='flex items-center justify-between border-b-[1px] py-3'>
+            <div className='flex items-center justify-between border-b-DEFAULT py-3'>
               <p className='text-base font-semibold'>Time</p>
               <p className='text-sm font-medium'>{moment.utc(pr.updated_at).startOf('minutes').fromNow()}</p>
             </div>
-            <div className='flex items-center justify-between border-b-[1px] py-3'>
+            <div className='flex items-center justify-between border-b-DEFAULT py-3'>
               <p className='text-base font-semibold'>Input</p>
               <div className='flex items-center justify-center gap-5'>
                 <a
@@ -205,18 +205,18 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                   rel='noopener noreferrer'
                   className='flex items-center justify-center'
                 >
-                  <InfoIcon strokeWidth={1} className='h-5 w-5' />
+                  <InfoIcon strokeWidth={1} className='size-5' />
                 </a>
                 <div>
                   <Copy
                     strokeWidth={1}
-                    className='h-5 w-5 cursor-pointer'
+                    className='size-5 cursor-pointer'
                     onClick={copyPrefetchData(ApiRoutes.PROOFS_PROOF_ID_INPUT.replace(PROOF_ID, pr.id.toString()))}
                   />
                 </div>
               </div>
             </div>
-            <div className='flex items-center justify-between border-b-[1px] py-3'>
+            <div className='flex items-center justify-between border-b-DEFAULT py-3'>
               <p className='text-base font-semibold'>Proofs</p>
               {pr.status === ProofStatus.SUCCESS ? (
                 <div className='flex items-center justify-center gap-5'>
@@ -226,12 +226,12 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
                     rel='noopener noreferrer'
                     className='flex items-center justify-center'
                   >
-                    <InfoIcon strokeWidth={1} className='h-5 w-5' />
+                    <InfoIcon strokeWidth={1} className='size-5' />
                   </a>
                   <div>
                     <Copy
                       strokeWidth={1}
-                      className='h-5 w-5 cursor-pointer'
+                      className='size-5 cursor-pointer'
                       onClick={copyPrefetchData(ApiRoutes.PROOFS_PROOF_ID_RESULT.replace(PROOF_ID, pr.id.toString()))}
                     />
                   </div>

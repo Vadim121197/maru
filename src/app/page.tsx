@@ -44,21 +44,21 @@ const IndexPage = async () => {
   return (
     <section className='grid items-center px-7 pt-10 lg:pt-[60px]'>
       <div className='flex flex-col justify-between gap-[100px]  lg:flex-row lg:gap-6'>
-        <div className='order-2 flex flex-col gap-10 lg:order-1 lg:w-[20%]'>
+        <div className='order-2 flex flex-col gap-10 lg:order-1 lg:w-1/5'>
           <AuthSidebar nav={siteConfig.secondaryNav} className='hidden w-full lg:block' />
           <div className='flex flex-col gap-[2px]'>
             <p className='mb-[14px] text-base font-semibold lg:text-lg lg:font-medium'>Resources</p>
             {resources.map((r) => (
               <div key={r.title} className='flex w-full items-center gap-[10px] p-4 text-muted-foreground'>
                 <div>
-                  <Link2 className='h-6 w-6 rotate-[-45deg]' strokeWidth={1} />
+                  <Link2 className='size-6 -rotate-45' strokeWidth={1} />
                 </div>
                 <p className='text-sm font-bold lg:text-base lg:font-semibold'>{r.title}</p>
               </div>
             ))}
           </div>
         </div>
-        <div className='order-1 flex flex-col items-center lg:order-2 lg:w-[60%] lg:items-end lg:gap-6'>
+        <div className='order-1 flex flex-col items-center lg:order-2 lg:w-3/5 lg:items-end lg:gap-6'>
           <div className='order-1 flex w-full flex-col items-center justify-between gap-6 bg-card p-4 lg:flex-row lg:gap-1 lg:px-5 lg:py-[18px]'>
             <p className='text-center text-base font-semibold lg:text-lg lg:font-medium'>
               Welcome! Get started by creating your first project.
