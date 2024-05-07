@@ -45,7 +45,7 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
   if (!loading && !proofs.length)
     return (
       <section className='mt-[100px] flex flex-col items-center justify-center px-7 lg:container lg:mt-[150px]'>
-        <Bird className='h-20 w-20' strokeWidth={1} />
+        <Bird className='size-20' strokeWidth={1} />
         <p className='text-xl font-semibold'>No proofs</p>
       </section>
     )
@@ -79,8 +79,6 @@ export const ProofsTab = ({ projectId }: { projectId: string }) => {
       } catch (error) {}
     })()
   }
-
-  console.log(proofs)
 
   return (
     <>

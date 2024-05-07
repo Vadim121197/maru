@@ -20,64 +20,63 @@ interface FiltersProps {
 export const Filters = ({ filters, setFilters }: FiltersProps) => {
   const options = useMemo(() => {
     return filters.map((i) => ({
-      ...filters,
+      ...i,
       label: i.name,
       value: i.name,
     }))
   }, [filters])
 
   const addFilter = () => {
-    const lastInvisibleIndex = filters.findIndex((i) => !i.vissible)
+    const firstInvisibleIndex = filters.findIndex((i) => !i.vissible)
 
-    if (lastInvisibleIndex === -1) return
+    if (firstInvisibleIndex === -1) return
 
-    const filter = filters[lastInvisibleIndex]
+    const filter = filters[firstInvisibleIndex]
+
     if (!filter) return
 
     filter.vissible = true
-    const newArray = filters.filter((i) => i.name !== filter.name)
-    newArray.push(filter)
+    const newArray = [...filters]
+
+    newArray[firstInvisibleIndex] = filter
 
     setFilters(newArray)
   }
 
   const selectFilter = (value: string, index: number) => {
-    const nextValueIndex = filters.filter((i) => i.vissible).findIndex((i) => i.name === value)
-
     const newArray = [...filters]
 
     const oldFilter = newArray[index]
 
     if (!oldFilter) return
 
-    if (nextValueIndex === -1) {
-      const newFilterIndex = newArray.findIndex((i) => i.name === value)
-      const newFilter = newArray[newFilterIndex]
-      if (!newFilter) return
+    const newFilterIndex = newArray.findIndex((i) => i.name === value)
+    const newFilter = newArray[newFilterIndex]
+    if (!newFilter) return
 
-      newFilter.vissible = true
-      oldFilter.vissible = false
+    newFilter.vissible = true
+    oldFilter.vissible = false
 
-      setFilters(newArray)
-    } else {
-      const nextValueIndex = filters.findIndex((i) => i.name === value)
-      const newFilter = newArray[nextValueIndex]
-      if (!newFilter) return
-      newArray[index] = newFilter
-      newArray[nextValueIndex] = oldFilter
-      setFilters(newArray)
-    }
+    newArray[index] = newFilter
+    newArray[newFilterIndex] = oldFilter
+
+    setFilters(newArray)
   }
 
   return (
     <div className='flex flex-col gap-2'>
-      {filters.map((i, index) => {
+      {filters.map((i, index, arr) => {
         if (!i.vissible) return
+
+        const lastVissibleIndex = arr.findLastIndex((el) => el.vissible)
+        const currentFilter = options.filter((f) => i.name === f.name)
+        const invisibleFilters = options.filter((f) => f.name !== i.name && !f.vissible)
+
         return (
           <div className='flex gap-2' key={i.name}>
             <SelectComponent
               value={i.name}
-              options={options}
+              options={[...currentFilter, ...invisibleFilters]}
               onValueChange={(value) => {
                 selectFilter(value, index)
               }}
@@ -94,9 +93,11 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                 setFilters(newArray)
               }}
             />
-            <Button variant='secondary' onClick={addFilter} className='font-medium'>
-              +
-            </Button>
+            {lastVissibleIndex === index && arr.length - 1 !== index && (
+              <Button variant='secondary' onClick={addFilter} className='font-medium'>
+                +
+              </Button>
+            )}
           </div>
         )
       })}
